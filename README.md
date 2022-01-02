@@ -1,6 +1,6 @@
 Carporate
 =======
-Coorporate Drive Application
+Corporate Drive Mobile Application
 
 This is my example function:
 ```js
