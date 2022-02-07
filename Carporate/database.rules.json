@@ -1,0 +1,11 @@
+{
+ 
+  "rules": {
+    "drives" : {
+      ".indexOn": ["driver","amount_of_people"]
+    },
+    ".read": true,
+    ".write": true
+  }
+}
+  
