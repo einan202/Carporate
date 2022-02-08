@@ -1,8 +1,8 @@
 import { AUTHENTICATE, SIGNUP, DETAILSFILLING, SET_DID_TRY_AL } from '../actions/auth';
 
 const initialState = {
-  token: null,
-  userId: null,
+  token: undefined,
+  userId: undefined,
   didTryAutoLogin: false,
   goToDettailsFelling: false,
   email: null,
@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
         token: action.token,
         userId: action.userId,
         didTryAutoLogin: true,
+        email: action.email
       };
       case SET_DID_TRY_AL:
         return {

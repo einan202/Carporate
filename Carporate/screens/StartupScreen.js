@@ -22,10 +22,10 @@ const StartupScreen = props => {
         return;
       }
       const transformedData = JSON.parse(userData);
-      const { token, userId, expiryDate } = transformedData;
+      const { token, userId, expiryDate, email } = transformedData;
       const expirationDate = new Date(expiryDate);
 
-      if (expirationDate <= new Date() || !token || !userId) {
+      if (expirationDate <= new Date() || !token || !userId || !email) {
         
         //props.navigation.navigate('Auth');
         dispatch(authActions.setDidTryAl());
@@ -34,9 +34,8 @@ const StartupScreen = props => {
       /*AsyncStorage.removeItem('userData');/*ffgggggggggggggggggggggggggggggg*/
       /*AsyncStorage.removeItem('userDetaills');/*ffgggggggggggggggggggggggggggggg*/
       const expirationTime = expirationDate.getTime() - new Date().getTime();
-      
       //props.navigation.navigate('App');
-      dispatch(authActions.authenticate(userId, token, expirationTime));
+      dispatch(authActions.authenticate(userId, token, expirationTime, email));
     };
 
     tryLogin();

@@ -89,7 +89,7 @@ const MainWindow = props => {
         setIsLoading(true);
         try {
           await dispatch(action);
-          dispatchFormState()
+          
         } catch (err) {
           setError(err.message);
           setIsLoading(false);

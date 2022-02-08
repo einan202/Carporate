@@ -21,17 +21,17 @@ const  isValidEmail = (testEmail) => {
   return is_valid_email;
 };
 
-export const authenticate = (userId, token, expiryTime) => {
+export const authenticate = (userId, token, expiryTime, email) => {
   return dispatch => {
     dispatch(setLogoutTimer(expiryTime));
-    dispatch({ type: AUTHENTICATE, userId: userId, token: token});
+    dispatch({ type: AUTHENTICATE, userId: userId, token: token, email: email});
   };
 };
 
-export const createAccount = (userId, token, expiryTime, email) => {
+export const createAccount = (userId, token, expiryTime, _email) => {
   return dispatch => {
     dispatch(setLogoutTimer(expiryTime));
-    dispatch({ type: SIGNUP, userId: userId, token: token, email: email });
+    dispatch({ type: SIGNUP, userId: userId, token: token, email: _email });
   };
 };
 
@@ -78,14 +78,14 @@ export const signup = (email, password) => {
       createAccount(
         resData.localId,
         resData.idToken,
-        parseInt(resData.expiresIn) * 1000,
+        parseInt(resData.expiresIn) * 10000000000,
         email
       )
     );
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.expiresIn) * 1000000000
     );
-    saveDataToStorage(resData.idToken, resData.localId, expirationDate);
+    saveDataToStorage(resData.idToken, resData.localId, expirationDate, email);
   };
 }
 };
@@ -133,7 +133,7 @@ export const login = (email, password) => {
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.expiresIn) * 1000000000
     );
-    saveDataToStorage(resData.idToken, resData.localId, expirationDate);
+    saveDataToStorage(resData.idToken, resData.localId, expirationDate, email);
   };
 };
 
@@ -182,13 +182,14 @@ const setLogoutTimer = expirationTime => {
   };
 };
 
-const saveDataToStorage = (token, userId, expirationDate) => {
+const saveDataToStorage = (token, userId, expirationDate, email) => {
   AsyncStorage.setItem(
     'userData',
     JSON.stringify({
       token: token,
       userId: userId,
-      expiryDate: expirationDate.toISOString()
+      expiryDate: expirationDate.toISOString(),
+      email: email
     })
   );
 };

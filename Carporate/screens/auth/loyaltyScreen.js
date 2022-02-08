@@ -50,6 +50,7 @@ const getDetaills = async () => {
   const loadDrives = useCallback(async () => {
     setError(null);
     setIsRefreshing(true);
+
     try {
       await dispatch(drivesActions.fetchDrives(detaills.email));
     } catch (err) {
@@ -69,6 +70,29 @@ const getDetaills = async () => {
       setIsLoading(false);
     });
   }, [dispatch, loadDrives]);
+
+
+  const credentials = <>
+  <View style={styles.textContainer}>
+  <Text style = {{fontSize: 16}}> E-Mail: {detaills.email} </Text>
+  </View>
+  <View style={styles.textContainer}>
+  <Text style = {{fontSize: 16}}> First name: {detaills.first_name}</Text>
+  </View>
+  <View style={styles.textContainer}>
+  <Text style = {{fontSize: 16}}> Last name:{detaills.last_name} </Text>
+  </View>
+  <View style={styles.textContainer}>
+  <Text style = {{fontSize: 16}}> Phone-Number: {detaills.phone_number}</Text>
+  </View>
+  <View style={styles.textContainer}>
+  <Text style = {{fontSize: 16}}> Age: {detaills.age}</Text>
+  </View>
+  <View style={styles.textContainer}>
+  <Text style = {{fontSize: 16}}> Gender: {detaills.gender}</Text>
+  </View>
+  <Text style = {{fontSize: 20, textAlign: 'center', fontFamily:'open-sans-bold'}}>My upcoming drives</Text>
+  </>;
 
   if (error) {
    console.log(error)
@@ -95,6 +119,7 @@ const getDetaills = async () => {
   if (!isLoading && drives.length === 0) {
     return (
       <View style={styles.centered}>
+        {credentials}
         <Text>No drives found. Maybe start adding some!</Text>
       </View>
     );
@@ -115,28 +140,8 @@ const getDetaills = async () => {
     return (
 
         <FlatList
-          ListHeaderComponent={
-          <>
-          <View style={styles.textContainer}>
-          <Text style = {{fontSize: 16}}> E-Mail: {detaills.email} </Text>
-          </View>
-          <View style={styles.textContainer}>
-          <Text style = {{fontSize: 16}}> First name: {detaills.first_name}</Text>
-          </View>
-          <View style={styles.textContainer}>
-          <Text style = {{fontSize: 16}}> Last name:{detaills.last_name} </Text>
-          </View>
-          <View style={styles.textContainer}>
-          <Text style = {{fontSize: 16}}> Phone-Number: {detaills.phone_number}</Text>
-          </View>
-          <View style={styles.textContainer}>
-          <Text style = {{fontSize: 16}}> Age: {detaills.age}</Text>
-          </View>
-          <View style={styles.textContainer}>
-          <Text style = {{fontSize: 16}}> Gender: {detaills.gender}</Text>
-          </View>
-          <Text style = {{fontSize: 20, textAlign: 'center', fontFamily:'open-sans-bold'}}>My upcoming drives</Text>
-          </>}
+          ListHeaderComponent={credentials }
+         
           onRefresh={loadDrives}
           refreshing={isRefreshing}
           data={drives}
