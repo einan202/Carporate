@@ -46,6 +46,7 @@ const MainWindow = props => {
     const [error, setError] = useState();
     const dispatch = useDispatch();
     const email = useSelector(state => state.auth.email);
+    
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
@@ -88,6 +89,7 @@ const MainWindow = props => {
         setIsLoading(true);
         try {
           await dispatch(action);
+          dispatchFormState()
         } catch (err) {
           setError(err.message);
           setIsLoading(false);
@@ -158,6 +160,7 @@ const MainWindow = props => {
             <DropDownButton
                 // style={{ zIndex: 9 }}
                 array={[
+                    { label: '0 min', value: '0' },
                     { label: '10 min', value: '10' },
                     { label: '20 min', value: '20' },
                     { label: '30 min', value: '30' },

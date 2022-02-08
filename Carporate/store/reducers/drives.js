@@ -31,9 +31,28 @@ const initialState = {
           action.driveData.driver,
           []
         );
+        const tmp = (state.userDrives.concat(newDrive)).sort((drive_a, drive_b)=> {
+          if (drive_a.date > drive_b.date) {
+            return 1;
+        }
+        if (drive_b.date > drive_a.date) {
+            return -1;
+        }
+        else{
+          if(drive_a.time > drive_b.time){
+            return 1;
+          }
+          if (drive_b.time > drive_a.time) {
+            return -1;
+        }
+        return 0;
+        }
+        })
         return {
-          ...state,
-          userDrives: state.userDrives.concat(newDrive)
+          
+          userDrives: tmp
+          
+          
         };
     }
     return state;

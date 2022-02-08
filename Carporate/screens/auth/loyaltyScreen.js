@@ -15,6 +15,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Drive from '../../models/drive'
 import * as drivesActions from '../../store/actions/drives'
+import DriveItem from '../../components/shop/DriveItem';
+
+
+
 
 const loyaltyScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
@@ -96,37 +100,59 @@ const getDetaills = async () => {
     );
   }
 
-    console.log(drives[0].driver)
+  const selectDrive = () => {
+    Alert.alert('Are you sure?','we will send to the driver a request',[
+      { text: 'Yes', onPress: () => console.log('Yes Pressed') },
+      {text: 'No',
+      onPress: () => console.log('No Pressed'),
+      style: 'cancel'},
+    ]) 
+
+  };
+
+
+
     return (
 
         <FlatList
           ListHeaderComponent={
           <>
           <View style={styles.textContainer}>
-          <Text style = {{fontSize: 20}}> E-Mail: {detaills.email} </Text>
+          <Text style = {{fontSize: 16}}> E-Mail: {detaills.email} </Text>
           </View>
           <View style={styles.textContainer}>
-          <Text style = {{fontSize: 20}}> First name: {detaills.first_name}</Text>
+          <Text style = {{fontSize: 16}}> First name: {detaills.first_name}</Text>
           </View>
           <View style={styles.textContainer}>
-          <Text style = {{fontSize: 20}}> Last name:{detaills.last_name} </Text>
+          <Text style = {{fontSize: 16}}> Last name:{detaills.last_name} </Text>
           </View>
           <View style={styles.textContainer}>
-          <Text style = {{fontSize: 20}}> Phone-Number: {detaills.phone_number}</Text>
+          <Text style = {{fontSize: 16}}> Phone-Number: {detaills.phone_number}</Text>
           </View>
           <View style={styles.textContainer}>
-          <Text style = {{fontSize: 20}}> Age: {detaills.age}</Text>
+          <Text style = {{fontSize: 16}}> Age: {detaills.age}</Text>
           </View>
           <View style={styles.textContainer}>
-          <Text style = {{fontSize: 20}}> Gender: {detaills.gender}</Text>
+          <Text style = {{fontSize: 16}}> Gender: {detaills.gender}</Text>
           </View>
-          <Text>upcoming drives</Text>
+          <Text style = {{fontSize: 20, textAlign: 'center', fontFamily:'open-sans-bold'}}>My upcoming drives</Text>
           </>}
           onRefresh={loadDrives}
           refreshing={isRefreshing}
           data={drives}
           keyExtractor = {item => item.id}
-          renderItem = {itemData =>{ return  <Text>{itemData.item.time}</Text>}}
+          renderItem = {itemData =>
+          (<DriveItem
+              starting_point = {itemData.item.starting_point}
+              destination = {itemData.item.destination}
+              date = {itemData.item.date}
+              time = {itemData.item.time}
+              amount_of_people = {itemData.item.amount_of_people}
+              deviation_time = {itemData.item.deviation_time}
+              driver = {itemData.item.driver}
+              passangers = {itemData.item.passangers}
+              onSelect={() => selectDrive()}
+          />)}
         />
        
     
