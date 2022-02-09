@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState} from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,11 @@ import {
   TouchableOpacity,
   TouchableNativeFeedback,
   Platform,
-  Button
+  Alert,
+  Modal,
+  Pressable
 } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import Colors from '../../constants/Colors';
 
 
@@ -21,53 +24,87 @@ const DriveItem = props => {
   if (Platform.OS === 'android' && Platform.Version >= 21) {
     TouchableCmp = TouchableNativeFeedback;
   }
+  const [modalVisible, setModalVisible] = useState(false);
+
+  
+  
+  const passangersText = 
+  props.passangers!==undefined && props.passangers !== [] ? 
+    <FlatList
+          ListHeaderComponent={<Text style={[styles.text, {fontSize: 20}]}>The passangers are:</Text>}
+          data={props.passangers.map((userMail, index) => ({ value: userMail, id: index  }))}
+          keyExtractor={item => item.id}
+          renderItem = {itemData => 
+            (
+            <Text style={[styles.text, {fontSize: 20}]}>{itemData.item.value}</Text>
+            )}
+    />
+    :
+    <View style = {{marginBottom:200}}>
+    <Text style={[styles.text, {fontSize: 20}]}>There are still no passangers for this drive</Text>
+    </View>;
+    
+  
 
   return (
-    <Card style={styles.product}>
+    <Card style={{
+      height: (props.showButton)?  160 : 120 ,
+      margin: 20
+    }}>
+       
       <View style={styles.touchable}>
       <Text style={styles.text}> {props.starting_point} {'-->'} {props.destination}</Text>
         <Text style={styles.text}> {props.date} {'at'} {props.time}  </Text>
         <Text style={styles.text}>  {'available spaces:'} {props.amount_of_people}  </Text>
         <Text style={styles.text}>  {'the driver is:'} {props.driver}  </Text>
       </View>
-      <Button
-         color={Colors.primary}
-         title="choose this drive"
-         onPress={props.onSelect}
-         style = {styles.button}/>
+      {props.showButton}
+      <Modal
+          animationType="slide"
+          transparent = {true}
+          visible={modalVisible}
+          onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+            <View style={styles.centeredView}>
+            <Card style={{
+              height: 400,
+               margin: 20,
+            }}>
+              <View style={styles.touchable}>
+              <Text style={[styles.text, {fontSize: 20}]}> {props.starting_point} {'-->'} {props.destination}</Text>
+              <Text style={[styles.text, {fontSize: 20}]}> {props.date} {'at'} {props.time}  </Text>
+              <Text style={[styles.text, {fontSize: 20}]}>  {'available spaces:'} {props.amount_of_people}  </Text>
+              <Text style={[styles.text, {fontSize: 20}]}>  {'the driver is:'} {props.driver}  </Text>
+              </View>
+              {passangersText}
+              <View >
+              <Pressable
+              onPress={() => setModalVisible(!modalVisible)}
+              style = {{marginBottom: 0}}
+              >
+              <Text style={[styles.text, {fontSize: 20, marginBottom:0}]}>Close</Text>
+              </Pressable>
+              </View>
+            </Card>
+            </View>
+        </Modal>
+        <View style = {{marginTop: 0}}>
+      <TouchableOpacity  onPress={() => setModalVisible(!modalVisible)}>
+          <Text style = {{textAlign: 'center', fontSize: 15, fontFamily: 'open-sans-bold'}}>For more details click here</Text>
+      </TouchableOpacity>
+         </View>
+        
     </Card>
   );
 };
 
 const styles = StyleSheet.create({
-  product: {
-    height: 150,
-    margin: 20
-  },
   touchable: {
     borderRadius: 10,
-    overflow: 'hidden'
-  },
-  imageContainer: {
-    width: '100%',
-    height: '60%',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    overflow: 'hidden'
-  },
-  image: {
-    width: '100%',
-    height: '100%'
-  },
-  details: {
-    alignItems: 'center',
-    height: '17%',
-    padding: 10
-  },
-  title: {
-    fontFamily: 'open-sans-bold',
-    fontSize: 18,
-    marginVertical: 2
+    overflow: 'hidden',
+    
   },
   text: {
     textAlign: 'center',
@@ -75,16 +112,58 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#888'
   },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    height: '23%',
-    paddingHorizontal: 20
+    
   },
   button: {
-    marginBottom: 10
-  }
+    backgroundColor: 'white',
+    padding: 12,
+    marginTop: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+    borderWidth: 20
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+    borderWidth: 20
+  },
+  bottomModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+    borderWidth: 20
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    borderWidth: 20
+  },
 });
 
 export default DriveItem;

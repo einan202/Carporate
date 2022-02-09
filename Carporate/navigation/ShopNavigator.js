@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Platform, SafeAreaView, Button, View,Text, StyleSheet,TouchableOpacity } from 'react-native';
+import { Platform,TouchableOpacity } from 'react-native';
 
 import loyaltyScreen from '../screens/auth/loyaltyScreen'
 import AuthScreen, {navigationOptions as authScreenOption} from '../screens/auth/AuthScreen';
@@ -10,8 +10,7 @@ import notificationScreen from '../screens/mainApp/notificationScreen';
 import Colors from '../constants/Colors';
 import driverScreen from '../screens/mainApp/driverScreen';
 import passengerScreen from '../screens/mainApp/passengerScreen';
-import { NavigationContainer } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
+import foundedDrivesScreen from '../screens/mainApp/foundedDrivesScreen';
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -60,6 +59,9 @@ const driver_passanger_navigator = ({navigation}) => {
     <appTabNavigator.Screen name = "Notification" component = {notificationScreen} options={{
       tabBarButton: (props) => null
     }} />
+    <appTabNavigator.Screen name = "foundedDrivesScreen" component = {foundedDrivesScreen} options={{
+      tabBarButton: (props) => null
+    }}/>
     <appTabNavigator.Screen name = "driver" component = {driverScreen}/>
     <appTabNavigator.Screen name = "passenger" component = {passengerScreen}/>
   </appTabNavigator.Navigator>

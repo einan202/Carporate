@@ -6,6 +6,11 @@ const initialState = {
   didTryAutoLogin: false,
   goToDettailsFelling: false,
   email: null,
+  first_name: null,
+  last_name: null,
+  phone_number: null,
+  age: null,
+  gender: null
 };
 
 export default (state = initialState, action) => {
@@ -15,7 +20,12 @@ export default (state = initialState, action) => {
         token: action.token,
         userId: action.userId,
         didTryAutoLogin: true,
-        email: action.email
+        email: action.email,
+        first_name: action.first_name,
+        last_name: action.last_name,
+        phone_number: action.phone_number,
+        age: action.age,
+        gender: action.gender,
       };
       case SET_DID_TRY_AL:
         return {
@@ -33,6 +43,12 @@ export default (state = initialState, action) => {
        case DETAILSFILLING:
          return {
            ...state,
+           email: action.email,
+           first_name: action.first_name,
+           last_name: action.last_name,
+           phone_number: action.phone_number,
+           age: action.age,
+           gender: action.gender,
           goToDettailsFelling: false
          };
     default:

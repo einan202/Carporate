@@ -13,7 +13,6 @@ import {
 import Colors from '../../constants/Colors';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Drive from '../../models/drive'
 import * as drivesActions from '../../store/actions/drives'
 import DriveItem from '../../components/shop/DriveItem';
 
@@ -26,43 +25,26 @@ const loyaltyScreen = props => {
   const [error, setError] = useState();
   const drives = useSelector(state => state.drives.userDrives);
   const dispatch = useDispatch();
-  const [detaills, setDetaills] = useState({
-    email: '',
-    first_name: '',
-    last_name: '',
-    phone_number: '',
-    age: '',
-    gender: ''
-  });
-
-
-const getDetaills = async () => {
-    try {
-      const userDetaills = await AsyncStorage.getItem('userDetaills');
-      const transformedDetaills = JSON.parse(userDetaills);
-      setDetaills(transformedDetaills);
-    } catch (error) {
-      console.log('Something went wrong in your code', error)
-    }
-  };
+  const email = useSelector(state => state.auth.email);
+  const first_name = useSelector(state => state.auth.first_name);
+  const last_name = useSelector(state => state.auth.last_name);
+  const phone_number = useSelector(state => state.auth.phone_number);
+  const age = useSelector(state => state.auth.age);
+  const gender = useSelector(state => state.auth.gender);
 
 
   const loadDrives = useCallback(async () => {
     setError(null);
     setIsRefreshing(true);
-
     try {
-      await dispatch(drivesActions.fetchDrives(detaills.email));
+      await dispatch(drivesActions.fetchDrives(email));
     } catch (err) {
       setError(err.message);
     }
     setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
 
-  useEffect(() => {
-    getDetaills();
-    loadDrives();
-  },[]);
+  
 
   useEffect(() => {
     setIsLoading(true);
@@ -72,30 +54,30 @@ const getDetaills = async () => {
   }, [dispatch, loadDrives]);
 
 
-  const credentials = <>
+  const credentials =
+   <>
   <View style={styles.textContainer}>
-  <Text style = {{fontSize: 16}}> E-Mail: {detaills.email} </Text>
+  <Text style = {{fontSize: 16}}> E-Mail: {email} </Text>
   </View>
   <View style={styles.textContainer}>
-  <Text style = {{fontSize: 16}}> First name: {detaills.first_name}</Text>
+  <Text style = {{fontSize: 16}}> First name: {first_name}</Text>
   </View>
   <View style={styles.textContainer}>
-  <Text style = {{fontSize: 16}}> Last name:{detaills.last_name} </Text>
+  <Text style = {{fontSize: 16}}> Last name:{last_name} </Text>
   </View>
   <View style={styles.textContainer}>
-  <Text style = {{fontSize: 16}}> Phone-Number: {detaills.phone_number}</Text>
+  <Text style = {{fontSize: 16}}> Phone-Number: {phone_number}</Text>
   </View>
   <View style={styles.textContainer}>
-  <Text style = {{fontSize: 16}}> Age: {detaills.age}</Text>
+  <Text style = {{fontSize: 16}}> Age: {age}</Text>
   </View>
   <View style={styles.textContainer}>
-  <Text style = {{fontSize: 16}}> Gender: {detaills.gender}</Text>
+  <Text style = {{fontSize: 16}}> Gender: {gender}</Text>
   </View>
   <Text style = {{fontSize: 20, textAlign: 'center', fontFamily:'open-sans-bold'}}>My upcoming drives</Text>
   </>;
 
   if (error) {
-   console.log(error)
     return (
       <View style={styles.centered}>
         <Text>An error occurred!</Text>
@@ -125,23 +107,14 @@ const getDetaills = async () => {
     );
   }
 
-  const selectDrive = () => {
-    Alert.alert('Are you sure?','we will send to the driver a request',[
-      { text: 'Yes', onPress: () => console.log('Yes Pressed') },
-      {text: 'No',
-      onPress: () => console.log('No Pressed'),
-      style: 'cancel'},
-    ]) 
-
-  };
+  
 
 
 
     return (
 
         <FlatList
-          ListHeaderComponent={credentials }
-         
+          ListHeaderComponent={credentials}
           onRefresh={loadDrives}
           refreshing={isRefreshing}
           data={drives}
@@ -157,11 +130,16 @@ const getDetaills = async () => {
               driver = {itemData.item.driver}
               passangers = {itemData.item.passangers}
               onSelect={() => selectDrive()}
+              moreDetails = {()=>{}}
+               /* <View style = {styles.buttonContainer}>
+              <Button
+                 color={Colors.primary}
+                 title="choose this drive"
+                 onPress={props.onSelect}
+                 style = {styles.button}/>
+          </View>*/
           />)}
         />
-       
-    
-    
     )
   };
 

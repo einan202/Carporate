@@ -1,6 +1,4 @@
 import Drive from '../../models/drive';
-
-
 export const DELETE_DRIVE = 'DELETE_DRIVE';
 export const CREATE_DRIVE = 'CREATE_DRIVE';
 export const UPDATE_DRIVE = 'UPDATE_DRIVE';
@@ -12,7 +10,7 @@ export const SET_DRIVE = 'SET_DRIVE';
 
 
 
-export const post_driver = (starting_point, destination, date, time, amount_of_people, deviation_time, email) => {
+export const post_drive = (starting_point, destination, date, time, amount_of_people, deviation_time, email) => {
     
     return async dispatch => {
         const response = await fetch('https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives.json', {
@@ -27,7 +25,8 @@ export const post_driver = (starting_point, destination, date, time, amount_of_p
             time: time,
             amount_of_people: amount_of_people,
             deviation_time: deviation_time,
-            driver: email
+            driver: email,
+            passangers: Array [amount_of_people]
           })
         });
         
@@ -53,19 +52,17 @@ export const post_driver = (starting_point, destination, date, time, amount_of_p
 
 export const fetchDrives = (email) => {
   return async dispatch => {
-    // any async code you want!a
-    
     try {
-      const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives.json?orderBy="driver"&equalTo=${email}&print=pretty`,{})
-
+      const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives.json?print=pretty`)
       if (!response.ok) {
         throw new Error('Something went wrong!');
       }
       const resData = await response.json();
+      console.log(resData)
       const loadedDrives = [];
-
       for (const key in resData) {
-        loadedDrives.push(new Drive(
+          if(email === resData[key].driver || (resData[key].passangers && (resData[key].passangers).includes(email))){
+          loadedDrives.push(new Drive(
           key,
           resData[key].starting_point,
           resData[key].destination,
@@ -74,10 +71,10 @@ export const fetchDrives = (email) => {
           resData[key].amount_of_people,
           resData[key].deviation_time,
           resData[key].driver,
-          []
+          resData[key].passangers
         ));
+          }
       }
-      
       dispatch({
         type: SET_DRIVE,
         userDrives: loadedDrives

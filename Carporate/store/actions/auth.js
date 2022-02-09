@@ -21,10 +21,19 @@ const  isValidEmail = (testEmail) => {
   return is_valid_email;
 };
 
-export const authenticate = (userId, token, expiryTime, email) => {
+export const authenticate = (userId, token, expiryTime, email, first_name, last_name, phone_number, age, gender) => {
   return dispatch => {
     dispatch(setLogoutTimer(expiryTime));
-    dispatch({ type: AUTHENTICATE, userId: userId, token: token, email: email});
+    dispatch({ type: AUTHENTICATE,
+      userId: userId,
+      token: token,
+      email: email,
+      first_name: first_name,
+      last_name: last_name,
+      phone_number: phone_number,
+      age: age,
+      gender: gender,
+    });
   };
 };
 
@@ -35,9 +44,16 @@ export const createAccount = (userId, token, expiryTime, _email) => {
   };
 };
 
-export const detailsfl = () => {
+export const detailsfl = (email, first_name, last_name, phone_number, age, gender) => {
   return dispatch => {
-    dispatch({ type: DETAILSFILLING});
+    dispatch({ type: DETAILSFILLING,
+    email: email,
+    first_name: first_name,
+    last_name: last_name,
+    phone_number: phone_number,
+    age: age,
+    gender: gender,
+    });
   };
 };
 
@@ -158,7 +174,7 @@ export const detailsFilling = (email, first_name, last_name,phone_number, age, g
   const resData = await response.json();
   saveDetaillsToStorage(email, first_name, last_name,phone_number, age, gender);
   
-  dispatch(detailsfl());
+  dispatch(detailsfl(email, first_name, last_name, phone_number, age, gender));
 };
 };
 

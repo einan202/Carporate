@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer, useCallback } from "react";
-import { View, Text, StyleSheet, Button, Alert } from "react-native";
+import { View, Text, StyleSheet, Button, Alert, ScrollView } from "react-native";
 
 import Input from "./Input";
 import TextCard from "./TextCard";
@@ -9,9 +9,9 @@ import DropDownButton from "./DropDownButton";
 import FiltersScreen from "./FiltersScreen";
 import { useDispatch,useSelector } from 'react-redux';
 import * as drivesActions from '../../store/actions/drives';
-import * as passangerActions from '../../store/actions/passanger';
 import Colors from '../../constants/Colors';
-
+import * as passangerActions from '../../store/actions/passanger';
+import { navigationOptions } from "../../screens/auth/AuthScreen";
 
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
@@ -56,6 +56,7 @@ const MainWindow = props => {
           time: '',
           amount_of_people: '',
           deviation_time: '',
+          deviationKm : '',
           email: email
         },
         inputValidities: {
@@ -64,7 +65,8 @@ const MainWindow = props => {
           date: false,
           time: false,
           amount_of_people: false,
-          deviation_time: false
+          deviation_time: false,
+          deviationKm: false
         },
         formIsValid: false
       });
@@ -75,8 +77,11 @@ const MainWindow = props => {
         }
       }, [error]);
     
-      const driverHandler = async () => {
-        let action = drivesActions.post_driver(
+      const driverPassangerHandler = async () => {
+        let action;
+        if(props.passangerOrDriver === "driver")
+        {
+          action = drivesActions.post_drive(
           formState.inputValues.starting_point,
           formState.inputValues.destination,
           formState.inputValues.date,
@@ -85,11 +90,25 @@ const MainWindow = props => {
           formState.inputValues.deviation_time,
           email,
         );
+      }
+      else {
+          action = passangerActions.searchDrives(
+          formState.inputValues.starting_point,
+          formState.inputValues.destination,
+          formState.inputValues.date,
+          formState.inputValues.time,
+          formState.inputValues.amount_of_people,
+          formState.inputValues.deviationKm,
+          email,
+        );
+      }
         setError(null);
         setIsLoading(true);
         try {
           await dispatch(action);
-          
+          if(props.passangerOrDriver === "passanger"){
+            props.navigation.navigate('foundedDrivesScreen');
+          }
         } catch (err) {
           setError(err.message);
           setIsLoading(false);
@@ -108,7 +127,24 @@ const MainWindow = props => {
         [dispatchFormState]
       );
 
+      const deviationArray =  props.passangerOrDriver === "driver" ?
+      [
+        { label: '0 min', value: '0' },
+        { label: '10 min', value: '10' },
+        { label: '20 min', value: '20' },
+        { label: '30 min', value: '30' },
+        { label: '40 min', value: '40' },
+    ] :
+    [
+      { label: '1 km', value: '1' },
+      { label: '5 km', value: '5' },
+      { label: '10 km', value: '10' },
+      { label: '20 km', value: '20' },
+      { label: '30 km', value: '30' },
+  ];
+
     return (
+      <ScrollView>
         <View style={styles.screen}>
             <View>
                 <TitleText style={styles.textBoxHeader}>Explanation:</TitleText>
@@ -159,15 +195,9 @@ const MainWindow = props => {
             />
             <DropDownButton
                 // style={{ zIndex: 9 }}
-                array={[
-                    { label: '0 min', value: '0' },
-                    { label: '10 min', value: '10' },
-                    { label: '20 min', value: '20' },
-                    { label: '30 min', value: '30' },
-                    { label: '40 min', value: '40' },
-                ]}
-                placeHolder="deviation time"
-                id = "deviation_time"
+                array = {deviationArray}
+                placeHolder = {props.passangerOrDriver === "driver" ? "deviation time" : "kilometrs deviation"}
+                id = {props.passangerOrDriver === "driver" ? "deviation_time" : "deviationKm"}
                 onInputChange ={inputChangeHandler}
             />
             
@@ -178,11 +208,12 @@ const MainWindow = props => {
             <Button
             title={props.buttonStr}
             color={Colors.primary}
-            onPress={driverHandler}
+            onPress={driverPassangerHandler}
             />
             </View>
             
-        </View>
+          </View>
+        </ScrollView>
     );
 };
 

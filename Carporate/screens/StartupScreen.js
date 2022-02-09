@@ -34,8 +34,15 @@ const StartupScreen = props => {
       /*AsyncStorage.removeItem('userData');/*ffgggggggggggggggggggggggggggggg*/
       /*AsyncStorage.removeItem('userDetaills');/*ffgggggggggggggggggggggggggggggg*/
       const expirationTime = expirationDate.getTime() - new Date().getTime();
+      try {
+        const userDetaills = await AsyncStorage.getItem('userDetaills');
+        const transformedDetaills = JSON.parse(userDetaills);
+        const {email, first_name, last_name,phone_number, age, gender} = transformedDetaills;
+        dispatch(authActions.authenticate(userId, token, expirationTime, email, first_name, last_name,phone_number,age, gender));
+      } catch (error) {
+        console.log('Something went wrong in your code', error)
+      }
       //props.navigation.navigate('App');
-      dispatch(authActions.authenticate(userId, token, expirationTime, email));
     };
 
     tryLogin();

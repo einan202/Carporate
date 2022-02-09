@@ -17,7 +17,23 @@ const initialState = {
     switch (action.type) {
       case SET_DRIVE:
         return {
-            userDrives: action.userDrives
+            userDrives: action.userDrives.sort((drive_a, drive_b)=> {
+              if (drive_a.date > drive_b.date) {
+                return -1;
+            }
+            if (drive_b.date > drive_a.date) {
+                return 1;
+            }
+            else{
+              if(drive_a.time > drive_b.time){
+                return -1;
+              }
+              if (drive_b.time > drive_a.time) {
+                return 1;
+            }
+            return 0;
+            }
+            })
         };
       case CREATE_DRIVE:
         const newDrive = new Drive(
@@ -33,17 +49,17 @@ const initialState = {
         );
         const tmp = (state.userDrives.concat(newDrive)).sort((drive_a, drive_b)=> {
           if (drive_a.date > drive_b.date) {
-            return 1;
+            return -1;
         }
         if (drive_b.date > drive_a.date) {
-            return -1;
+            return 1;
         }
         else{
           if(drive_a.time > drive_b.time){
-            return 1;
+            return -1;
           }
           if (drive_b.time > drive_a.time) {
-            return -1;
+            return 1;
         }
         return 0;
         }

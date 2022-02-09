@@ -4,7 +4,7 @@ import { View, Text, Button, Platform, StyleSheet, TouchableOpacity,Alert } from
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const DateTimeButton = props => {
-    const [date, setDate] = useState(new Date(1598051730000));
+    const [date, setDate] = useState(new Date('February 01, 2022 08:00:00'));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [dateField, setDateField] = useState('date field');
@@ -18,8 +18,48 @@ const DateTimeButton = props => {
         setDate(currentDate);
 
         let tempDate = new Date(currentDate);
-        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
+
+
+        let Date1 = (tempDate) => 
+        {
+            if (tempDate.getDate()<10){
+              return  `0${tempDate.getDate()}`
+            }
+            else {
+                return  tempDate.getDate()
+            }
+        }
+        let Month = (tempDate) => 
+        {
+            if (tempDate.getMonth()<10){
+              return  `0${tempDate.getMonth()+1}`
+            }
+            else {
+                return  tempDate.getMonth() + 1
+            }
+        }
+
+
+        let fDate = Date1(tempDate) + '/' + Month(tempDate)  + '/' + tempDate.getFullYear();
+        let Hours = (tempDate) => 
+        {
+            if (tempDate.getHours()<10){
+              return  `0${tempDate.getHours()}`
+            }
+            else {
+                return  tempDate.getHours()
+            }
+        }
+        let Minutes = (tempDate) => 
+        {
+            if (tempDate.getMinutes()<10){
+                return   `0${tempDate.getMinutes()}`
+            }
+            else {
+                return  tempDate.getMinutes()
+            }
+        }
+        let fTime = Hours(tempDate) + ':' + Minutes(tempDate);
 
         setDateField(fDate);
         setTimeField(fTime);

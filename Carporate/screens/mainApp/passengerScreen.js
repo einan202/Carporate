@@ -14,7 +14,8 @@ const passengerScreen = props => {
         <MainWindow 
           text="text for the textBox"
           buttonStr = "Search"
-          passangerOrDriver = "passanger">
+          passangerOrDriver = "passanger"
+          navigation = {props.navigation}>
           </MainWindow>
         </View>
       );

@@ -6,12 +6,14 @@ import AppLoading from 'expo-app-loading';
 import ReduxThunk from 'redux-thunk';
 import authReducer from './store/reducers/auth';
 import drivesReducer from './store/reducers/drives';
+import passangerReducer from './store/reducers/passanger';
 import AppNavigator from './navigation/AppNavigator';
 import * as Font from 'expo-font';
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  drives: drivesReducer
+  drives: drivesReducer,
+  passanger: passangerReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
