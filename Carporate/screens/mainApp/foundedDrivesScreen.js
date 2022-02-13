@@ -24,6 +24,29 @@ const foundedDrivesScreen = props => {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [error, setError] = useState();
     const dispatch = useDispatch();
+    const first_name = useSelector(state => state.auth.first_name);
+    const email = useSelector(state => state.auth.email);
+    const last_name = useSelector(state => state.auth.last_name);
+    const pushToken = useSelector(state => state.auth.pushToken);
+
+
+    const triggerNotificationHandler = (itemData) => {
+
+      fetch('https://exp.host/--/api/v2/push/send', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Accept-Encoding': 'gzip, deflate',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: itemData.item.driver.driverPushToken,
+          data: { driveData: itemData, passangerPushToken: pushToken, passangerFN: first_name, passangerLN: last_name, passangerEmail:email },
+          title: 'You received a request to join a drive',
+          body: `${first_name} ${last_name} want to join to your drive`,
+        }),
+      });
+    };
 
     if (error) {
         return (
@@ -51,9 +74,9 @@ const foundedDrivesScreen = props => {
         );
     }
 
-    const selectDrive = () => {
+    const selectDrive = (itemData) => {
         Alert.alert('Are you sure?','we will send to the driver a request',[
-          { text: 'Yes', onPress: () => console.log('Yes Pressed') },
+          { text: 'Yes', onPress: triggerNotificationHandler(itemData) },
           {text: 'No',
           onPress: () => console.log('No Pressed'),
           style: 'cancel'},
@@ -74,9 +97,9 @@ const foundedDrivesScreen = props => {
               time = {itemData.item.time}
               amount_of_people = {itemData.item.amount_of_people}
               deviation_time = {itemData.item.deviation_time}
-              driver = {itemData.item.driver}
+              driver = {itemData.item.driver.driverEmail}
               passangers = {itemData.item.passangers}
-              onSelect={() => selectDrive()}
+              onSelect={() => selectDrive(itemData)}
               moreDetails = {()=>{}}
               showButton = {
               <View style = {styles.buttonContainer}>

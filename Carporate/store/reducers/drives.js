@@ -3,6 +3,7 @@ import {
   DELETE_DRIVE,
   CREATE_DRIVE,
   UPDATE_DRIVE,
+  JOIN_DRIVE,
   SET_DRIVE
 } from '../actions/drives';
 import Drive from '../../models/drive';
@@ -45,6 +46,7 @@ const initialState = {
           action.driveData.amount_of_people,
           action.driveData.deviation_time,
           action.driveData.driver,
+          [],
           []
         );
         const tmp = (state.userDrives.concat(newDrive)).sort((drive_a, drive_b)=> {
@@ -70,6 +72,16 @@ const initialState = {
           
           
         };
+        case JOIN_DRIVE:
+          const driveKey =  action.driveData.id;
+          const passangers= action.driveData.passangers;
+          const passangersPushToken= action.driveData.passangersPushToken;
+          const objIndex = userDrives.findIndex((obj => obj.id === driveKey));
+          state.userDrives[objIndex].passangers = passangers;
+          state.userDrives[objIndex].passangersPushToken = passangersPushToken;
+          return {
+            userDrives: userDrives
+          };
     }
     return state;
   };

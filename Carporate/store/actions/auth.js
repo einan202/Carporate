@@ -21,7 +21,7 @@ const  isValidEmail = (testEmail) => {
   return is_valid_email;
 };
 
-export const authenticate = (userId, token, expiryTime, email, first_name, last_name, phone_number, age, gender) => {
+export const authenticate = (userId, token, expiryTime, email, first_name, last_name, phone_number, age, gender, pushToken) => {
   return dispatch => {
     dispatch(setLogoutTimer(expiryTime));
     dispatch({ type: AUTHENTICATE,
@@ -33,6 +33,7 @@ export const authenticate = (userId, token, expiryTime, email, first_name, last_
       phone_number: phone_number,
       age: age,
       gender: gender,
+      pushToken: pushToken
     });
   };
 };
@@ -44,7 +45,7 @@ export const createAccount = (userId, token, expiryTime, _email) => {
   };
 };
 
-export const detailsfl = (email, first_name, last_name, phone_number, age, gender) => {
+export const detailsfl = (email, first_name, last_name, phone_number, age, gender, pushToken) => {
   return dispatch => {
     dispatch({ type: DETAILSFILLING,
     email: email,
@@ -53,6 +54,7 @@ export const detailsfl = (email, first_name, last_name, phone_number, age, gende
     phone_number: phone_number,
     age: age,
     gender: gender,
+    pushToken: pushToken
     });
   };
 };
@@ -153,7 +155,7 @@ export const login = (email, password) => {
   };
 };
 
-export const detailsFilling = (email, first_name, last_name,phone_number, age, gender) => {
+export const detailsFilling = (email, first_name, last_name,phone_number, age, gender, pushToken) => {
   return async dispatch => {
     const response = await fetch('https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users.json', {
       method: 'POST',
@@ -166,15 +168,16 @@ export const detailsFilling = (email, first_name, last_name,phone_number, age, g
         last_name: last_name,
         phone_number: phone_number,
         age: age,
-        gender: gender
+        gender: gender,
+        pushToken: pushToken
       })
 
     });
 
   const resData = await response.json();
-  saveDetaillsToStorage(email, first_name, last_name,phone_number, age, gender);
+  saveDetaillsToStorage(email, first_name, last_name,phone_number, age, gender, pushToken);
   
-  dispatch(detailsfl(email, first_name, last_name, phone_number, age, gender));
+  dispatch(detailsfl(email, first_name, last_name, phone_number, age, gender, pushToken));
 };
 };
 
@@ -210,7 +213,7 @@ const saveDataToStorage = (token, userId, expirationDate, email) => {
   );
 };
 
-const saveDetaillsToStorage = (email, first_name, last_name, phone_number, age, gender) => {
+const saveDetaillsToStorage = (email, first_name, last_name, phone_number, age, gender, pushToken) => {
   AsyncStorage.setItem(
     'userDetaills',
     JSON.stringify({
@@ -219,7 +222,8 @@ const saveDetaillsToStorage = (email, first_name, last_name, phone_number, age, 
       last_name: last_name,
       phone_number: phone_number,
       age: age,
-      gender: gender
+      gender: gender,
+      pushToken: pushToken
     })
   );
 };

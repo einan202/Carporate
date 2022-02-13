@@ -14,7 +14,7 @@ export const searchDrives = (starting_point, destination, date, time, amount_of_
       for (const key in resData) {
         if(date === resData[key].date && resData[key].amount_of_people > 0 && resData[key].amount_of_people >= amount_of_people && 
           starting_point === resData[key].starting_point &&  destination === resData[key].destination
-          && email !== resData[key].driver){
+          && email !== resData[key].driver.driverEmail){
           foundedDrives.push(new Drive(
         key,
         resData[key].starting_point,
@@ -24,7 +24,8 @@ export const searchDrives = (starting_point, destination, date, time, amount_of_
         resData[key].amount_of_people,
         resData[key].deviation_time,
         resData[key].driver,
-        resData[key].passangers
+        resData[key].passangers,
+        resData[key].passangersPushToken
       ));
         }
     }

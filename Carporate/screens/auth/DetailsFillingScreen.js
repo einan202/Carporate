@@ -15,6 +15,8 @@ import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/auth';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
@@ -47,7 +49,7 @@ const DetailsFillingScreen = props => {
   const [error, setError] = useState();
   const dispatch = useDispatch();
   const email = useSelector(state => state.auth.email);
-  
+  const [pushToken, setPushToken] = useState();
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
@@ -56,7 +58,8 @@ const DetailsFillingScreen = props => {
           last_name: '',
           phone: '',
           age: '',
-          gender: ''
+          gender: '',
+          pushToken: pushToken
         },
         inputValidities: {
           email: true,
@@ -64,10 +67,38 @@ const DetailsFillingScreen = props => {
           last_name: false,
           phone: false,
           age: false,
-          gender: false
+          gender: false,
+          pushToken: true
         },
         formIsValid: false
       });
+
+      useEffect(() => {
+        Permissions.getAsync(Permissions.NOTIFICATIONS)
+          .then((statusObj) => {
+            if (statusObj.status !== 'granted') {
+              return Permissions.askAsync(Permissions.NOTIFICATIONS);
+            }
+            return statusObj;
+          })
+          .then((statusObj) => {
+            if (statusObj.status !== 'granted') {
+              Alert.alert('An Error Occurred!', 'We must have your permission to send you notifications', [{ text: 'Okay' }]);
+              return Permissions.askAsync(Permissions.NOTIFICATIONS);
+            }
+          })
+          .then(() => {
+            return Notifications.getExpoPushTokenAsync();
+          })
+          .then((response) => {
+            const token = response.data;
+            setPushToken(token);
+          })
+          .catch((err) => {
+            console.log(err);
+            return null;
+          });
+      }, []);
 
       useEffect(() => {
         if (error) {
@@ -82,7 +113,8 @@ const DetailsFillingScreen = props => {
           formState.inputValues.last_name,
           formState.inputValues.phone,
           formState.inputValues.age,
-          formState.inputValues.gender
+          formState.inputValues.gender,
+          formState.inputValues.pushToken
         );
         setError(null);
         setIsLoading(true);

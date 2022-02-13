@@ -10,7 +10,8 @@ const initialState = {
   last_name: null,
   phone_number: null,
   age: null,
-  gender: null
+  gender: null,
+  pushToken: null
 };
 
 export default (state = initialState, action) => {
@@ -26,6 +27,7 @@ export default (state = initialState, action) => {
         phone_number: action.phone_number,
         age: action.age,
         gender: action.gender,
+        pushToken: action.pushToken
       };
       case SET_DID_TRY_AL:
         return {
@@ -49,6 +51,7 @@ export default (state = initialState, action) => {
            phone_number: action.phone_number,
            age: action.age,
            gender: action.gender,
+           pushToken: action.pushToken,
           goToDettailsFelling: false
          };
     default:
