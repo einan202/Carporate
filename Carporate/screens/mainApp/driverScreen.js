@@ -11,8 +11,9 @@ const driverScreen = props => {
             text="text for the textBox"
             buttonStr = "Post the drive"
             passangerOrDriver = "driver"
-             ></MainWindow>
-      </View>
+            navigation = {props.navigation}>
+             </MainWindow>
+        </View>
     );
 };
 

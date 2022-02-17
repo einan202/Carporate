@@ -10,8 +10,7 @@ export const JOIN_DRIVE = 'JOIN_DRIVE';
 
 
 
-export const post_drive = (starting_point, destination, date, time, amount_of_people, deviation_time, email) => {
-  const pushToken = useSelector(state => state.auth.pushToken);
+export const post_drive = (starting_point, destination, date, time, amount_of_people, deviation_time, email, pushToken) => {
     return async dispatch => {
         const response = await fetch('https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives.json', {
           method: 'POST',

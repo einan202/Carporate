@@ -46,7 +46,8 @@ const MainWindow = props => {
     const [error, setError] = useState();
     const dispatch = useDispatch();
     const email = useSelector(state => state.auth.email);
-    
+    const pushToken = useSelector(state => state.auth.pushToken);
+
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
@@ -57,7 +58,8 @@ const MainWindow = props => {
           amount_of_people: '',
           deviation_time: '',
           deviationKm : '',
-          email: email
+          email: email,
+          pushToken: pushToken
         },
         inputValidities: {
           starting_point: false,
@@ -66,10 +68,24 @@ const MainWindow = props => {
           time: false,
           amount_of_people: false,
           deviation_time: false,
-          deviationKm: false
+          deviationKm: false,
+          email: true,
+          pushToken: true
         },
         formIsValid: false
       });
+
+      const inputChangeHandler = useCallback(
+        (inputIdentifier, inputValue, inputValidity) => {
+          dispatchFormState({
+            type: FORM_INPUT_UPDATE,
+            value: inputValue,
+            isValid: inputValidity,
+            input: inputIdentifier
+          });
+        },
+        [dispatchFormState]
+      );
 
       useEffect(() => {
         if (error) {
@@ -89,6 +105,7 @@ const MainWindow = props => {
           formState.inputValues.amount_of_people,
           formState.inputValues.deviation_time,
           email,
+          pushToken
         );
       }
       else {
@@ -109,23 +126,16 @@ const MainWindow = props => {
           if(props.passangerOrDriver === "passanger"){
             props.navigation.navigate('foundedDrivesScreen');
           }
+          else if(props.passangerOrDriver === "driver"){
+            props.navigation.navigate('Loyalty');
+          }
         } catch (err) {
           setError(err.message);
           setIsLoading(false);
         }
       };
 
-    const inputChangeHandler = useCallback(
-        (inputIdentifier, inputValue, inputValidity) => {
-          dispatchFormState({
-            type: FORM_INPUT_UPDATE,
-            value: inputValue,
-            isValid: inputValidity,
-            input: inputIdentifier
-          });
-        },
-        [dispatchFormState]
-      );
+
 
       const deviationArray =  props.passangerOrDriver === "driver" ?
       [
