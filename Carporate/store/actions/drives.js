@@ -92,7 +92,7 @@ export const fetchDrives = (email) => {
 export const joinDrive = (driveData,passangerEmail,pushToken) => {
   let passangers = driveData.passangers;
   let passangersPushToken = driveData.passangersPushToken;
-  const drivekey = driveData.key;
+  const drivekey = driveData.id;
   if(passangers){
     passangers.push(passangerEmail);
     passangersPushToken.push(pushToken)
@@ -103,7 +103,7 @@ export const joinDrive = (driveData,passangerEmail,pushToken) => {
   }
   return async dispatch => {
     const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${drivekey}.json`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },

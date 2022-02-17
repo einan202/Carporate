@@ -9,6 +9,16 @@ import drivesReducer from './store/reducers/drives';
 import passangerReducer from './store/reducers/passanger';
 import AppNavigator from './navigation/AppNavigator';
 import * as Font from 'expo-font';
+import * as Notifications from 'expo-notifications';
+
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true,
+    };
+  },
+});
 
 const rootReducer = combineReducers({
   auth: authReducer,

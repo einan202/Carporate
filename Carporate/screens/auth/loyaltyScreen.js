@@ -18,13 +18,7 @@ import DriveItem from '../../components/shop/DriveItem';
 import * as Notifications from 'expo-notifications';
 
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => {
-    return {
-      shouldShowAlert: true,
-    };
-  },
-});
+
 
 
 const loyaltyScreen = props => {
@@ -77,48 +71,25 @@ const loyaltyScreen = props => {
   useEffect(() => {
     const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(
       (response) => {
-        const content = response.notification.request.content;
-        const passangerFirstName = content.data.passangerFN;
-        const passangerLastName = content.data.passangerLN;
-        const passangerEmail = content.data.passangerLN;
-        const driveData = content.data.driveData.item;
-        const drivekey = driveData.id;
-        const pushToken = content.data.passangerPushToken;
-        if(content.title === 'You received a request to join a drive'){
-          Alert.alert('You received a request to join a drive',`${passangerFirstName} ${passangerLastName} asked to join your drive from ${driveData.starting_point} 
-            to ${driveData.destination} in ${driveData.date}, you still have ${driveData.amount_of_people} places. Do you accept?`
-          ,[
-            { text: 'Yes', onPress: triggerNotificationHandler(driveData,pushToken,'You have received permission to join the drive','',{},passangerEmail,drivekey) },
-            {text: 'No',
-            onPress: triggerNotificationHandler(driveData,pushToken,'We sorry','You do not have permission to join the drive',{},passangerEmail,drivekey),
-            style: 'cancel'},
-          ])
-        }
-        else if(content.title === 'You have received permission to join the drive'){
-          Alert.alert('You have received permission to join the drive',`${driveData.driver.driverEmail} accept you to join his drive from ${driveData.starting_point} to ${driveData.destination} in ${driveData.date}`
-        ,[
-          {text: 'OK',
-          onPress: () => {},
-          style: 'cancel'},
-        ])
-        }
-        else{
-          Alert.alert('We sorry',`You do not have permission to join the drive from ${driveData.starting_point} to ${driveData.destination} in ${driveData.date}. You can try another drive`
-        ,[
-          {text: 'OK',
-          onPress: () => {},
-          style: 'cancel'},
-        ])
-        } 
+         Notifications.scheduleNotificationAsync({
+          content: {
+            title:response.notification.request.content.title,
+            body: response.notification.request.content.body,
+            data: response.notification.request.content.data,
+          },
+          trigger: {
+            seconds: 1,
+       },
+     });
       }
     );
 
     const foregroundSubscription = Notifications.addNotificationReceivedListener(
       (response) => {
-        const content = response.notification.request.content;
+        const content = response.request.content;
         const passangerFirstName = content.data.passangerFN;
         const passangerLastName = content.data.passangerLN;
-        const passangerEmail = content.data.passangerLN;
+        const passangerEmail = content.data.passangerEmail;
         const driveData = content.data.driveData.item;
         const drivekey = driveData.id;
         const pushToken = content.data.passangerPushToken;
@@ -126,9 +97,9 @@ const loyaltyScreen = props => {
           Alert.alert('You received a request to join a drive',`${passangerFirstName} ${passangerLastName} asked to join your drive from ${driveData.starting_point} 
             to ${driveData.destination} in ${driveData.date}, you still have ${driveData.amount_of_people} places. Do you accept?`
           ,[
-            { text: 'Yes', onPress: triggerNotificationHandler(driveData,pushToken,'You have received permission to join the drive','',{},passangerEmail,drivekey) },
+            { text: 'Yes', onPress:() => triggerNotificationHandler(driveData,pushToken,'You have received permission to join the drive','',content.data,passangerEmail,drivekey) },
             {text: 'No',
-            onPress: triggerNotificationHandler(driveData,pushToken,'We sorry','You do not have permission to join the drive',{},passangerEmail,drivekey),
+            onPress:() => triggerNotificationHandler(driveData,pushToken,'We sorry','You do not have permission to join the drive',content.data,passangerEmail,drivekey),
             style: 'cancel'},
           ])
         }
@@ -153,10 +124,7 @@ const loyaltyScreen = props => {
       }
     );
 
-    return () => {
-      backgroundSubscription.remove();
-      foregroundSubscription.remove();
-    };
+    
   }, []);
 
 
@@ -225,17 +193,6 @@ const loyaltyScreen = props => {
     );
   }
 
-  if (!isLoading && drives.length === 0) {
-    return (
-      <View style={styles.centered}>
-        {credentials}
-        <Text>No drives found</Text>
-      </View>
-    );
-  }
-
-  
-
 
 
     return (
@@ -258,14 +215,13 @@ const loyaltyScreen = props => {
               passangers = {itemData.item.passangers}
               onSelect={() => selectDrive()}
               moreDetails = {()=>{}}
-               /* <View style = {styles.buttonContainer}>
-              <Button
-                 color={Colors.primary}
-                 title="choose this drive"
-                 onPress={props.onSelect}
-                 style = {styles.button}/>
-          </View>*/
+              
           />)}
+          ListEmptyComponent = {
+            <View style={styles.centered}>
+              <Text>No drives found</Text>
+            </View>
+        }
         />
     )
   };

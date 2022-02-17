@@ -76,7 +76,7 @@ const foundedDrivesScreen = props => {
 
     const selectDrive = (itemData) => {
         Alert.alert('Are you sure?','we will send to the driver a request',[
-          { text: 'Yes', onPress: triggerNotificationHandler(itemData) },
+          { text: 'Yes', onPress: () => triggerNotificationHandler(itemData) },
           {text: 'No',
           onPress: () => console.log('No Pressed'),
           style: 'cancel'},
@@ -106,7 +106,7 @@ const foundedDrivesScreen = props => {
               <Button
                  color = {Colors.primary}
                  title = "choose this drive"
-                 onPress = {() => selectDrive()}
+                 onPress = {() => selectDrive(itemData)}
                  style = {styles.button}/>
                 </View>}
           />)}
