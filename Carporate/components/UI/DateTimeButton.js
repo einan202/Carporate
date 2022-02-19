@@ -4,7 +4,7 @@ import { View, Text, Button, Platform, StyleSheet, TouchableOpacity,Alert } from
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const DateTimeButton = props => {
-    const [date, setDate] = useState(new Date('February 01, 2022 08:00:00'));
+    const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [dateField, setDateField] = useState('date field');
