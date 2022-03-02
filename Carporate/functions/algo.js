@@ -1,6 +1,5 @@
 import * as googleAPI from './googleAPI.js'
 
-<<<<<<< HEAD
 /*
   Input: 
     1. location = Passenger's current location (should be LatLng)
@@ -36,25 +35,6 @@ export async function algo(location, oldDir, pickUpRangeFilter = 1){
   //let passengerDriveDuration = googleAPI.getSubRouteDuration(newDir, pickUpPoint, undefined);
 
   return {newDir, pickUpPoint, devationTime}
-=======
-export async function algo(placeId, oldDir){
-  let {lat, lng} = await googleAPI.getLatLng(placeId);
-  let nearbyPlaces = await googleAPI.getNearbySearch(lat, lng, `transit_station`);
-
-  let pickUpPointsById = googleAPI.getNearbySearchPlacesId(nearbyPlaces);
-  let filteredPickUpPointsById = [];
-  const x = 4;
-  for (let i = 0; i < 5 && i < pickUpPointsById.length; i++){
-    filteredPickUpPointsById.push(pickUpPointsById[i * x]);
-  }
-  //filteredPickUpPointsById = pickUpPointsById.slice(0, 5);
-  console.log('PickUp Points', filteredPickUpPointsById);
-  let output = await optimalDir(filteredPickUpPointsById, oldDir);
-
-  //console.log('Optimal Route Points', output.optDir.geocoded_waypoints);
-
-  return {...output, filteredPickUpPointsById}
->>>>>>> d221a02d290e07b4b9608d314ea030991db18f13
 }
 
 /* ***************************************************************************************** */
@@ -76,12 +56,8 @@ async function optimalDir(pickUpPoints, oldDir, depature_time = new Date()) {
     )
   ));
   let index = findShortestDirIndex(dirs);
-<<<<<<< HEAD
  
   let output = {optDir: dirs[index], pickUpPoint: await googleAPI.createPlaceObj(pickUpPoints[index])};
-=======
-  let output = {optDir: dirs[index], pickUpPoint: pickUpPoints[index]};
->>>>>>> d221a02d290e07b4b9608d314ea030991db18f13
   return output;
 
   /* ******************************************************************************** */
@@ -104,11 +80,7 @@ async function optimalDir(pickUpPoints, oldDir, depature_time = new Date()) {
       return index;
   }
 
-<<<<<<< HEAD
   
 
 }
 
-=======
-}
->>>>>>> d221a02d290e07b4b9608d314ea030991db18f13

@@ -44,7 +44,6 @@ export function getRouteDuration(route){
   return duration;
 }
 
-<<<<<<< HEAD
 // NotCompleted !!!
 export function getSubRouteDuration(dir, originPlaceId, destinationPlaceId){
   let routeLegs = route.legs;
@@ -66,8 +65,6 @@ export function getSubRouteDuration(dir, originPlaceId, destinationPlaceId){
   return subRouteDuration;
 }
 
-=======
->>>>>>> d221a02d290e07b4b9608d314ea030991db18f13
 export function getWayPointsInOrder(dir) {
   // Get Route Points by addresses
   let legs = dir.routes[0].legs
@@ -185,7 +182,6 @@ export async function getLatLng(placeId){
     console.log(error);
   }
 }
-<<<<<<< HEAD
 
 export async function createPlaceObj (place_id){
   const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?place_id=${place_id}&language=iw&key=${KEY}`);
@@ -202,5 +198,3 @@ export async function createPlaceObj (place_id){
   return placeObj;
 }
 
-=======
->>>>>>> d221a02d290e07b4b9608d314ea030991db18f13

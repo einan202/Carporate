@@ -21,6 +21,7 @@ const DropDownButton = props => {
                 items={items}
                 setOpen={setOpen}
                 setValue={setValue}
+                setValue={setValue}
                 setItems={setItems}
                 onChangeValue={(value) => {
                     onInputChange(id, value, true)
