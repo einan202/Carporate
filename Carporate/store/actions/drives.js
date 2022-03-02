@@ -73,7 +73,6 @@ export const fetchDrives = (email) => {
         throw new Error('Something went wrong!');
       }
       const resData = await response.json();
-      console.log(resData)
       const loadedDrives = [];
       for (const key in resData) {
           if(email === resData[key].driver.driverEmail || (resData[key].passangers && (resData[key].passangers).includes(email))){
@@ -91,6 +90,7 @@ export const fetchDrives = (email) => {
           resData[key].passangersPickUpLocations,
           resData[key].dir
         ));
+        console.log('********************************\n', resData[key]);
           }
       }
       dispatch({

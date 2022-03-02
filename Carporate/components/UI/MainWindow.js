@@ -223,7 +223,7 @@ const MainWindow = props => {
                 array = {deviationArray}
                 placeHolder = {props.passangerOrDriver === "driver" ? "deviation time" : "km deviation"}
                 id = {props.passangerOrDriver === "driver" ? "deviation_time" : "deviationKm"}
-                onInputChange ={inputChangeHandler}
+                onInputChange = {inputChangeHandler}
             />
            
             </View>
