@@ -33,7 +33,8 @@ const mainNavigator = createStackNavigator();
 
 const driver_passanger_navigator = ({navigation}) => {
   return <appTabNavigator.Navigator screenOptions={ { headerStyle: {
-    backgroundColor: Platform.OS === 'android' ? Colors.primary : ''
+    backgroundColor: Platform.OS === 'android' ? Colors.primary : '',
+    height: 70
   },
   headerTitleAlign: 'center',
   headerTitleStyle: {

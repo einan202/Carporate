@@ -92,7 +92,13 @@ const DetailsFillingScreen = props => {
           })
           .then((response) => {
             const token = response.data;
-            setPushToken(token);
+            dispatchFormState({
+              type: FORM_INPUT_UPDATE,
+              value: token,
+              isValid: true,
+              input: 'pushToken'
+            });
+            //setPushToken(token);
           })
           .catch((err) => {
             console.log(err);

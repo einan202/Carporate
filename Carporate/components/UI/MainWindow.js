@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useReducer, useCallback } from "react";
 import { View, Text, StyleSheet, Button, Alert, ScrollView } from "react-native";
 
-import Input from "./Input";
-import TextCard from "./TextCard";
-import TitleText from "./TitleText";
 import DateTimeButton from "./DateTimeButton";
 import DropDownButton from "./DropDownButton";
 import FiltersScreen from "./FiltersScreen";
@@ -11,7 +8,7 @@ import { useDispatch,useSelector } from 'react-redux';
 import * as drivesActions from '../../store/actions/drives';
 import Colors from '../../constants/Colors';
 import * as passangerActions from '../../store/actions/passanger';
-import { navigationOptions } from "../../screens/auth/AuthScreen";
+import AutoCompleteSearch from "../../functions/AutoCompleteSearch";
 
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
@@ -47,17 +44,37 @@ const MainWindow = props => {
     const dispatch = useDispatch();
     const email = useSelector(state => state.auth.email);
     const pushToken = useSelector(state => state.auth.pushToken);
+    const [start_point_place, setStart_point_place] = useState(
+      address = undefined,
+      place_id = undefined,
+      location = {
+        lat: undefined, 
+        lng: undefined
+      }
+    );
+
+    const [destination, setDestination] = useState(
+      address = undefined,
+      place_id = undefined,
+      location = {
+        lat: undefined, 
+        lng: undefined
+      }
+    );
+
+
+
 
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
-          starting_point: '',
-          destination: '',
-          date: '',
-          time: '',
-          amount_of_people: '',
-          deviation_time: '',
-          deviationKm : '',
+          starting_point: start_point_place,
+          destination: destination,
+          date: undefined,
+          time: undefined,
+          amount_of_people: undefined,
+          deviation_time: undefined,
+          deviationKm : undefined,
           email: email,
           pushToken: pushToken
         },
@@ -98,8 +115,8 @@ const MainWindow = props => {
         if(props.passangerOrDriver === "driver")
         {
           action = drivesActions.post_drive(
-          formState.inputValues.starting_point,
-          formState.inputValues.destination,
+          start_point_place,
+          destination,
           formState.inputValues.date,
           formState.inputValues.time,
           formState.inputValues.amount_of_people,
@@ -110,8 +127,8 @@ const MainWindow = props => {
       }
       else {
           action = passangerActions.searchDrives(
-          formState.inputValues.starting_point,
-          formState.inputValues.destination,
+          start_point_place,
+          destination,
           formState.inputValues.date,
           formState.inputValues.time,
           formState.inputValues.amount_of_people,
@@ -153,46 +170,42 @@ const MainWindow = props => {
       { label: '30 km', value: '30' },
   ];
 
+ 
+
     return (
-      <ScrollView>
+      
         <View style={styles.screen}>
-            <View>
+            {/* <View>
                 <TitleText style={styles.textBoxHeader}>Explanation:</TitleText>
             </View>
             <View style={styles.textBox}>
                 <TextCard text={props.text}></TextCard>
+            </View> */}
+            <View style = {{ padding: 30, alignItems: 'center'}}>
+            <AutoCompleteSearch
+              placeholder="starting point"
+              setPlace = {setStart_point_place}
+              zIndex = {40}
+               
+            />
             </View>
-            <Input style={styles.textField}
-                blurOnSubmit
-                placeholder="starting point"
-                underlineColorAndroid="transparent"
-                id="starting_point"
-                keyboardType="default"
-                required
-                errorText="Please enter a valid starting point."
-                onInputChange={inputChangeHandler}
-                initialValue=""
+            <View style = {{ padding: 30, alignItems: 'center'}}>
+            <AutoCompleteSearch
+              placeholder="destination"
+              setPlace = {setDestination}
+              zIndex = {30}
             />
-            <Input style={styles.textField}
-                blurOnSubmit
-                placeholder="destination"
-                underlineColorAndroid="transparent"
-                id="destination"
-                keyboardType="default"
-                required
-                errorText="Please enter a valid destination."
-                onInputChange={inputChangeHandler}
-                initialValue=""
-            />
-            <View>
+            </View>
+            <View style = {{marginTop: 0}}>
                 <Text>
                     <DateTimeButton
                     onInputChange={inputChangeHandler}
                     />
                 </Text>
             </View>
-            <DropDownButton
-                // style={{ zIndex: 10 }}
+            <View style = {styles.dropDownStyle}>
+              <DropDownButton
+                style={{ zIndex: 20, }}
                 array={[
                     { label: '1', value: '1' },
                     { label: '2', value: '2' },
@@ -202,14 +215,18 @@ const MainWindow = props => {
                 placeHolder="amount of people"
                 id = "amount_of_people"
                 onInputChange = {inputChangeHandler}
-            />
+              />
+            
+            
             <DropDownButton
-                // style={{ zIndex: 9 }}
+                style={{ zIndex: 10,  }}
                 array = {deviationArray}
-                placeHolder = {props.passangerOrDriver === "driver" ? "deviation time" : "kilometrs deviation"}
+                placeHolder = {props.passangerOrDriver === "driver" ? "deviation time" : "km deviation"}
                 id = {props.passangerOrDriver === "driver" ? "deviation_time" : "deviationKm"}
                 onInputChange ={inputChangeHandler}
             />
+           
+            </View>
             
             <View style = {styles.filtersContainer}>
                 <FiltersScreen />
@@ -223,7 +240,7 @@ const MainWindow = props => {
             </View>
             
           </View>
-        </ScrollView>
+        
     );
 };
 
@@ -231,7 +248,8 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         padding: 10,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 30
     },
     textBoxHeader: {
         margin: 10
@@ -246,9 +264,16 @@ const styles = StyleSheet.create({
         margin: 10
     },
     filtersContainer : {
-        margin: 10,
-        flex: 1
+        margin: 20,
+        flex: 1,
 
+    },
+    dropDownStyle: {
+      flexDirection: 'row',
+      width: 500,
+      maxWidth: "90%",
+      marginTop: 20
+      
     }
 });
 

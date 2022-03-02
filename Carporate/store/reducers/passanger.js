@@ -13,17 +13,17 @@ import {
           case SEARCH_DRIVE:
             return {
                 foundedDrives: action.foundedDrives.sort((drive_a, drive_b)=> {
-                    if (drive_a.date > drive_b.date) {
+                    if (drive_a.old_drive.date > drive_b.old_drive.date) {
                       return -1;
                   }
-                  if (drive_b.date > drive_a.date) {
+                  if (drive_b.old_drive.date > drive_a.old_drive.date) {
                       return 1;
                   }
                   else{
-                    if(drive_a.time > drive_b.time){
+                    if(drive_a.old_drive.time > drive_b.old_drive.time){
                       return -1;
                     }
-                    if (drive_b.time > drive_a.time) {
+                    if (drive_b.old_drive.time > drive_a.old_drive.time) {
                       return 1;
                   }
                   return 0;

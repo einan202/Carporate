@@ -31,7 +31,7 @@ const foundedDrivesScreen = props => {
 
 
     const triggerNotificationHandler = (itemData) => {
-
+      
       fetch('https://exp.host/--/api/v2/push/send', {
         method: 'POST',
         headers: {
@@ -40,12 +40,14 @@ const foundedDrivesScreen = props => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          to: itemData.item.driver.driverPushToken,
-          data: { driveData: itemData, passangerPushToken: pushToken, passangerFN: first_name, passangerLN: last_name, passangerEmail:email },
+          to: itemData.item.old_drive.driver.driverPushToken,
+          data: { driveData: itemData.item.old_drive, passangerPushToken: pushToken, passangerFN: first_name, passangerLN: last_name, passangerEmail:email, newDriveInformation: itemData.item.newDriveInformation },
           title: 'You received a request to join a drive',
           body: `${first_name} ${last_name} want to join to your drive`,
+          priority: 'high'
         }),
       });
+      
     };
 
     if (error) {
@@ -88,27 +90,28 @@ const foundedDrivesScreen = props => {
           ListHeaderComponent={<Text style = {{textAlign:'center', fontSize:16, fontFamily: 'open-sans-bold'}}>These are the drives we found for you </Text>}
           refreshing={isRefreshing}
           data={foundedDrives}
-          keyExtractor = {item => item.id}
+          keyExtractor = {item => item.old_drive.id}
           renderItem = {itemData =>
           (<DriveItem
-              starting_point = {itemData.item.starting_point}
-              destination = {itemData.item.destination}
-              date = {itemData.item.date}
-              time = {itemData.item.time}
-              amount_of_people = {itemData.item.amount_of_people}
-              deviation_time = {itemData.item.deviation_time}
-              driver = {itemData.item.driver.driverEmail}
-              passangers = {itemData.item.passangers}
+              starting_point = {itemData.item.old_drive.starting_point.address}
+              destination = {itemData.item.old_drive.destination.address}
+              date = {itemData.item.old_drive.date}
+              time = {itemData.item.old_drive.time}
+              amount_of_people = {itemData.item.old_drive.amount_of_people}
+              deviation_time = {itemData.item.old_drive.deviation_time}
+              driver = {itemData.item.old_drive.driver.driverEmail}
+              passangers = {itemData.item.old_drive.passangers}
               onSelect={() => selectDrive(itemData)}
               moreDetails = {()=>{}}
               showButton = {
-              <View style = {styles.buttonContainer}>
-              <Button
-                 color = {Colors.primary}
-                 title = "choose this drive"
-                 onPress = {() => selectDrive(itemData)}
-                 style = {styles.button}/>
+                <View style = {styles.buttonContainer}>
+                  <Button
+                  color = {Colors.primary}
+                  title = "choose this drive"
+                  onPress = {() => selectDrive(itemData)}
+                  style = {styles.button}/>
                 </View>}
+              newDriveInformation = {itemData.item.newDriveInformation}
           />)}
         />
     );

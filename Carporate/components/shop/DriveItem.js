@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import Colors from '../../constants/Colors';
+import { useSelector} from 'react-redux';
 
 
 import Card from '../UI/Card';
@@ -20,6 +21,7 @@ import CollapseView from '../UI/CollapseView';
 
 const DriveItem = props => {
   let TouchableCmp = TouchableOpacity;
+  const email = useSelector(state => state.auth.email);
 
   if (Platform.OS === 'android' && Platform.Version >= 21) {
     TouchableCmp = TouchableNativeFeedback;
@@ -45,10 +47,9 @@ const DriveItem = props => {
     </View>;
     
   
-
   return (
     <Card style={{
-      height: (props.showButton)?  160 : 120 ,
+      height: (props.showButton)?  180 : 120 ,
       margin: 20
     }}>
        
@@ -56,7 +57,7 @@ const DriveItem = props => {
       <Text style={styles.text}> {props.starting_point} {'-->'} {props.destination}</Text>
         <Text style={styles.text}> {props.date} {'at'} {props.time}  </Text>
         <Text style={styles.text}>  {'available spaces:'} {props.amount_of_people}  </Text>
-        <Text style={styles.text}>  {'the driver is:'} {props.driver}  </Text>
+        <Text style={styles.text}>  {props.driver === email ? 'You are the driver' : `the driver is: ${props.driver}`}  </Text>
       </View>
       {props.showButton}
       <Modal
@@ -74,9 +75,12 @@ const DriveItem = props => {
             }}>
               <View style={styles.touchable}>
               <Text style={[styles.text, {fontSize: 20}]}> {props.starting_point} {'-->'} {props.destination}</Text>
+              {props.newDriveInformation ?  
+              <Text style={[styles.text, {fontSize: 20}]}> {'The pick up address is:\n'} {props.newDriveInformation.pickUpPoint.address}</Text> : <Text></Text>
+              }
               <Text style={[styles.text, {fontSize: 20}]}> {props.date} {'at'} {props.time}  </Text>
-              <Text style={[styles.text, {fontSize: 20}]}>  {'available spaces:'} {props.amount_of_people}  </Text>
-              <Text style={[styles.text, {fontSize: 20}]}>  {'the driver is:'} {props.driver}  </Text>
+              <Text style={[styles.text, {fontSize: 20}]}> {'available spaces:'} {props.amount_of_people}  </Text>
+              <Text style={[styles.text, {fontSize: 20}]}> {props.driver === email ? 'You are the driver' : `the driver is: ${props.driver}`}  </Text>
               </View>
               {passangersText}
               <View >

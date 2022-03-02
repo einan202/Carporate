@@ -14,7 +14,7 @@ const DropDownButton = props => {
     return (
         <View style={styles.container}>
             <DropDownPicker
-                // style={{ ...styles.picker, ...props.style }}
+                style={{ ...styles.picker, ...props.style }}
                 placeholder={props.placeHolder}
                 open={open}
                 value={value}
@@ -26,6 +26,8 @@ const DropDownButton = props => {
                 onChangeValue={(value) => {
                     onInputChange(id, value, true)
                   }}
+                dropDownDirection="BOTTOM"
+                
             />
         </View>
     );
@@ -33,16 +35,20 @@ const DropDownButton = props => {
 
 const styles = StyleSheet.create({
     container: {
-        minHeight: 70,
-        justifyContent: 'center',
-        width: 240,
+        flexDirection: 'row',
+        width: 150,
+        marginHorizontal: 13,
+        
+        
+        
     },
     picker: {
         borderColor: 'grey',
         borderWidth: 1,
-        paddingVertical: 5,
-        paddingHorizontal: 15,
-        borderRadius: 10
+        borderRadius: 10,
+        width: 150,
+
+        
     }
 });
 

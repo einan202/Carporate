@@ -47,7 +47,9 @@ const initialState = {
           action.driveData.deviation_time,
           action.driveData.driver,
           [],
-          []
+          [],
+          [],
+          action.driveData.dir
         );
         const tmp = (state.userDrives.concat(newDrive)).sort((drive_a, drive_b)=> {
           if (drive_a.date > drive_b.date) {
@@ -76,9 +78,17 @@ const initialState = {
           const driveKey =  action.driveData.id;
           const passangers= action.driveData.passangers;
           const passangersPushToken= action.driveData.passangersPushToken;
+          const passangersPickUpLocations = action.driveData.passangersPickUpLocations;
+          const amount_of_people =  action.driveData.amount_of_people;
+          const deviation_time = action.driveData.deviation_time;
+          const dir = action.driveData.dir;
           const objIndex = userDrives.findIndex((obj => obj.id === driveKey));
           state.userDrives[objIndex].passangers = passangers;
           state.userDrives[objIndex].passangersPushToken = passangersPushToken;
+          state.userDrives[objIndex].passangersPickUpLocations = passangersPickUpLocations;
+          state.userDrives[objIndex].amount_of_people = amount_of_people;
+          state.userDrives[objIndex].deviation_time = deviation_time;
+          state.userDrives[objIndex].dir = dir;
           return {
             userDrives: userDrives
           };
