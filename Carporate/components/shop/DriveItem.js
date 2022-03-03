@@ -14,6 +14,7 @@ import {
 import { FlatList } from 'react-native-gesture-handler';
 import Colors from '../../constants/Colors';
 import { useSelector} from 'react-redux';
+import {showDirectionInMaps} from '../../functions/googleAPI';
 
 
 import Card from '../UI/Card';
@@ -49,12 +50,12 @@ const DriveItem = props => {
   
   return (
     <Card style={{
-      height: (props.showButton)?  250 : 120 ,
+      height: (props.showButton)?  250 : 250 ,
       margin: 20
     }}>
        
       <View style={styles.touchable}>
-      <Text style={styles.text}> {props.starting_point} {'-->'} {props.destination}</Text>
+      <Text style={styles.text}> {props.starting_point.address} {'-->'} {props.destination.address}</Text>
         <Text style={styles.text}> {props.date} {'at'} {props.time}  </Text>
         <Text style={styles.text}>  {'available spaces:'} {props.amount_of_people}  </Text>
         <Text style={styles.text}>  {props.driver === email ? 'You are the driver' : `the driver is: ${props.driver}`}  </Text>
@@ -74,7 +75,7 @@ const DriveItem = props => {
                margin: 20,
             }}>
               <View style={styles.touchable}>
-              <Text style={[styles.text, {fontSize: 20}]}> {props.starting_point} {'-->'} {props.destination}</Text>
+              <Text style={[styles.text, {fontSize: 20}]}> {props.starting_point.address} {'-->'} {props.destination.address}</Text>
               {props.newDriveInformation ?  
               <Text style={[styles.text, {fontSize: 20}]}> {'The pick up address is:\n'} {props.newDriveInformation.pickUpPoint.address}</Text> : <Text></Text>
               }
@@ -83,6 +84,13 @@ const DriveItem = props => {
               <Text style={[styles.text, {fontSize: 20}]}> {props.driver === email ? 'You are the driver' : `the driver is: ${props.driver}`}  </Text>
               </View>
               {passangersText}
+              {props.map === true ? 
+              <Pressable
+              onPress={() => showDirectionInMaps( props.dir)}
+              style = {{marginBottom: 0}}
+              >
+              <Text style={[styles.text, {fontSize: 20, marginBottom:0}]}>Press here to show the ride on map</Text>
+              </Pressable> : <Text></Text>}
               <View >
               <Pressable
               onPress={() => setModalVisible(!modalVisible)}

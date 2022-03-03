@@ -17,16 +17,16 @@ import * as googleAPI from './googleAPI.js'
 export async function algo(location, oldDir, pickUpRangeFilter = 1){
   let {lat, lng} = location;
   let nearbyPlaces = await googleAPI.getNearbySearch(lat, lng, `transit_station`);
-  let pickUpPointsById = googleAPI.getNearbySearchPlacesId(nearbyPlaces);
-  let filteredPickUpPointsById = [];
+  let pickUpPoints = googleAPI.getNearbySearchPlacesDetails(nearbyPlaces);
+  let filteredPickUpPoints = [];
   
-  for (let i = 0; i < 5 && i < pickUpPointsById.length; i++){
-    let tmpPickUpPoint = pickUpPointsById[i * pickUpRangeFilter];
-    tmpPickUpPoint = tmpPickUpPoint === undefined ? pickUpPointsById[pickUpPointsById.length - 1] : tmpPickUpPoint ;
-    filteredPickUpPointsById.push(tmpPickUpPoint);
+  for (let i = 0; i < 5 && i < pickUpPoints.length; i++){
+    let tmpPickUpPoint = pickUpPoints[i * pickUpRangeFilter];
+    tmpPickUpPoint = tmpPickUpPoint === undefined ? pickUpPoints[pickUpPoints.length - 1] : tmpPickUpPoint ;
+    filteredPickUpPoints.push(tmpPickUpPoint);
   }
   
-  let {optDir: newDir, pickUpPoint} = await optimalDir(filteredPickUpPointsById, oldDir);
+  let {optDir: newDir, pickUpPoint} = await optimalDir(filteredPickUpPoints, oldDir);
 
   let oldDirDuration = googleAPI.getRouteDuration(googleAPI.getRoute(oldDir));
   let newDirDuration = googleAPI.getRouteDuration(googleAPI.getRoute(newDir));
@@ -41,11 +41,10 @@ export async function algo(location, oldDir, pickUpRangeFilter = 1){
 
 async function optimalDir(pickUpPoints, oldDir, depature_time = new Date()) {
   // Set Params for Directions Request
-  let points = googleAPI.getWayPointsInOrder(oldDir);
-  let pointsById = points.map(point => point.place_id);
-  let origin = pointsById[0]
-  let destination = pointsById[pointsById.length-1];
-  let waypoints = pointsById.slice(1, pointsById.length-1);
+  let points = googleAPI.getRoutePointsInOrder(oldDir);
+  let origin = points[0]
+  let destination = points[points.length-1];
+  let waypoints = points.slice(1, points.length-1);
   // Get Directions for each potential point
   let dirs = await Promise.all(pickUpPoints.map(async currPickUpPoint => 
     await googleAPI.getDirections(
@@ -57,7 +56,7 @@ async function optimalDir(pickUpPoints, oldDir, depature_time = new Date()) {
   ));
   let index = findShortestDirIndex(dirs);
  
-  let output = {optDir: dirs[index], pickUpPoint: await googleAPI.createPlaceObj(pickUpPoints[index])};
+  let output = {optDir: dirs[index], pickUpPoint: pickUpPoints[index]};
   return output;
 
   /* ******************************************************************************** */

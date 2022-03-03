@@ -209,8 +209,8 @@ const loyaltyScreen = props => {
           keyExtractor = {item => item.id}
           renderItem = {itemData =>
           (<DriveItem
-              starting_point = {itemData.item.starting_point.address}
-              destination = {itemData.item.destination.address}
+              starting_point = {itemData.item.starting_point}
+              destination = {itemData.item.destination}
               date = {itemData.item.date}
               time = {itemData.item.time}
               amount_of_people = {itemData.item.amount_of_people}
@@ -219,7 +219,9 @@ const loyaltyScreen = props => {
               passangers = {itemData.item.passangers}
               onSelect={() => selectDrive()}
               moreDetails = {()=>{}}
-              
+              map = {true}
+              waypoints = {itemData.item.dir ? itemData.item.dir.geocoded_waypoints : undefined}
+              dir = {itemData.item.dir}
           />)}
           ListEmptyComponent = {
             <View style={styles.centered}>

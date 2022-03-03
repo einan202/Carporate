@@ -1,3 +1,4 @@
+import * as Linking from 'expo-linking';
 const KEY = 'AIzaSyAxYot8Bu7ZdNcaY1tPyHcJUXISKs4V9K8';
 const config = {
   method: 'GET',
@@ -5,16 +6,20 @@ const config = {
 };
 
 export async function getDirections(origin, destination, depature_time = undefined, waypoints = undefined){
+  let waypointsById = waypoints === undefined ? undefined : waypoints.map(wayPoint => wayPoint.place_id);
+  let originById = origin.place_id;
+  let destinationById = destination.place_id;
   let url = `https://maps.googleapis.com/maps/api/directions/json`+
-  `?origin=place_id:${origin}`+
-  `&destination=place_id:${destination}`+
+  `?origin=place_id:${originById}`+
+  `&destination=place_id:${destinationById}`+
   `&key=${KEY}`+
   `&alternatives=false`+
   `&language=iw`+
   `&region=il`+
   `&units=metric`;
   url = depature_time === undefined ? url : (url + `&depature_time=${depature_time}`);
-  url = waypoints === undefined ? url : (url + '&waypoints=optimize:true|place_id:'+waypoints.join('|place_id:')); 
+  url = waypoints === undefined ? url : (url + '&waypoints=optimize:true|place_id:'+waypointsById.join('|place_id:')); 
+  console.log("googleAPI line 21 ",url);
   try {
     let response = await fetch(url, config);
     let data = await response.json();
@@ -47,7 +52,7 @@ export function getRouteDuration(route){
 // NotCompleted !!!
 export function getSubRouteDuration(dir, originPlaceId, destinationPlaceId){
   let routeLegs = route.legs;
-  let routeWayPoints = getWayPointsInOrder(dir);
+  let routeWayPoints = getRoutePointsInOrder(dir);
   let originIndex = 0, destinationIndex = routeWayPoints.length - 1;
   for (let i = 0; i < routeWayPoints.length; i++){
     let currWayPoint = routeWayPoints[i];
@@ -65,7 +70,7 @@ export function getSubRouteDuration(dir, originPlaceId, destinationPlaceId){
   return subRouteDuration;
 }
 
-export function getWayPointsInOrder(dir) {
+export function getRoutePointsInOrder(dir) {
   // Get Route Points by addresses
   let legs = dir.routes[0].legs
   let numOfPoints = legs.length + 1;
@@ -196,5 +201,31 @@ export async function createPlaceObj (place_id){
 						}}
   
   return placeObj;
+}
+
+export function showDirectionInMaps(dir){
+  /*let url = 'https://www.google.com/maps/dir/?api=1&';
+  let originLatLng = `origin=${origin.location.lat},${origin.location.lng}&`;
+  let destinationLatLng = `destination=${destination.location.lat},${destination.location.lng}&`
+  let travelMode = `travelmode=driving`;
+  url = url + originLatLng + destinationLatLng + travelMode ;
+  if(wayPoints !== undefined){
+    wayPoints = wayPoints.slice(1, wayPoints.length-1);
+    let waypointsByLatLng = wayPoints.map(waypoint => getLatLng(waypoint));
+    waypointsByLatLng = waypointsByLatLng.map(waypoint =>`${waypoint.lat},${waypoint.lng}`);
+    url = url + '&waypoints='+waypointsByLatLng.join('|');
+  }*/
+  let url = 'https://www.google.com/maps/dir/?api=1&';
+  let routesPointsByOrder = getRoutePointsInOrder(dir);
+  let origin = `origin=${routesPointsByOrder[0].location.lat},${routesPointsByOrder[0].location.lng}&`;
+  let destination = `destination=${routesPointsByOrder[routesPointsByOrder.length - 1].location.lat},${routesPointsByOrder[routesPointsByOrder.length - 1].location.lng}&`
+  let travelMode = `travelmode=driving`;
+  url = url + origin + destination + travelMode ;
+  let waypoints = routesPointsByOrder.slice(1, routesPointsByOrder.length-1);
+  if(waypoints.length > 0){
+    waypoints = waypoints.map(waypoint =>`${waypoint.location.lat},${waypoint.location.lng}`);
+    url = url + '&waypoints='+waypoints.join('|');
+  }
+  Linking.openURL(url);
 }
 

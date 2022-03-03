@@ -23,7 +23,7 @@ const  isValidEmail = (testEmail) => {
 
 export const authenticate = (userId, token, expiryTime, email, first_name, last_name, phone_number, age, gender, pushToken) => {
   return dispatch => {
-    dispatch(setLogoutTimer(expiryTime));
+    //dispatch(setLogoutTimer(expiryTime));
     dispatch({ type: AUTHENTICATE,
       userId: userId,
       token: token,
@@ -40,7 +40,7 @@ export const authenticate = (userId, token, expiryTime, email, first_name, last_
 
 export const createAccount = (userId, token, expiryTime, _email) => {
   return dispatch => {
-    dispatch(setLogoutTimer(expiryTime));
+    //dispatch(setLogoutTimer(expiryTime));
     dispatch({ type: SIGNUP, userId: userId, token: token, email: _email });
   };
 };
@@ -182,12 +182,12 @@ export const detailsFilling = (email, first_name, last_name,phone_number, age, g
 };
 
 export const logout = () => {
-  clearLogoutTimer();
+  //clearLogoutTimer();
   AsyncStorage.removeItem('userData');
   return { type: LOGOUT };
 };
 
-const clearLogoutTimer = () => {
+/*const clearLogoutTimer = () => {
   if (timer) {
     clearTimeout(timer);
   }
@@ -199,7 +199,7 @@ const setLogoutTimer = expirationTime => {
       dispatch(logout());
     }, expirationTime);
   };
-};
+};*/
 
 const saveDataToStorage = (token, userId, expirationDate, email) => {
   AsyncStorage.setItem(

@@ -82,7 +82,7 @@ const initialState = {
           const amount_of_people =  action.driveData.amount_of_people;
           const deviation_time = action.driveData.deviation_time;
           const dir = action.driveData.dir;
-          const objIndex = userDrives.findIndex((obj => obj.id === driveKey));
+          const objIndex = state.userDrives.findIndex((obj => obj.id === driveKey));
           state.userDrives[objIndex].passangers = passangers;
           state.userDrives[objIndex].passangersPushToken = passangersPushToken;
           state.userDrives[objIndex].passangersPickUpLocations = passangersPickUpLocations;
