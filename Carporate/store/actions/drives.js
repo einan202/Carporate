@@ -21,7 +21,6 @@ function make_date (date, time){
 
 export const post_drive = (starting_point, destination, date, time, amount_of_people, deviation_time, email, pushToken) => {
   let dateObj = make_date(date,time);
-  console.log(pushToken);
   return async dispatch => {
         let dir = await getDirections(starting_point.place_id, destination.place_id, dateObj.getTime());
         const response = await fetch('https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives.json', {
@@ -73,7 +72,6 @@ export const fetchDrives = (email) => {
         throw new Error('Something went wrong!');
       }
       const resData = await response.json();
-      console.log(resData)
       const loadedDrives = [];
       for (const key in resData) {
           if(email === resData[key].driver.driverEmail || (resData[key].passangers && (resData[key].passangers).includes(email))){
@@ -124,7 +122,7 @@ export const joinDrive = (driveData,passangerEmail,pushToken, newDriveInformatio
     passangersPickUpLocations = [newDriveInformation.pickUpPoint];
   }
   return async dispatch => {
-    let dir =  await getDirections(driveData.starting_point.place_id, driveData.destination.place_id, dateObj.getTime());
+    let dir =  await getDirections(driveData.starting_point.place_id, driveData.destination.place_id, dateObj.getTime(), passangersPickUpLocations);
     const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${drivekey}.json`, {
       method: 'PATCH',
       headers: {

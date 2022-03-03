@@ -15,8 +15,9 @@ export const searchDrives = (starting_point, destination, date, time, amount_of_
       for (const key in resData) {
         if(date === resData[key].date && resData[key].amount_of_people >= amount_of_people && 
           destination.place_id === resData[key].destination.place_id
-          && email !== resData[key].driver.driverEmail && (resData[key].passangers === undefined || !resData[key].passangers.include(email))){ 
+          && email !== resData[key].driver.driverEmail && (resData[key].passangers === undefined || !resData[key].passangers.includes(email))){ 
             let {newDir, pickUpPoint, devationTime} = await algo(starting_point.location, resData[key].dir, 5);
+        if(devationTime <= Number(resData[key].deviation_time)){
         foundedDrives.push({old_drive: new Drive(
         key,
         resData[key].starting_point,
@@ -32,6 +33,7 @@ export const searchDrives = (starting_point, destination, date, time, amount_of_
         undefined
       ), newDriveInformation: {pickUpPoint: pickUpPoint, devationTime: devationTime, amount_of_people: amount_of_people}
     });
+  }
         }
     }
     dispatch({
