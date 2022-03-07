@@ -11,7 +11,7 @@ class Drive {
         this.passangers = passangers;
         this.passangersPushToken = passangersPushToken;
         this.passangersPickUpLocations = passangersPickUpLocations;
-        this.dir = dir
+        this.dir = dir;
     }
 }
 

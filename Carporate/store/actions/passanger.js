@@ -30,7 +30,7 @@ export const searchDrives = (starting_point, destination, date, time, amount_of_
         resData[key].passangers,
         resData[key].passangersPushToken,
         resData[key].passangersPickUpLocations,
-        undefined
+        newDir
       ), newDriveInformation: {pickUpPoint: pickUpPoint, devationTime: devationTime, amount_of_people: amount_of_people}
     });
   }

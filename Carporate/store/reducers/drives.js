@@ -83,6 +83,7 @@ const initialState = {
           const deviation_time = action.driveData.deviation_time;
           const dir = action.driveData.dir;
           const objIndex = state.userDrives.findIndex((obj => obj.id === driveKey));
+          console.log("aaaaaaaa", state.userDrives[objIndex].passangers)
           state.userDrives[objIndex].passangers = passangers;
           state.userDrives[objIndex].passangersPushToken = passangersPushToken;
           state.userDrives[objIndex].passangersPickUpLocations = passangersPickUpLocations;
@@ -90,7 +91,7 @@ const initialState = {
           state.userDrives[objIndex].deviation_time = deviation_time;
           state.userDrives[objIndex].dir = dir;
           return {
-            userDrives: userDrives
+            userDrives: state.userDrives
           };
     }
     return state;

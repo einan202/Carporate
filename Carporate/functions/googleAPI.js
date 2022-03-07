@@ -203,6 +203,7 @@ export async function createPlaceObj (place_id){
   return placeObj;
 }
 
+//based on direction object, opens the directions on maps phone
 export function showDirectionInMaps(dir){
   /*let url = 'https://www.google.com/maps/dir/?api=1&';
   let originLatLng = `origin=${origin.location.lat},${origin.location.lng}&`;

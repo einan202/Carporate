@@ -35,15 +35,16 @@ const DriveItem = props => {
   props.passangers!==undefined && props.passangers !== [] ? 
     <FlatList
           ListHeaderComponent={<Text style={[styles.text, {fontSize: 20}]}>The passangers are:</Text>}
-          data={props.passangers.map((userMail, index) => ({ value: userMail, id: index  }))}
+          data={props.passangers.map((passanger, index) => ({ value: passanger, id: index  }))}
           keyExtractor={item => item.id}
           renderItem = {itemData => 
             (
-            <Text style={[styles.text, {fontSize: 20}]}>{itemData.item.value}</Text>
+            <Text style={[styles.text, {fontSize: 20}]}>{itemData.item.value} </Text>
+             
             )}
     />
     :
-    <View style = {{marginBottom:200}}>
+    <View style = {{marginTop:0}}>
     <Text style={[styles.text, {fontSize: 20}]}>There are still no passangers for this drive</Text>
     </View>;
     
@@ -86,10 +87,10 @@ const DriveItem = props => {
               {passangersText}
               {props.map === true ? 
               <Pressable
-              onPress={() => showDirectionInMaps( props.dir)}
-              style = {{marginBottom: 0}}
+              onPress={() => showDirectionInMaps(props.dir)}
+              style = {{marginTop: 20}}
               >
-              <Text style={[styles.text, {fontSize: 20, marginBottom:0}]}>Press here to show the ride on map</Text>
+              <Text style={[styles.text, {fontSize: 20, marginTop:0}]}>Press here to show the ride on map</Text>
               </Pressable> : <Text></Text>}
               <View >
               <Pressable
