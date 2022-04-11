@@ -9,6 +9,8 @@ import DetailsFillingScreen from '../screens/auth/DetailsFillingScreen';
 import notificationScreen from '../screens/mainApp/notificationScreen';
 import Colors from '../constants/Colors';
 import driverScreen from '../screens/mainApp/driverScreen';
+import driveScreenIfFound from '../screens/mainApp/DriveScreenIfFound';
+import driveScreenIfUpcoming from '../screens/mainApp/DriveScreenIfUpcoming';
 import passengerScreen from '../screens/mainApp/passengerScreen';
 import foundedDrivesScreen from '../screens/mainApp/foundedDrivesScreen';
 import { Ionicons } from '@expo/vector-icons';
@@ -63,8 +65,24 @@ const driver_passanger_navigator = ({navigation}) => {
     <appTabNavigator.Screen name = "foundedDrivesScreen" component = {foundedDrivesScreen} options={{
       tabBarButton: (props) => null
     }}/>
-    <appTabNavigator.Screen name = "driver" component = {driverScreen}/>
-    <appTabNavigator.Screen name = "passenger" component = {passengerScreen}/>
+    <appTabNavigator.Screen name = "driver" component = {driverScreen} />
+    <appTabNavigator.Screen name = "passenger" component = {passengerScreen} />
+    <appTabNavigator.Screen name = "upcomingDrive" component = {driveScreenIfUpcoming} options={{
+      tabBarButton: (props) => null,
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate("Loyalty")}>
+          <Ionicons name="arrow-back" size={32} color="white" />    
+        </TouchableOpacity>
+     ),
+    }} />
+    <appTabNavigator.Screen name = "foundDrive" component = {driveScreenIfFound} options={{
+      tabBarButton: (props) => null,
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate("foundedDrivesScreen")}>
+          <Ionicons name="arrow-back" size={32} color="white" />    
+        </TouchableOpacity>
+     ),
+    }} />
   </appTabNavigator.Navigator>
 
 };

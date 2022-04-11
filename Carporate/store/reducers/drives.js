@@ -47,8 +47,6 @@ const initialState = {
           action.driveData.deviation_time,
           action.driveData.driver,
           [],
-          [],
-          [],
           action.driveData.dir
         );
         const tmp = (state.userDrives.concat(newDrive)).sort((drive_a, drive_b)=> {
@@ -69,30 +67,43 @@ const initialState = {
         }
         })
         return {
-          
           userDrives: tmp
-          
-          
         };
         case JOIN_DRIVE:
-          const driveKey =  action.driveData.id;
-          const passangers= action.driveData.passangers;
-          const passangersPushToken= action.driveData.passangersPushToken;
-          const passangersPickUpLocations = action.driveData.passangersPickUpLocations;
-          const amount_of_people =  action.driveData.amount_of_people;
-          const deviation_time = action.driveData.deviation_time;
-          const dir = action.driveData.dir;
-          const objIndex = state.userDrives.findIndex((obj => obj.id === driveKey));
-          console.log("aaaaaaaa", state.userDrives[objIndex].passangers)
-          state.userDrives[objIndex].passangers = passangers;
-          state.userDrives[objIndex].passangersPushToken = passangersPushToken;
-          state.userDrives[objIndex].passangersPickUpLocations = passangersPickUpLocations;
-          state.userDrives[objIndex].amount_of_people = amount_of_people;
-          state.userDrives[objIndex].deviation_time = deviation_time;
-          state.userDrives[objIndex].dir = dir;
-          return {
-            userDrives: state.userDrives
-          };
+          if(state.userDrives != []){
+            const driveKey =  action.driveData.id;
+            const passangers= action.driveData.passangers;
+            const amount_of_people =  action.driveData.amount_of_people;
+            const deviation_time = action.driveData.deviation_time;
+            const dir = action.driveData.dir;
+            const objIndex = state.userDrives.findIndex((obj => obj.id === driveKey));
+            state.userDrives[objIndex].passangers = passangers;
+            state.userDrives[objIndex].amount_of_people = amount_of_people;
+            state.userDrives[objIndex].deviation_time = deviation_time;
+            state.userDrives[objIndex].dir = dir;
+            return {
+              userDrives: state.userDrives
+            };
+          }
+          else{
+            return {
+              userDrives: [
+                new Drive(
+                  action.driveData.id,
+                  action.driveData.starting_point,
+                  action.driveData.destination,
+                  action.driveData.date,
+                  action.driveData.time,
+                  action.driveData.amount_of_people,
+                  action.driveData.deviation_time,
+                  action.driveData.driver,
+                  [],
+                  action.driveData.dir
+                )
+              ]
+            };
+          }
+          
     }
     return state;
   };

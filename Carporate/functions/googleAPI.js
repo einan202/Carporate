@@ -19,7 +19,6 @@ export async function getDirections(origin, destination, depature_time = undefin
   `&units=metric`;
   url = depature_time === undefined ? url : (url + `&depature_time=${depature_time}`);
   url = waypoints === undefined ? url : (url + '&waypoints=optimize:true|place_id:'+waypointsById.join('|place_id:')); 
-  console.log("googleAPI line 21 ",url);
   try {
     let response = await fetch(url, config);
     let data = await response.json();

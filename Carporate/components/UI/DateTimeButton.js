@@ -65,7 +65,7 @@ const DateTimeButton = props => {
         setTimeField(fTime);
         onInputChange('date', fDate, true);
         onInputChange('time', fTime, true);
-        console.log(fDate + ' (' + fTime + ') ');
+        
     };
 
     const showMode = (currentMode) => {

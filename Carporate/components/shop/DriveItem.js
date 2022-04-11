@@ -15,21 +15,22 @@ import { FlatList } from 'react-native-gesture-handler';
 import Colors from '../../constants/Colors';
 import { useSelector} from 'react-redux';
 import {showDirectionInMaps} from '../../functions/googleAPI';
-
+import {useEffect, useLayoutEffect} from 'react'
 
 import Card from '../UI/Card';
 import CollapseView from '../UI/CollapseView';
 
-const DriveItem = props => {
+const upcomingDriveItem = props => {
   let TouchableCmp = TouchableOpacity;
   const email = useSelector(state => state.auth.email);
+  
 
   if (Platform.OS === 'android' && Platform.Version >= 21) {
     TouchableCmp = TouchableNativeFeedback;
   }
   const [modalVisible, setModalVisible] = useState(false);
 
-  
+
   
   const passangersText = 
   props.passangers!==undefined && props.passangers !== [] ? 
@@ -59,10 +60,10 @@ const DriveItem = props => {
       <Text style={styles.text}> {props.starting_point.address} {'-->'} {props.destination.address}</Text>
         <Text style={styles.text}> {props.date} {'at'} {props.time}  </Text>
         <Text style={styles.text}>  {'available spaces:'} {props.amount_of_people}  </Text>
-        <Text style={styles.text}>  {props.driver === email ? 'You are the driver' : `the driver is: ${props.driver}`}  </Text>
+        <Text style={styles.text}>  {props.driver.driverEmail === email ? 'You are the driver' : `the driver is: ${props.driver.driverFirstName} ${props.driver.driverLastName}`}  </Text>
       </View>
       {props.showButton}
-      <Modal
+      {/* <Modal
           animationType="slide"
           transparent = {true}
           visible={modalVisible}
@@ -102,9 +103,20 @@ const DriveItem = props => {
               </View>
             </Card>
             </View>
-        </Modal>
+        </Modal> */}
         <View style = {{marginTop: 0}}>
-      <TouchableOpacity  onPress={() => setModalVisible(!modalVisible)}>
+      {/* <TouchableOpacity  onPress={() => setModalVisible(!modalVisible)}> */}
+      <TouchableOpacity  onPress={() => props.navigation.navigate(`${props.whereToNavigate}`,{
+        starting_point: props.starting_point.address,
+        destination: props.destination.address,
+        date: props.date,
+        time: props.time,
+        passangers: props.passangers,
+        amount_of_people: props.amount_of_people,
+        driver: props.driver,
+        dir: props.dir,
+        driveID: props.driveID
+      })} >
           <Text style = {{textAlign: 'center', fontSize: 15, fontFamily: 'open-sans-bold'}}>For more details click here</Text>
       </TouchableOpacity>
          </View>
@@ -179,4 +191,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DriveItem;
+export default upcomingDriveItem;

@@ -43,7 +43,11 @@ const MainWindow = props => {
     const [error, setError] = useState();
     const dispatch = useDispatch();
     const email = useSelector(state => state.auth.email);
+    const userID = useSelector(state => state.auth.userId);
     const pushToken = useSelector(state => state.auth.pushToken);
+    const firstName = useSelector(state => state.auth.first_name);
+    const LastName = useSelector(state => state.auth.last_name);
+    const phone = useSelector(state => state.auth.phone_number);
     const [start_point_place, setStart_point_place] = useState(
       address = undefined,
       place_id = undefined,
@@ -68,26 +72,18 @@ const MainWindow = props => {
 
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
-          starting_point: start_point_place,
-          destination: destination,
           date: undefined,
           time: undefined,
           amount_of_people: undefined,
           deviation_time: undefined,
           deviationKm : undefined,
-          email: email,
-          pushToken: pushToken
         },
         inputValidities: {
-          starting_point: false,
-          destination: false,
           date: false,
           time: false,
           amount_of_people: false,
           deviation_time: false,
           deviationKm: false,
-          email: true,
-          pushToken: true
         },
         formIsValid: false
       });
@@ -122,7 +118,11 @@ const MainWindow = props => {
           formState.inputValues.amount_of_people,
           formState.inputValues.deviation_time,
           email,
-          pushToken
+          pushToken,
+          firstName,
+          LastName,
+          phone,
+          userID
         );
       }
       else {

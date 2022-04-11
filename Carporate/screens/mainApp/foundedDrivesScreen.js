@@ -29,11 +29,10 @@ const foundedDrivesScreen = props => {
     const last_name = useSelector(state => state.auth.last_name);
     const phone = useSelector(state => state.auth.phone);
     const pushToken = useSelector(state => state.auth.pushToken);
-
+    const userID = useSelector(state => state.auth.userId);
 
     const triggerNotificationHandler = (itemData) => {
       itemData.item.old_drive.dir = undefined;
-      console.log(itemData)
       fetch('https://exp.host/--/api/v2/push/send', {
         method: 'POST',
         headers: {
@@ -43,13 +42,13 @@ const foundedDrivesScreen = props => {
         },
         body: JSON.stringify({
           to: itemData.item.old_drive.driver.driverPushToken,
-          data: { driveData: itemData.item.old_drive, passangerPushToken: pushToken, passangerFN: first_name, passangerLN: last_name, passangerEmail:email,passangerPhone:phone, newDriveInformation: itemData.item.newDriveInformation },
+          data: { driveData: itemData.item.old_drive, passangerPushToken: pushToken, passangerFN: first_name, passangerLN: last_name, passangerEmail:email,passangerPhone:phone,passangerUserID:userID, newDriveInformation: itemData.item.newDriveInformation },
           title: 'You received a request to join a drive',
           body: `${first_name} ${last_name} want to join to your drive`,
           priority: 'high'
         }),
       });
-      
+      props.navigation.navigate("Loyalty")
     };
 
     if (error) {
@@ -101,7 +100,7 @@ const foundedDrivesScreen = props => {
               time = {itemData.item.old_drive.time}
               amount_of_people = {itemData.item.old_drive.amount_of_people}
               deviation_time = {itemData.item.old_drive.deviation_time}
-              driver = {itemData.item.old_drive.driver.driverEmail}
+              driver = {itemData.item.old_drive.driver}
               passangers = {itemData.item.old_drive.passangers}
               onSelect={() => selectDrive(itemData)}
               moreDetails = {()=>{}}
@@ -116,6 +115,9 @@ const foundedDrivesScreen = props => {
               newDriveInformation = {itemData.item.newDriveInformation}
               dir = {itemData.item.old_drive.dir}
               map = {true}
+              whereToNavigate = {"foundDrive"}
+              navigation = {props.navigation}
+              driveID = {itemData.item.old_drive.id}
           />)}
         />
     );

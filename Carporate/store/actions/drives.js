@@ -1,5 +1,6 @@
 import Drive from '../../models/drive';
-import {getDirections} from '../../functions/googleAPI'
+
+import {getDirections, getRouteDuration, getRoute} from '../../functions/googleAPI'
 export const DELETE_DRIVE = 'DELETE_DRIVE';
 export const CREATE_DRIVE = 'CREATE_DRIVE';
 export const UPDATE_DRIVE = 'UPDATE_DRIVE';
@@ -19,7 +20,7 @@ function make_date (date, time){
 }
 
 
-export const post_drive = (starting_point, destination, date, time, amount_of_people, deviation_time, email, pushToken) => {
+export const post_drive = (starting_point, destination, date, time, amount_of_people, deviation_time, driverEmail, driverPushToken, driverFirstName, driverLastName, driverPhone, driverUserId) => {
   let dateObj = make_date(date,time);
   return async dispatch => {
         let dir = await getDirections(starting_point, destination, dateObj.getTime());
@@ -35,16 +36,35 @@ export const post_drive = (starting_point, destination, date, time, amount_of_pe
             time: time,
             amount_of_people: amount_of_people,
             deviation_time: deviation_time,
-            driver: {driverEmail: email, driverPushToken: pushToken},
-            passangers: Array [amount_of_people],
-            passangersPushToken: Array [amount_of_people],
-            passangersPickUpLocations: Array [amount_of_people],
+            driver: {driverEmail: driverEmail, driverPushToken: driverPushToken, driverFirstName: driverFirstName, driverLastName:driverLastName, driverPhone: driverPhone, driverID: driverUserId, driverDeviationTime: parseInt(deviation_time)},
             dir: dir
           })
         });
         
 
       const resData = await response.json(); 
+
+      let driverDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driverUserId}.json`)
+      let driverDetails = await driverDetailsJson.json(); 
+
+      let driverDrives = driverDetails.drives
+      if(driverDrives){
+        driverDrives.push(resData.name)
+      }
+      else{
+        driverDrives = [resData.name]
+      }
+
+      driverDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driverUserId}.json`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+         drives: driverDrives
+        })
+      });
+
      
       dispatch({
         type: CREATE_DRIVE,
@@ -56,7 +76,7 @@ export const post_drive = (starting_point, destination, date, time, amount_of_pe
           time,
           amount_of_people,
           deviation_time,
-          driver: {driverEmail: email, driverPushToken: pushToken},
+          driver: {driverEmail: driverEmail, driverPushToken: driverPushToken, driverFirstName: driverFirstName, driverLastName:driverLastName, driverPhone: driverPhone, driverID: driverUserId,  driverDeviationTime: parseInt(deviation_time)},
           dir
         }
       });
@@ -64,31 +84,33 @@ export const post_drive = (starting_point, destination, date, time, amount_of_pe
 };
 
 
-export const fetchDrives = (email) => {
+export const fetchDrives = (userID) => {
   return async dispatch => {
     try {
-      const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives.json?print=pretty`)
+      let response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${userID}.json`)
       if (!response.ok) {
         throw new Error('Something went wrong!');
       }
       const resData = await response.json();
       const loadedDrives = [];
-      for (const key in resData) {
-          if(email === resData[key].driver.driverEmail || (resData[key].passangers && (resData[key].passangers).includes(email))){
-          loadedDrives.push(new Drive(
-          key,
-          resData[key].starting_point,
-          resData[key].destination,
-          resData[key].date,
-          resData[key].time,
-          resData[key].amount_of_people,
-          resData[key].deviation_time,
-          resData[key].driver,
-          resData[key].passangers,
-          resData[key].passangersPushToken,
-          resData[key].passangersPickUpLocations,
-          resData[key].dir
-        ));
+      let currentDate = new Date()
+      for (const key in resData.drives) {
+        let currRide = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${resData.drives[key]}.json`);
+        currRide = await currRide.json();
+          let driveDate = make_date(currRide.date,currRide.time)
+          if(currentDate < driveDate){
+            loadedDrives.push(new Drive(
+            resData.drives[key],
+            currRide.starting_point,
+            currRide.destination,
+            currRide.date,
+            currRide.time,
+            currRide.amount_of_people,
+            currRide.deviation_time,
+            currRide.driver,
+            currRide.passangers,
+            currRide.dir
+            ));
           }
       }
       dispatch({
@@ -103,26 +125,44 @@ export const fetchDrives = (email) => {
 };
 
 
-export const joinDrive = (driveData,passangerEmail,pushToken, newDriveInformation) => {
+export const joinDrive = (driveData,passangerEmail, passangerPushToken, passangerFirstName, passangerLastName, passangerPhone, passangerUserId, newDriveInformation) => {
   let passangers = driveData.passangers;
-  let passangersPushToken = driveData.passangersPushToken;
-  let passangersPickUpLocations = driveData.passangersPickUpLocations;
+  let passangersPickUpLocations = passangers != undefined ? passangers.map(passanger => passanger.pickUpLocation): undefined
+
   let dateObj = make_date(driveData.date,driveData.time);
   let deviation_time = driveData.deviation_time - newDriveInformation.devationTime;
   let amount_of_people = driveData.amount_of_people - newDriveInformation.amount_of_people
   const drivekey = driveData.id;
   if(passangers){
-    passangers.push(passangerEmail);
-    passangersPushToken.push(pushToken);
-    passangersPickUpLocations.push(newDriveInformation.pickUpPoint);
+    passangers.push({
+      firstName: passangerFirstName,
+      lastName: passangerLastName,
+      email: passangerEmail,
+      pushToken:passangerPushToken,
+      phone: passangerPhone,
+      userID:passangerUserId,
+      pickUpLocation: newDriveInformation.pickUpPoint,
+      starting_point: newDriveInformation.passangerStartingPoint,
+      destination: newDriveInformation.passangerDestination,
+      amountOfPeople: parseInt(newDriveInformation.amount_of_people)
+    });
   }
   else{
-    passangers = [passangerEmail];
-    passangersPushToken = [pushToken];
-    passangersPickUpLocations = [newDriveInformation.pickUpPoint];
+    passangers = [{
+      firstName: passangerFirstName,
+      lastName: passangerLastName,
+      email: passangerEmail,
+      pushToken:passangerPushToken,
+      phone: passangerPhone,
+      userID:passangerUserId,
+      pickUpLocation: newDriveInformation.pickUpPoint,
+      starting_point: newDriveInformation.passangerStartingPoint,
+      destination: newDriveInformation.passangerDestination,
+      amountOfPeople: parseInt(newDriveInformation.amount_of_people)
+    }];
   }
   return async dispatch => {
-    let dir =  await getDirections(driveData.starting_point, driveData.destination, dateObj.getTime(), passangersPickUpLocations);
+    let dir =  await getDirections(driveData.starting_point, driveData.destination, dateObj.getTime(), [newDriveInformation.pickUpPoint]);
     const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${drivekey}.json`, {
       method: 'PATCH',
       headers: {
@@ -130,8 +170,6 @@ export const joinDrive = (driveData,passangerEmail,pushToken, newDriveInformatio
       },
       body: JSON.stringify({
         passangers: passangers,
-        passangersPushToken: passangersPushToken,
-        passangersPickUpLocations: passangersPickUpLocations,
         amount_of_people: amount_of_people,
         dir: dir,
         deviation_time: deviation_time
@@ -140,18 +178,183 @@ export const joinDrive = (driveData,passangerEmail,pushToken, newDriveInformatio
     
 
   const resData = await response.json(); 
+
+  let passangerDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${passangerUserId}.json`)
+      let passangerDetails = await passangerDetailsJson.json(); 
+      
+      let passangerDrives = passangerDetails.drives
+      if(passangerDrives){
+        passangerDrives.push(drivekey)
+      }
+      else{
+        passangerDrives = [drivekey]
+      }
+      
+      driverDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${passangerUserId}.json`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+         drives: passangerDrives
+        })
+      });
+
+
  
-  dispatch({
-    type: JOIN_DRIVE,
-    driveData: {
-      id: drivekey,
-      passangers: passangers, 
-      passangersPushToken: passangersPushToken,
-      passangersPickUpLocations: passangersPickUpLocations,
-      amount_of_people: amount_of_people,
-      deviation_time: deviation_time,
-      dir: dir
+    // dispatch({
+    //   type: JOIN_DRIVE,
+    //   driveData: {
+    //     id: drivekey,
+    //     passangers: passangers, 
+    //     amount_of_people: amount_of_people,
+    //     deviation_time: deviation_time,
+    //     dir: dir,
+    //     starting_point: driveData.starting_point,
+    //     destination: driveData.destination,
+    //     date: driveData.date, 
+    //     time: driveData.time,
+    //     driver: driveData.driver
+    //   }
+    // });
+};
+};
+
+
+export const deleteDriveForDriver = (driveID) => {
+  return async dispatch => {
+    let driveDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`)
+    let driveDetails = await driveDetailsJson.json(); 
+    if(driveDetails.passangers){
+      for(let i = 0; i < driveDetails.passangers.length ; i++){
+        let currpassangerDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driveDetails.passangers[i].userID}.json`)
+        let currpassangerDetails = await currpassangerDetailsJson.json(); 
+        let currDrives = currpassangerDetails.drives
+        currDrives = currDrives.filter(drive => drive != driveID)
+        const tmp = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driveDetails.passangers[i].userID}.json`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+          drives: currDrives
+          })
+        });
+
     }
+  }
+
+    let driverDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driveDetails.driver.driverID}.json`)
+    let driverDetails = await driverDetailsJson.json(); 
+    let currDrives = driverDetails.drives
+    currDrives = currDrives.filter(drive => drive != driveID)
+    const tmp = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driveDetails.driver.driverID}.json`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+      drives: currDrives
+      })
+    });
+
+  const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
   });
-};
-};
+  }
+}
+
+export const deleteDriveForPassanger = (driveID,userID) => {
+  return async dispatch => {
+    let driveDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`)
+    let driveDetails = await driveDetailsJson.json(); 
+    let passangers = driveDetails.passangers
+    let passangerToDelete = passangers.filter(passanger => passanger.userID == userID)
+    passangers = passangers.filter(passanger => passanger.userID != userID)
+    let dateObj = make_date(driveDetails.date,driveDetails.time);
+    let amountOfPeople = driveDetails.amount_of_people + passangerToDelete[0].amountOfPeople
+    let pickUpPoints = passangers.map(passanger => passanger.pickUpLocation)//maybe need to copy
+    
+    if(pickUpPoints.length === 0){
+      pickUpPoints = undefined
+    }
+    let oldDir =  await getDirections(driveDetails.starting_point, driveDetails.destination, dateObj.getTime())
+    let newDir =  await getDirections(driveDetails.starting_point, driveDetails.destination, dateObj.getTime(), pickUpPoints);
+    let oldDirDuration = getRouteDuration(getRoute(oldDir));
+    let newDirDuration = getRouteDuration(getRoute(newDir));
+
+    let deviationTime = oldDirDuration - newDirDuration + driveDetails.driver.driverDeviationTime
+
+    
+    let passangerDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${userID}.json`)
+    let passangerDetails = await passangerDetailsJson.json(); 
+    let currDrives = passangerDetails.drives
+    currDrives = currDrives.filter(drive => drive != driveID)
+    const tmp = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${userID}.json`, {
+      method: 'PATCH',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+        body: JSON.stringify({
+        drives: currDrives
+        })
+      });
+
+    const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        passangers: passangers,
+        amount_of_people: amountOfPeople,
+        dir: newDir,
+        deviation_time: deviationTime
+      })
+    });
+
+    
+  }
+}
+
+
+export const delaySpecificDrive = (driveID,minutesDiff) => {
+  return async dispatch => {
+    let driveDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`)
+    let driveDetails = await driveDetailsJson.json(); 
+    let time = make_date(driveDetails.date, driveDetails.time)
+    time = new Date(time.getTime() + (60000 * minutesDiff))
+    let newMinutes = time.getMinutes()
+    let newHour = time.getHours()
+    if(newHour < 10){
+      newHour = '0' + newHour.toString()
+    }
+    else{
+      newHour = newHour.toString()
+    }
+    if(newMinutes < 10){
+      newMinutes = '0' + newMinutes.toString()
+    }
+    else{
+      newMinutes = newMinutes.toString()
+    }
+    let newTime = newHour.toString() + ':' + newMinutes.toString()
+
+    const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        time: newTime
+      })
+    });
+  }
+}
+
+
+
+

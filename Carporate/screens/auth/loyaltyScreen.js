@@ -28,6 +28,7 @@ const loyaltyScreen = props => {
   const drives = useSelector(state => state.drives.userDrives);
   const dispatch = useDispatch();
   const email = useSelector(state => state.auth.email);
+  const userID = useSelector(state => state.auth.userId);
   const first_name = useSelector(state => state.auth.first_name);
   const last_name = useSelector(state => state.auth.last_name);
   const phone_number = useSelector(state => state.auth.phone_number);
@@ -35,7 +36,7 @@ const loyaltyScreen = props => {
   const gender = useSelector(state => state.auth.gender);
 
 
-  const triggerNotificationHandler = (driveData, pushToken, title, body, data, passangerEmail, drivekey, newDriveInformation) => {
+  const triggerNotificationHandler = (driveData, passangerpushToken, title, body, data, passangerEmail, drivekey, newDriveInformation,  passangerFirstName, passangerLastName, passangerUserID, passangerPhone) => {
 
     fetch('https://exp.host/--/api/v2/push/send', {
       method: 'POST',
@@ -45,7 +46,7 @@ const loyaltyScreen = props => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        to: pushToken,
+        to: passangerpushToken,
         data: data,
         title: title,
         body: body,
@@ -56,8 +57,12 @@ const loyaltyScreen = props => {
       const action = drivesActions.joinDrive(
         driveData,
         passangerEmail,
-        pushToken,
-        newDriveInformation
+        passangerpushToken,
+        passangerFirstName,
+        passangerLastName,
+        passangerPhone, 
+        passangerUserID, 
+        newDriveInformation,
       );
       try{
          dispatch(action);
@@ -90,24 +95,28 @@ const loyaltyScreen = props => {
       (response) => {
         
         const content = response.request.content;
-        const passangerFirstName = content.data.passangerFN;
-        const passangerLastName = content.data.passangerLN;
-        const passangerEmail = content.data.passangerEmail;
-        const driveData = content.data.driveData;
-        const drivekey = driveData.id;
-        const pushToken = content.data.passangerPushToken;
-        const newDriveInformation = content.data.newDriveInformation;
         if(content.title === 'You received a request to join a drive'){
+          const passangerFirstName = content.data.passangerFN;
+          const passangerLastName = content.data.passangerLN;
+          const passangerEmail = content.data.passangerEmail;
+          const passangerPhone = content.data.passangerPhone;
+          const driveData = content.data.driveData;
+          const drivekey = driveData.id;
+          const passangerpushToken = content.data.passangerPushToken;
+          const passangerUserID = content.data.passangerUserID;
+          const newDriveInformation = content.data.newDriveInformation;
           Alert.alert('You received a request to join a drive',`${passangerFirstName} ${passangerLastName} asked to join your drive from ${driveData.starting_point.address} 
             to ${driveData.destination.address} in ${driveData.date}, you still have ${driveData.amount_of_people} places. Do you accept? \n This will extend the ride by ${newDriveInformation.devationTime} minutes `
           ,[
-            { text: 'Yes', onPress:() => triggerNotificationHandler(driveData,pushToken,'You have received permission to join the drive','',content.data,passangerEmail,drivekey, newDriveInformation) },
+            { text: 'Yes', onPress:() => triggerNotificationHandler(driveData,passangerpushToken,'You have received permission to join the drive','',content.data,passangerEmail,drivekey, newDriveInformation, passangerFirstName, passangerLastName, passangerUserID, passangerPhone) },
             {text: 'No',
-            onPress:() => triggerNotificationHandler(driveData,pushToken,'We sorry','You do not have permission to join the drive',content.data,passangerEmail,drivekey, newDriveInformation),
+            onPress:() => triggerNotificationHandler(driveData,passangerpushToken,'We sorry','You do not have permission to join the drive',content.data,passangerEmail,drivekey, newDriveInformation,  passangerFirstName, passangerLastName, passangerUserID, passangerPhone),
             style: 'cancel'},
           ])
         }
         else if(content.title === 'You have received permission to join the drive'){
+          const driveData = content.data.driveData;
+          const newDriveInformation = content.data.newDriveInformation;
           Alert.alert('You have received permission to join the drive',`${driveData.driver.driverEmail} accept you to join his drive from ${driveData.starting_point.address} to ${driveData.destination.address} in ${driveData.date}. Your pick up address is ${newDriveInformation.pickUpPoint.address}`
         ,[
           {text: 'OK',
@@ -115,7 +124,40 @@ const loyaltyScreen = props => {
           style: 'cancel'},
         ])
         }
+        else if(content.title === "Your drive was deleted"){
+          Alert.alert(content.title,content.body
+          ,[
+            {text: 'OK',
+            onPress: () => {},
+            style: 'cancel'},
+          ])
+        }
+        else if(content.title === "Someone leave your drive"){
+          Alert.alert(content.title,content.body
+          ,[
+            {text: 'OK',
+            onPress: () => {},
+            style: 'cancel'},
+          ])
+        }
+        else if(content.title === "Your drive start"){
+          Alert.alert(content.title,content.body
+            ,[
+              {text: 'OK',
+              onPress: () => {},
+              style: 'cancel'},
+            ])
+        }
+        else if(content.title === "Your drive will be delayed"){
+          Alert.alert(content.title,content.body
+            ,[
+              {text: 'OK',
+              onPress: () => {},
+              style: 'cancel'},
+            ])
+        }
         else{
+          const driveData = content.data.driveData;
           Alert.alert('We sorry',`You do not have permission to join the drive from ${driveData.starting_point.address} to ${driveData.destination.address} in ${driveData.date}. You can try another drive`
         ,[
           {text: 'OK',
@@ -136,7 +178,7 @@ const loyaltyScreen = props => {
     setError(null);
     setIsRefreshing(true);
     try {
-      await dispatch(drivesActions.fetchDrives(email));
+      await dispatch(drivesActions.fetchDrives(userID));
     } catch (err) {
       setError(err.message);
     }
@@ -215,13 +257,16 @@ const loyaltyScreen = props => {
               time = {itemData.item.time}
               amount_of_people = {itemData.item.amount_of_people}
               deviation_time = {itemData.item.deviation_time}
-              driver = {itemData.item.driver.driverEmail}
+              driver = {itemData.item.driver}
               passangers = {itemData.item.passangers}
               onSelect={() => selectDrive()}
               moreDetails = {()=>{}}
               map = {true}
               waypoints = {itemData.item.dir ? itemData.item.dir.geocoded_waypoints : undefined}
               dir = {itemData.item.dir}
+              whereToNavigate = {"upcomingDrive"}
+              navigation = {props.navigation}
+              driveID = {itemData.item.id}
           />)}
           ListEmptyComponent = {
             <View style={styles.centered}>

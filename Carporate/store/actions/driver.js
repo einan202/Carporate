@@ -5,7 +5,7 @@ import {Alert} from 'react-native';
 
 
 
-export const post_driver = (starting_point, destination, date, time, amount_of_people, deviation_time, email) => {
+export const post_driver = (starting_point, destination, date, time, amount_of_people, deviation_time, userID) => {
     
     return async dispatch => {
         const response = await fetch('https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives.json', {
@@ -20,8 +20,7 @@ export const post_driver = (starting_point, destination, date, time, amount_of_p
             time: time,
             amount_of_people: amount_of_people,
             deviation_time: deviation_time,
-            driver: email,
-            passangers: ["", "", ""]
+            driver: userID,
           })
         });
         

@@ -45,6 +45,7 @@ export default (state = initialState, action) => {
        case DETAILSFILLING:
          return {
            ...state,
+           userId: action.userID,
            email: action.email,
            first_name: action.first_name,
            last_name: action.last_name,

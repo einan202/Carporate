@@ -45,9 +45,10 @@ export const createAccount = (userId, token, expiryTime, _email) => {
   };
 };
 
-export const detailsfl = (email, first_name, last_name, phone_number, age, gender, pushToken) => {
+export const detailsfl = (userID, email, first_name, last_name, phone_number, age, gender, pushToken) => {
   return dispatch => {
     dispatch({ type: DETAILSFILLING,
+    userID: userID,
     email: email,
     first_name: first_name,
     last_name: last_name,
@@ -91,7 +92,6 @@ export const signup = (email, password) => {
     }
 
     const resData = await response.json();
-    console.log(resData);
     dispatch(
       createAccount(
         resData.localId,
@@ -139,7 +139,6 @@ export const login = (email, password) => {
     }
 
     const resData = await response.json();
-    console.log(resData);
     dispatch(
       authenticate(
         resData.localId,
@@ -175,9 +174,9 @@ export const detailsFilling = (email, first_name, last_name,phone_number, age, g
     });
 
   const resData = await response.json();
-  saveDetaillsToStorage(email, first_name, last_name,phone_number, age, gender, pushToken);
+  saveDetaillsToStorage(resData.name, email, first_name, last_name,phone_number, age, gender, pushToken);
   
-  dispatch(detailsfl(email, first_name, last_name, phone_number, age, gender, pushToken));
+  dispatch(detailsfl(resData.name, email, first_name, last_name, phone_number, age, gender, pushToken));
 };
 };
 
@@ -213,10 +212,11 @@ const saveDataToStorage = (token, userId, expirationDate, email) => {
   );
 };
 
-const saveDetaillsToStorage = (email, first_name, last_name, phone_number, age, gender, pushToken) => {
+const saveDetaillsToStorage = (userID, email, first_name, last_name, phone_number, age, gender, pushToken) => {
   AsyncStorage.setItem(
     'userDetaills',
     JSON.stringify({
+      userID: userID,
       email: email,
       first_name: first_name,
       last_name: last_name,

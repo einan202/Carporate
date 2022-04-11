@@ -37,8 +37,8 @@ const StartupScreen = props => {
       try {
         const userDetaills = await AsyncStorage.getItem('userDetaills');
         const transformedDetaills = JSON.parse(userDetaills);
-        const {email, first_name, last_name,phone_number, age, gender, pushToken} = transformedDetaills;
-        dispatch(authActions.authenticate(userId, token, expirationTime, email, first_name, last_name,phone_number,age, gender, pushToken));
+        const {userID, email, first_name, last_name,phone_number, age, gender, pushToken} = transformedDetaills;
+        dispatch(authActions.authenticate(userID, token, expirationTime, email, first_name, last_name,phone_number,age, gender, pushToken));
       } catch (error) {
         console.log('Something went wrong in your code', error)
       }
