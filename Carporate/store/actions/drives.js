@@ -24,6 +24,7 @@ export const post_drive = (starting_point, destination, date, time, amount_of_pe
   let dateObj = make_date(date,time);
   return async dispatch => {
         let dir = await getDirections(starting_point, destination, dateObj.getTime());
+        // Add a new drive to the firebase
         const response = await fetch('https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives.json', {
           method: 'POST',
           headers: {
@@ -37,13 +38,15 @@ export const post_drive = (starting_point, destination, date, time, amount_of_pe
             amount_of_people: amount_of_people,
             deviation_time: deviation_time,
             driver: {driverEmail: driverEmail, driverPushToken: driverPushToken, driverFirstName: driverFirstName, driverLastName:driverLastName, driverPhone: driverPhone, driverID: driverUserId, driverDeviationTime: parseInt(deviation_time)},
-            dir: dir
+            dir: dir,
+            driveTime: getRouteDuration(getRoute(dir))
           })
         });
         
 
       const resData = await response.json(); 
 
+      // Add the drive key to the driver user, under "drives"
       let driverDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driverUserId}.json`)
       let driverDetails = await driverDetailsJson.json(); 
 
@@ -142,6 +145,10 @@ export const joinDrive = (driveData,passangerEmail, passangerPushToken, passange
       phone: passangerPhone,
       userID:passangerUserId,
       pickUpLocation: newDriveInformation.pickUpPoint,
+
+      dropOffLocation: newDriveInformation.dropOffPoint,
+
+
       starting_point: newDriveInformation.passangerStartingPoint,
       destination: newDriveInformation.passangerDestination,
       amountOfPeople: parseInt(newDriveInformation.amount_of_people)
@@ -157,12 +164,20 @@ export const joinDrive = (driveData,passangerEmail, passangerPushToken, passange
       userID:passangerUserId,
       pickUpLocation: newDriveInformation.pickUpPoint,
       starting_point: newDriveInformation.passangerStartingPoint,
+
+      dropOffPoint: newDriveInformation.dropOffPoint,
+
       destination: newDriveInformation.passangerDestination,
       amountOfPeople: parseInt(newDriveInformation.amount_of_people)
     }];
   }
   return async dispatch => {
-    let dir =  await getDirections(driveData.starting_point, driveData.destination, dateObj.getTime(), [newDriveInformation.pickUpPoint]);
+    let dir =  await getDirections(
+      driveData.starting_point, 
+      driveData.destination, 
+      dateObj.getTime(), 
+      [newDriveInformation.drivePoints.slice(1, newDriveInformation.drivePoints.length-1)]
+    );
     const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${drivekey}.json`, {
       method: 'PATCH',
       headers: {
@@ -172,6 +187,7 @@ export const joinDrive = (driveData,passangerEmail, passangerPushToken, passange
         passangers: passangers,
         amount_of_people: amount_of_people,
         dir: dir,
+        driveTime: getRouteDuration(getRoute(dir)),
         deviation_time: deviation_time
       })
     });
@@ -224,50 +240,59 @@ export const joinDrive = (driveData,passangerEmail, passangerPushToken, passange
 export const deleteDriveForDriver = (driveID) => {
   return async dispatch => {
     let driveDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`)
-    let driveDetails = await driveDetailsJson.json(); 
+    let driveDetails = await driveDetailsJson.json();
+    // Delete the drive from the drives of each passenger in it 
     if(driveDetails.passangers){
       for(let i = 0; i < driveDetails.passangers.length ; i++){
         let currpassangerDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driveDetails.passangers[i].userID}.json`)
         let currpassangerDetails = await currpassangerDetailsJson.json(); 
         let currDrives = currpassangerDetails.drives
         currDrives = currDrives.filter(drive => drive != driveID)
-        const tmp = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driveDetails.passangers[i].userID}.json`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-          drives: currDrives
-          })
-        });
-
+        const tmp = await fetch(
+          `https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driveDetails.passangers[i].userID}.json`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            drives: currDrives
+            })
+          }
+        );
+      }
     }
-  }
-
+    // Delete the drive from the drives of the driver
     let driverDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driveDetails.driver.driverID}.json`)
     let driverDetails = await driverDetailsJson.json(); 
     let currDrives = driverDetails.drives
     currDrives = currDrives.filter(drive => drive != driveID)
-    const tmp = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driveDetails.driver.driverID}.json`, {
+    const tmp = await fetch(
+      `https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${driveDetails.driver.driverID}.json`, 
+      {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-      drives: currDrives
+        drives: currDrives
       })
-    });
-
-  const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  });
+      }
+    );
+    // Delete the drive from the drives of each passenger in it 
+    const response = await fetch(
+      `https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      }
+    );
   }
 }
 
-export const deleteDriveForPassanger = (driveID,userID) => {
+export const deleteDriveForPassanger = (driveID, userID) => {
   return async dispatch => {
     let driveDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`)
     let driveDetails = await driveDetailsJson.json(); 
@@ -276,19 +301,28 @@ export const deleteDriveForPassanger = (driveID,userID) => {
     passangers = passangers.filter(passanger => passanger.userID != userID)
     let dateObj = make_date(driveDetails.date,driveDetails.time);
     let amountOfPeople = driveDetails.amount_of_people + passangerToDelete[0].amountOfPeople
-    let pickUpPoints = passangers.map(passanger => passanger.pickUpLocation)//maybe need to copy
-    
-    if(pickUpPoints.length === 0){
-      pickUpPoints = undefined
+
+    let oldDriveWayPoints = driveDetails.drivePoints.slice(1, driveDetails.drivePoints.length-1);
+    function filterWayPoints(point){
+      const pickUpFilter = point.place_id !== passangerToDelete.pickUpLocation.place_id;
+      const dropOffFilter = point.place_id !== passangerToDelete.dropOffLocation.place_id;
+      return pickUpFilter && dropOffFilter;
     }
-    let oldDir =  await getDirections(driveDetails.starting_point, driveDetails.destination, dateObj.getTime())
-    let newDir =  await getDirections(driveDetails.starting_point, driveDetails.destination, dateObj.getTime(), pickUpPoints);
-    let oldDirDuration = getRouteDuration(getRoute(oldDir));
+    let newDriveWayPoints = oldDriveWayPoints.filter(filterWayPoints);
+
+    let newDir = await getDirections(
+      driveDetails.starting_point,
+      driveDetails.destination,
+      dateObj.getTime(),
+      newDriveWayPoints
+    )
+
+    let oldDirDuration = getRouteDuration(getRoute(driveDetails.dir));
     let newDirDuration = getRouteDuration(getRoute(newDir));
 
     let deviationTime = oldDirDuration - newDirDuration + driveDetails.driver.driverDeviationTime
 
-    
+    // Delete the drive from the drives of the passenger who is leaving
     let passangerDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${userID}.json`)
     let passangerDetails = await passangerDetailsJson.json(); 
     let currDrives = passangerDetails.drives
@@ -302,7 +336,8 @@ export const deleteDriveForPassanger = (driveID,userID) => {
         drives: currDrives
         })
       });
-
+    
+    // Update the drive in the database
     const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`, {
       method: 'PATCH',
       headers: {
@@ -312,7 +347,8 @@ export const deleteDriveForPassanger = (driveID,userID) => {
         passangers: passangers,
         amount_of_people: amountOfPeople,
         dir: newDir,
-        deviation_time: deviationTime
+        deviation_time: deviationTime,
+        driveTime: newDirDuration
       })
     });
 

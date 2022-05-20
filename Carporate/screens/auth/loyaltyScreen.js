@@ -92,9 +92,14 @@ const loyaltyScreen = props => {
     );
 
     const foregroundSubscription = Notifications.addNotificationReceivedListener(
-      (response) => {
+      async function(response) {
+        
         
         const content = response.request.content;
+
+        let title = content.title;
+        let body = content.body;
+
         if(content.title === 'You received a request to join a drive'){
           const passangerFirstName = content.data.passangerFN;
           const passangerLastName = content.data.passangerLN;
@@ -105,20 +110,29 @@ const loyaltyScreen = props => {
           const passangerpushToken = content.data.passangerPushToken;
           const passangerUserID = content.data.passangerUserID;
           const newDriveInformation = content.data.newDriveInformation;
-          Alert.alert('You received a request to join a drive',`${passangerFirstName} ${passangerLastName} asked to join your drive from ${driveData.starting_point.address} 
-            to ${driveData.destination.address} in ${driveData.date}, you still have ${driveData.amount_of_people} places. Do you accept? \n This will extend the ride by ${newDriveInformation.devationTime} minutes `
-          ,[
+
+          body = `${passangerFirstName} ${passangerLastName} asked to join your drive from ${driveData.starting_point.address} 
+          to ${driveData.destination.address} in ${driveData.date}, you still have ${driveData.amount_of_people} places. Do you accept? \n This will extend the ride by ${newDriveInformation.devationTime} minutes `;
+
+          Alert.alert(
+            'You received a request to join a drive',
+            body,
+          [
             { text: 'Yes', onPress:() => triggerNotificationHandler(driveData,passangerpushToken,'You have received permission to join the drive','',content.data,passangerEmail,drivekey, newDriveInformation, passangerFirstName, passangerLastName, passangerUserID, passangerPhone) },
             {text: 'No',
             onPress:() => triggerNotificationHandler(driveData,passangerpushToken,'We sorry','You do not have permission to join the drive',content.data,passangerEmail,drivekey, newDriveInformation,  passangerFirstName, passangerLastName, passangerUserID, passangerPhone),
             style: 'cancel'},
           ])
+           
         }
         else if(content.title === 'You have received permission to join the drive'){
           const driveData = content.data.driveData;
           const newDriveInformation = content.data.newDriveInformation;
-          Alert.alert('You have received permission to join the drive',`${driveData.driver.driverEmail} accept you to join his drive from ${driveData.starting_point.address} to ${driveData.destination.address} in ${driveData.date}. Your pick up address is ${newDriveInformation.pickUpPoint.address}`
-        ,[
+          body = `${driveData.driver.driverEmail} accept you to join his drive from ${driveData.starting_point.address} to ${driveData.destination.address} in ${driveData.date}. Your pick up address is ${newDriveInformation.pickUpPoint.address}`;
+          Alert.alert(
+            'You have received permission to join the drive',
+            body,
+            [
           {text: 'OK',
           onPress: () => {},
           style: 'cancel'},
@@ -158,15 +172,41 @@ const loyaltyScreen = props => {
         }
         else{
           const driveData = content.data.driveData;
-          Alert.alert('We sorry',`You do not have permission to join the drive from ${driveData.starting_point.address} to ${driveData.destination.address} in ${driveData.date}. You can try another drive`
-        ,[
-          {text: 'OK',
-          onPress: () => {},
-          style: 'cancel'},
-        ])
+          body = `You do not have permission to join the drive from ${driveData.starting_point.address} to ${driveData.destination.address} in ${driveData.date}. You can try another drive`;
+          Alert.alert(
+            'We sorry',
+            body,
+            [
+              {text: 'OK',
+              onPress: () => {},
+              style: 'cancel'},
+            ]
+          )
 
         }
-         
+        
+        let notificationToUpload = {title, body, time: new Date()};
+
+        let userJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${userID}.json`)
+        let userDetails = await userJson.json(); 
+        
+        let notifications = userDetails.notifications;
+        if(notifications){
+          notifications.unshift(notificationToUpload);
+        }
+        else{
+          notifications = [notificationToUpload];
+        }
+  
+        driverDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${userID}.json`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            notifications: notifications
+          })
+        });
       }
     );
 

@@ -7,6 +7,10 @@ const config = {
 
 export async function getDirections(origin, destination, depature_time = undefined, waypoints = undefined){
   let waypointsById = waypoints === undefined ? undefined : waypoints.map(wayPoint => wayPoint.place_id);
+  
+  console.log(`waypoints: ${JSON.stringify(waypoints)}`);
+  console.log(`waypoints by Id: ${waypointsById}`);
+
   let originById = origin.place_id;
   let destinationById = destination.place_id;
   let url = `https://maps.googleapis.com/maps/api/directions/json`+
@@ -25,7 +29,7 @@ export async function getDirections(origin, destination, depature_time = undefin
     if (data.status === "OK")
       return data;
     else {
-      throw Error(`Response Status = ${data.status}\nCheck documentation for more details`);
+      throw Error(`Response Status = ${data.status}\nurl = ${url}\nCheck documentation for more details`);
     }
   }
   catch (error){
@@ -34,17 +38,26 @@ export async function getDirections(origin, destination, depature_time = undefin
 }
 
 export function getRoute(dir){
+  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+
   return dir.routes[0];
 }
 
+// Returns the duration of each leg in minutes
+export function getLegsDuration(dir){
+  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
+  return dir.routes[0].legs.map(leg => Math.round(leg.duration.value/60));
+}
+
 export function getRouteLegsDuration(route){
-  return route.legs.map(leg => leg.duration.value);
+  return route.legs.map(leg => Math.round(leg.duration.value/60));
 }
 
 export function getRouteDuration(route){
   let routeLegsDuration = getRouteLegsDuration(route);
   let duration = routeLegsDuration.reduce((acc, curr) => acc + curr, 0);
-  duration = duration / 60; // In Minutes
+  duration = Math.round(duration / 60); // In Minutes
   return duration;
 }
 
@@ -70,7 +83,7 @@ export function getSubRouteDuration(dir, originPlaceId, destinationPlaceId){
 }
 
 export function getRoutePointsInOrder(dir) {
-  // Get Route Points by addresses
+  // Get The Number of Route Points
   let legs = dir.routes[0].legs
   let numOfPoints = legs.length + 1;
   let numOfWayPoints = numOfPoints > 2 ? (numOfPoints - 2) : 0;
@@ -94,30 +107,34 @@ export function getRoutePointsInOrder(dir) {
   for (let i = 0; i < numOfPoints; i++){
     let point = {
       address: pointsByAddr[i],
-      place_id: pointsByPlaceId[i],
-      location: pointsByLatLng[i]
+      place_id: pointsByPlaceId[i], 
+      location: {
+        lat: pointsByLatLng[i].lat, 
+        lng: pointsByLatLng[i].lng
+      }
     }
     pointsInOrder.push(point);
   }
   return pointsInOrder;
 }
 
-export async function getNearbySearch(lat, lng, type, radius = undefined) {
-  /* return top five place_ids of transit stations, 
-      ordered by distance given a LatLng location using NearbySearch API */
-
+/* return the results of neraby places, 
+    ordered by prominence given a LatLng location using NearbySearch API */
+export async function getNearbySearch(place, type, keyword, radius) {
   let url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?`+ 
   `type=${type}`+
-  `&rankby=distance`+
-  // `&radius=800`+
-  `&location=${lat}%2C${lng}`+
+  `&rankby=prominence`+
+  `&radius=${radius}`+
+  //`&keyword=${keyword}`+
+  `&location=${place.location.lat}%2C${place.location.lng}`+
   `&key=AIzaSyAxYot8Bu7ZdNcaY1tPyHcJUXISKs4V9K8`;
 
   try {
     let response = await fetch(url, config);
     let data = await response.json();
-    if (data.status === "OK")
+    if (data.status === "OK"){
       return data;
+    }
     else {
       throw Error(`Response Status = ${data.status}\nCheck documentation for more details`);
     }
@@ -127,23 +144,23 @@ export async function getNearbySearch(lat, lng, type, radius = undefined) {
   }
 }
 
-export function getNearbySearchPlacesId(nearbyPlaces){
-  return nearbyPlaces.results.map(place => place.place_id);
-}
+//export function getNearbySearchPlacesId(nearbyPlaces){
+//  return nearbyPlaces.results.map(place => place.place_id);
+//}
 
-export function getNearbySearchPlacesDetails(nearbyPlaces){
-  let details = nearbyPlaces.results.map(place => {
-    let pointDetails = {
-      address: place.name,
-      place_id: place.place_id,
+export function getNearbySearchPlaces(nearbySearch){
+  let places = nearbySearch.results.map(res => {
+    let place = {
+      address: res.name,
+      place_id: res.place_id,
       location:{
-        lat: place.geometry.location.lat,
-        lng: place.geometry.location.lng
+        lat: res.geometry.location.lat,
+        lng: res.geometry.location.lng
       }
     };
-    return pointDetails;
+    return place;
   });
-  return details
+  return places
 }
 
 export async function getPlaceId(text){
