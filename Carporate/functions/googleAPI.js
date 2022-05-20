@@ -8,8 +8,8 @@ const config = {
 export async function getDirections(origin, destination, depature_time = undefined, waypoints = undefined){
   let waypointsById = waypoints === undefined ? undefined : waypoints.map(wayPoint => wayPoint.place_id);
   
-  console.log(`waypoints: ${JSON.stringify(waypoints)}`);
-  console.log(`waypoints by Id: ${waypointsById}`);
+  // console.log(`waypoints: ${JSON.stringify(waypoints)}`);
+  // console.log(`waypoints by Id: ${waypointsById}`);
 
   let originById = origin.place_id;
   let destinationById = destination.place_id;
@@ -38,7 +38,7 @@ export async function getDirections(origin, destination, depature_time = undefin
 }
 
 export function getRoute(dir){
-  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+  // console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
 
   return dir.routes[0];
 }

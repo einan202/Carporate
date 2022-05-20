@@ -176,7 +176,7 @@ export const joinDrive = (driveData,passangerEmail, passangerPushToken, passange
       driveData.starting_point, 
       driveData.destination, 
       dateObj.getTime(), 
-      [newDriveInformation.drivePoints.slice(1, newDriveInformation.drivePoints.length-1)]
+      newDriveInformation.drivePoints.slice(1, newDriveInformation.drivePoints.length-1)
     );
     const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${drivekey}.json`, {
       method: 'PATCH',
