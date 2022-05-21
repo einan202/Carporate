@@ -123,7 +123,14 @@ function driveScreenIfUpcoming({ route, navigation }) {
           data={route.params.passangers.map((passanger, index) => ({ value: passanger, id: index  }))}
           keyExtractor={item => item.id}
           renderItem = {itemData => 
-            (
+            (ifDriver? <Pressable
+              onPress={() => Linking.openURL(`tel:${itemData.item.value.phone}`)}
+              >
+                
+                <Text style={[styles.text, {fontSize: 20}]}>{itemData.item.value.firstName} {itemData.item.value.lastName}</Text>
+              </Pressable>
+
+            :
             <Text style={[styles.text, {fontSize: 20}]}>{itemData.item.value.firstName} {itemData.item.value.lastName}</Text>
              
             )}
@@ -142,7 +149,15 @@ function driveScreenIfUpcoming({ route, navigation }) {
             }
             <Text style={[styles.text, {fontSize: 20}]}> {route.params.date} {'at'} {route.params.time}  </Text>
             <Text style={[styles.text, {fontSize: 20}]}> {'available spaces:'} {route.params.amount_of_people}  </Text>
-            <Text style={[styles.text, {fontSize: 20}]}> {route.params.driver === email ? 'You are the driver' : `the driver is: ${route.params.driver.driverFirstName} ${route.params.driver.driverLastName}`}  </Text>
+            {
+              ifDriver?
+              <Text style={[styles.text, {fontSize: 20}]}> { 'You are the driver'}  </Text>
+              :
+              <Pressable
+              onPress={() => Linking.openURL(`tel:${route.params.driver.driverPhone}`)}>
+                <Text style={[styles.text, {fontSize: 20}]}> {`the driver is: ${route.params.driver.driverFirstName} ${route.params.driver.driverLastName}`}  </Text>
+              </Pressable>
+            }
             
             {passangersText}
             { 

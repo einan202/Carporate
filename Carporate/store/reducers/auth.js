@@ -1,4 +1,4 @@
-import { AUTHENTICATE, SIGNUP, DETAILSFILLING, SET_DID_TRY_AL } from '../actions/auth';
+import { AUTHENTICATE, SIGNUP, DETAILSFILLING, SET_DID_TRY_AL, EMAILVAREFICATION } from '../actions/auth';
 
 const initialState = {
   token: undefined,
@@ -11,7 +11,8 @@ const initialState = {
   phone_number: null,
   age: null,
   gender: null,
-  pushToken: null
+  pushToken: null,
+  email_code: null,
 };
 
 export default (state = initialState, action) => {
@@ -55,6 +56,11 @@ export default (state = initialState, action) => {
            pushToken: action.pushToken,
           goToDettailsFelling: false
          };
+        case EMAILVAREFICATION:
+          return{
+            ...state,
+            email_code: action.email_code
+          }
     default:
       return state;
   }

@@ -70,33 +70,34 @@ const AuthScreen = props => {
   }, [error]);
 
   const authHandler = async () => {
-    let action;
-    if (isSignup) {
-      action = authActions.signup(
-        formState.inputValues.email,
-        formState.inputValues.password
-      );
-    } else {
-      action = authActions.login(
-        formState.inputValues.email,
-        formState.inputValues.password
-      );
-    }
-    setError(null);
-    setIsLoading(true);
-    try {
-      await dispatch(action);
-      if(isSignup){
-        navigation.navigate('DetailsFilling', { email: formState.inputValues.email});
-      } 
-     /* else{
-      props.navigation.navigate('App');
-      }*/
-    } 
-    catch (err) {
-      setError(err.message);
-      setIsLoading(false);
-    }
+    props.navigation.navigate('EmailVarefication', { email: formState.inputValues.email, password:formState.inputValues.password});
+    // let action;
+    // if (isSignup) {
+    //   action = authActions.signup(
+    //     formState.inputValues.email,
+    //     formState.inputValues.password
+    //   );
+    // } else {
+    //   action = authActions.login(
+    //     formState.inputValues.email,
+    //     formState.inputValues.password
+    //   );
+    // }
+    // setError(null);
+    // setIsLoading(true);
+    // try {
+    //   await dispatch(action);
+    //   if(isSignup){
+    //     navigation.navigate('DetailsFilling', { email: formState.inputValues.email});
+    //   } 
+    //  /* else{
+    //   props.navigation.navigate('App');
+    //   }*/
+    // } 
+    // catch (err) {
+    //   setError(err.message);
+    //   setIsLoading(false);
+    // }
   };
 
   const inputChangeHandler = useCallback(

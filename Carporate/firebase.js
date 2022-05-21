@@ -1,9 +1,8 @@
 // Import the functions you need from the SDKs you need
-import firebase from "firebase/app";
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app"
 import { getDatabase } from "firebase/database";
-require("firebase/functions")
-
+import { getAuth } from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
 // Required for side-effects
 
 
@@ -24,8 +23,11 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = firebase.initializeApp(firebaseConfig);
-export {firebase};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app)
+const auth = getAuth(app);
+const functions = getFunctions();
+export {db, auth, functions, httpsCallable};
 
 
 

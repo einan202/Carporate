@@ -6,6 +6,7 @@ import { Platform,TouchableOpacity } from 'react-native';
 import loyaltyScreen from '../screens/auth/loyaltyScreen'
 import AuthScreen, {navigationOptions as authScreenOption} from '../screens/auth/AuthScreen';
 import DetailsFillingScreen from '../screens/auth/DetailsFillingScreen';
+import EmailVareficationScreen from '../screens/auth/EmailVareficationScreen';
 import notificationScreen from '../screens/mainApp/notificationScreen';
 import Colors from '../constants/Colors';
 import driverScreen from '../screens/mainApp/driverScreen';
@@ -107,6 +108,7 @@ const AuthStackNavigator = createStackNavigator();
 export const AuthNavigator = () => {
   return <AuthStackNavigator.Navigator screenOptions={defaultNavOptions}>
     <AuthStackNavigator.Screen name = "Auth" component = {AuthScreen} options={authScreenOption} />
+    <AuthStackNavigator.Screen name = "EmailVarefication" component = {EmailVareficationScreen}  />
     <AuthStackNavigator.Screen name = "DetailsFilling" component = {DetailsFillingScreen}/>
   </AuthStackNavigator.Navigator>
 

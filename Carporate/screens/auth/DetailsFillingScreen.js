@@ -17,6 +17,7 @@ import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/auth';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
+import DropDownButton from "../../components/UI/DropDownButton";
 
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
@@ -113,6 +114,7 @@ const DetailsFillingScreen = props => {
       }, [error]);
     
       const authHandler = async () => {
+        
         let action = authActions.detailsFilling(
           formState.inputValues.email,
           formState.inputValues.first_name,
@@ -212,6 +214,16 @@ const DetailsFillingScreen = props => {
                   onInputChange={inputChangeHandler}
                   initialValue=""
                 />
+                {/* <DropDownButton
+                  style={{ zIndex: 10,  }}
+                  array = {[
+                    { label: 'male', value: 'male' },
+                    { label: 'female', value: 'female' },
+                  ]}
+                  placeHolder = {"gender"}
+                  id = {"gender"}
+                  onInputChange ={inputChangeHandler}
+                /> */}
                 <View style={styles.buttonContainer}>
                   {isLoading ? (
                     <ActivityIndicator size="small" color={Colors.primary} />

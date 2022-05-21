@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import {Alert} from 'react-native';
+import {functions,httpsCallable} from '../../firebase'
+
 
 
 
@@ -9,7 +11,7 @@ export const LOGIN = 'LOGIN';
 export const AUTHENTICATE = 'AUTHENTICATE';
 export const DETAILSFILLING = 'DETAILSFILLING';
 export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
-
+export const EMAILVAREFICATION = 'EMAILVAREFICATION';
 let timer;
 
 export const setDidTryAl = () => {
@@ -37,6 +39,42 @@ export const authenticate = (userId, token, expiryTime, email, first_name, last_
     });
   };
 };
+
+export const sendVareficationMail = (email)=>{
+  return async dispatch => {
+      let code = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+      const response = await fetch(
+        'https://us-central1-carpool-54fdc.cloudfunctions.net/sendEmailVarefication',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            code: `${code}`,
+            email: `${email}`,
+          })
+        });
+
+        dispatch({ type: EMAILVAREFICATION,
+          email_code: code
+        });
+        
+      
+      // const sendEmailVarefication = httpsCallable(functions, 'sendEmailVarefication');
+      
+      // sendEmailVarefication({ message: "asdaskjdlskdjflksdjflksjdflksdjf" })
+      //   .then((result) => {
+      //     // Read result of the Cloud Function.
+      //     console.log("aaa\n")
+      //     /** @type {any} */
+      //     console.log(result.JSON);
+      //     // const data = result.data;
+      //     // const sanitizedMessage = data.text;
+      //   });
+
+  }
+}
 
 export const createAccount = (userId, token, expiryTime, _email) => {
   return dispatch => {
