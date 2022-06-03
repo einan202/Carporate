@@ -49,7 +49,7 @@ const upcomingDriveItem = props => {
     <Text style={[styles.text, {fontSize: 20}]}>There are still no passangers for this drive</Text>
     </View>;
     
-  
+ 
   return (
     <Card style={{
       height: (props.showButton)?  250 : 250 ,
@@ -115,7 +115,8 @@ const upcomingDriveItem = props => {
         amount_of_people: props.amount_of_people,
         driver: props.driver,
         dir: props.dir,
-        driveID: props.driveID
+        driveID: props.driveID,
+        newDriveInformation: props.newDriveInformation
       })} >
           <Text style = {{textAlign: 'center', fontSize: 15, fontFamily: 'open-sans-bold'}}>For more details click here</Text>
       </TouchableOpacity>

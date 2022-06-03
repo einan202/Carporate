@@ -7,6 +7,7 @@ import ReduxThunk from 'redux-thunk';
 import authReducer from './store/reducers/auth';
 import drivesReducer from './store/reducers/drives';
 import passangerReducer from './store/reducers/passanger';
+import notificationsReducer from './store/reducers/notifications';
 import AppNavigator from './navigation/AppNavigator';
 import * as Font from 'expo-font';
 import * as Notifications from 'expo-notifications';
@@ -23,7 +24,8 @@ Notifications.setNotificationHandler({
 const rootReducer = combineReducers({
   auth: authReducer,
   drives: drivesReducer,
-  passanger: passangerReducer
+  passanger: passangerReducer,
+  notifications: notificationsReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));

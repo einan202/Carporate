@@ -27,7 +27,7 @@ const foundedDrivesScreen = props => {
     const first_name = useSelector(state => state.auth.first_name);
     const email = useSelector(state => state.auth.email);
     const last_name = useSelector(state => state.auth.last_name);
-    const phone = useSelector(state => state.auth.phone);
+    const phone = useSelector(state => state.auth.phone_number);
     const pushToken = useSelector(state => state.auth.pushToken);
     const userID = useSelector(state => state.auth.userId);
 

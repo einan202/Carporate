@@ -10,7 +10,8 @@ import {
   Text, 
   FlatList,
   Pressable,
-  Modal
+  Modal,
+  Linking
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import Colors from '../../constants/Colors';
@@ -104,7 +105,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
       let title = "Someone leave your drive"
       let body = `${firstName} ${LastName} leave your drive to ${route.params.destination} on ${route.params.date}`
       
-      triggerNotificationHandler(title, to, body)
+      triggerNotificationHandler(title, to, body);
       try{
         dispatch(deleteDriveForPassanger(route.params.driveID, userID))
       }
@@ -115,7 +116,6 @@ function driveScreenIfUpcoming({ route, navigation }) {
     }
     navigation.navigate("Loyalty")
   }
-
     const passangersText = 
     route.params.passangers!==undefined && route.params.passangers !== [] ? 
         <FlatList
@@ -123,17 +123,20 @@ function driveScreenIfUpcoming({ route, navigation }) {
           data={route.params.passangers.map((passanger, index) => ({ value: passanger, id: index  }))}
           keyExtractor={item => item.id}
           renderItem = {itemData => 
-            (ifDriver? <Pressable
+            (ifDriver?
+              
+               <Pressable
               onPress={() => Linking.openURL(`tel:${itemData.item.value.phone}`)}
               >
                 
                 <Text style={[styles.text, {fontSize: 20}]}>{itemData.item.value.firstName} {itemData.item.value.lastName}</Text>
               </Pressable>
-
+              
             :
             <Text style={[styles.text, {fontSize: 20}]}>{itemData.item.value.firstName} {itemData.item.value.lastName}</Text>
              
-            )}
+            )
+          }
         />
         :
         <View style = {{marginTop:0}}>
@@ -155,7 +158,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
               :
               <Pressable
               onPress={() => Linking.openURL(`tel:${route.params.driver.driverPhone}`)}>
-                <Text style={[styles.text, {fontSize: 20}]}> {`the driver is: ${route.params.driver.driverFirstName} ${route.params.driver.driverLastName}`}  </Text>
+                <Text style={[styles.text, {fontSize: 20}]}> {`the driver is: ${route.params.driver.driverFirstName + ' ' + route.params.driver.driverLastName}`}  </Text>
               </Pressable>
             }
             

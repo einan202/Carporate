@@ -97,6 +97,7 @@ export const fetchDrives = (userID) => {
       const resData = await response.json();
       const loadedDrives = [];
       let currentDate = new Date()
+      
       for (const key in resData.drives) {
         let currRide = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${resData.drives[key]}.json`);
         currRide = await currRide.json();
@@ -131,7 +132,6 @@ export const fetchDrives = (userID) => {
 export const joinDrive = (driveData,passangerEmail, passangerPushToken, passangerFirstName, passangerLastName, passangerPhone, passangerUserId, newDriveInformation) => {
   let passangers = driveData.passangers;
   let passangersPickUpLocations = passangers != undefined ? passangers.map(passanger => passanger.pickUpLocation): undefined
-
   let dateObj = make_date(driveData.date,driveData.time);
   let deviation_time = driveData.deviation_time - newDriveInformation.devationTime;
   let amount_of_people = driveData.amount_of_people - newDriveInformation.amount_of_people
@@ -188,7 +188,8 @@ export const joinDrive = (driveData,passangerEmail, passangerPushToken, passange
         amount_of_people: amount_of_people,
         dir: dir,
         driveTime: getRouteDuration(getRoute(dir)),
-        deviation_time: deviation_time
+        deviation_time: deviation_time,
+        drivePoints: newDriveInformation.drivePoints
       })
     });
     
@@ -297,18 +298,20 @@ export const deleteDriveForPassanger = (driveID, userID) => {
     let driveDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`)
     let driveDetails = await driveDetailsJson.json(); 
     let passangers = driveDetails.passangers
-    let passangerToDelete = passangers.filter(passanger => passanger.userID == userID)
+    
+    let passangerToDelete = passangers.filter(passanger => passanger.userID == userID)[0]
     passangers = passangers.filter(passanger => passanger.userID != userID)
+    
     let dateObj = make_date(driveDetails.date,driveDetails.time);
-    let amountOfPeople = driveDetails.amount_of_people + passangerToDelete[0].amountOfPeople
-
+    let amountOfPeople = driveDetails.amount_of_people + passangerToDelete.amountOfPeople
     let oldDriveWayPoints = driveDetails.drivePoints.slice(1, driveDetails.drivePoints.length-1);
     function filterWayPoints(point){
       const pickUpFilter = point.place_id !== passangerToDelete.pickUpLocation.place_id;
-      const dropOffFilter = point.place_id !== passangerToDelete.dropOffLocation.place_id;
+      const dropOffFilter = point.place_id !== passangerToDelete.dropOffPoint.place_id;
       return pickUpFilter && dropOffFilter;
     }
     let newDriveWayPoints = oldDriveWayPoints.filter(filterWayPoints);
+    newDriveWayPoints = newDriveWayPoints.length === 0 ? undefined : newDriveWayPoints;
 
     let newDir = await getDirections(
       driveDetails.starting_point,

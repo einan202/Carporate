@@ -18,7 +18,7 @@ import {showDirectionInMaps} from '../../functions/googleAPI';
 function driveScreenIfFound({ route, navigation }) {
 
   const email = useSelector(state => state.auth.email);
-
+  
     const passangersText = 
     route.params.passangers!==undefined && route.params.passangers !== [] ? 
         <FlatList
@@ -45,7 +45,7 @@ function driveScreenIfFound({ route, navigation }) {
             }
             <Text style={[styles.text, {fontSize: 20}]}> {route.params.date} {'at'} {route.params.time}  </Text>
             <Text style={[styles.text, {fontSize: 20}]}> {'available spaces:'} {route.params.amount_of_people}  </Text>
-            <Text style={[styles.text, {fontSize: 20}]}> {route.params.driver === email ? 'You are the driver' : `the driver is: ${route.params.driver}`}  </Text>
+            <Text style={[styles.text, {fontSize: 20}]}> {route.params.driver === email ? 'You are the driver' : `the driver is: ${route.params.driver.driverFirstName + ' ' + route.params.driver.driverLastName}`}  </Text>
             
             {passangersText}
             { 
