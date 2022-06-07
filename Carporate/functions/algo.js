@@ -1,5 +1,5 @@
 import * as googleAPI from './googleAPI.js'
-const NUM_OF_FILTERED_POINTS = 5;
+const NUM_OF_FILTERED_POINTS = 3;
 const SEARCH_RANGE = [1500, 5000, 10000];
 /*
   Input: 
@@ -39,10 +39,20 @@ export async function algo(st_location, dest_location, oldDir, pickUpRangeFilter
     newDir,
     newDriveInfo
   } = await optDrive(pickUpPoints, dropOffPoints, oldDriveInfo, date);
-
-
-  console.log(`In algo: ${JSON.stringify(newDriveInfo)}`);
-
+  // console.log(`oldDir Duration: ${googleAPI.getRouteDuration(googleAPI.getRoute(oldDir))}`)
+  // console.log(`newDir Duration: ${googleAPI.getRouteDuration(googleAPI.getRoute(newDir))}`)
+  // console.log(`oldDrive Duration: ${oldDriveInfo.getDuration({})}`);
+  // console.log(`newDrive Duration: ${newDriveInfo.getDuration({})}`); 
+  oldLegsDuration = oldDriveInfo.getLegsDuration();
+  newLegsDuration = newDriveInfo.getLegsDuration();
+  console.log('old legs duration');
+  for (let i=0; i < oldLegsDuration.length; i++){
+    console.log(oldLegsDuration[i])
+  }
+  console.log('new legs duration');
+  for (let i=0; i < newLegsDuration.length; i++){
+    console.log(newLegsDuration[i])
+  }
   let drivePoints = newDriveInfo.getPoints();
   let driveTime = newDriveInfo.getDuration({});
   let devationTime = newDriveInfo.getDuration({}) - oldDriveInfo.getDuration({});
@@ -218,7 +228,7 @@ class DriveInfo{
     {
       mergedDrive = new DriveInfo({
         points: this.points.concat(drive.points.slice(1)),
-        legs_duration: this.legs_duration.concat(drive.legs_duration.slice(1))
+        legs_duration: this.legs_duration.concat(drive.legs_duration)
       });
     }
     return mergedDrive;

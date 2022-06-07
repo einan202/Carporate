@@ -47,11 +47,11 @@ export function getRoute(dir){
 export function getLegsDuration(dir){
   console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
-  return dir.routes[0].legs.map(leg => Math.round(leg.duration.value/60));
+  return dir.routes[0].legs.map(leg => Math.round(leg.duration.value / 60));
 }
 
 export function getRouteLegsDuration(route){
-  return route.legs.map(leg => Math.round(leg.duration.value/60));
+  return route.legs.map(leg => leg.duration.value);
 }
 
 export function getRouteDuration(route){

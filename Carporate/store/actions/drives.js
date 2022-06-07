@@ -39,6 +39,7 @@ export const post_drive = (starting_point, destination, date, time, amount_of_pe
             deviation_time: deviation_time,
             driver: {driverEmail: driverEmail, driverPushToken: driverPushToken, driverFirstName: driverFirstName, driverLastName:driverLastName, driverPhone: driverPhone, driverID: driverUserId, driverDeviationTime: parseInt(deviation_time)},
             dir: dir,
+            drivePoints: [starting_point, destination],
             driveTime: getRouteDuration(getRoute(dir))
           })
         });
@@ -322,8 +323,8 @@ export const deleteDriveForPassanger = (driveID, userID) => {
 
     let oldDirDuration = getRouteDuration(getRoute(driveDetails.dir));
     let newDirDuration = getRouteDuration(getRoute(newDir));
-
-    let deviationTime = oldDirDuration - newDirDuration + driveDetails.driver.driverDeviationTime
+e
+    let deviationTim = oldDirDuration - newDirDuration + driveDetails.deviation_time
 
     // Delete the drive from the drives of the passenger who is leaving
     let passangerDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${userID}.json`)

@@ -10,7 +10,6 @@ export const updateNotifications = (userID) => {
           }
           const resData = await response.json();
           const userNotifications = resData.notifications;
-          console.log("sdfsdf" ,userNotifications);
           dispatch({
             type: UPDATE_NOTIFICATIONS,
             userNotifications: userNotifications

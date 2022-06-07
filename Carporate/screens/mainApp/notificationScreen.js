@@ -1,9 +1,10 @@
 import React, { useState,  useCallback, useEffect } from "react";
-import { View, StyleSheet, Text, FlatList } from "react-native";
+import { View, StyleSheet, Text, FlatList, ActivityIndicator } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import NotificationItem from "../../components/shop/NotificationItem";
 import * as notificationsActions from "../../store/actions/notifications";
-
+import Colors from "../../constants/Colors";
+import { LinearGradient } from "expo-linear-gradient";
 const Cred = (
   <View>
     <Text
@@ -18,7 +19,7 @@ const Cred = (
   </View>
 );
 
-const notificationScreen = async (props) => {
+const notificationScreen = props => {
   const userID = useSelector((state) => state.auth.userId);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -69,26 +70,29 @@ const notificationScreen = async (props) => {
   
  
   return (
-    <FlatList
-      refreshing={isRefreshing}
-      ListHeaderComponent={Cred}
-      onRefresh={loadNotifications}
-      data={notifications}
-      keyExtractor = {item => item.id}
-      renderItem={(itemData) => (
-        <NotificationItem
-          title={itemData.item.title}
-          body={itemData.item.body}
-          time={itemData.item.time}
-        />
-      )}
-      ListEmptyComponent={
-        <View style={styles.centered}>
-          <Text>No notifications found</Text>
-        </View>
-      }
-    />
+    <LinearGradient colors={['#DB7093', '#ffe3ff']} style={styles.gradient}>
+      <FlatList
+        refreshing={isRefreshing}
+        ListHeaderComponent={Cred}
+        onRefresh={loadNotifications}
+        data={notifications}
+        keyExtractor = {item => item.id}
+        renderItem={(itemData) => (
+          <NotificationItem
+            title={itemData.item.title}
+            body={itemData.item.body}
+            time={itemData.item.time}
+          />
+        )}
+        ListEmptyComponent={
+          <View style={styles.centered}>
+            <Text>No notifications found</Text>
+          </View>
+        }
+      />
+    </LinearGradient>
   );
+
 };
 
 const styles = StyleSheet.create({
@@ -106,6 +110,11 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 12,
     backgroundColor: "white",
+  },
+  gradient: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 });
 
