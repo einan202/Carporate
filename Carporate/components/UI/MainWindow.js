@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer, useCallback } from "react";
-import { View, Text, StyleSheet, Button, Alert, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Button, Alert, ScrollView, ActivityIndicator } from "react-native";
 
 import DateTimeButton from "./DateTimeButton";
 import DropDownButton from "./DropDownButton";
@@ -140,6 +140,7 @@ const MainWindow = props => {
         setIsLoading(true);
         try {
           await dispatch(action);
+          setIsLoading(false);
           if(props.passangerOrDriver === "passanger"){
             props.navigation.navigate('foundedDrivesScreen');
           }
@@ -151,6 +152,8 @@ const MainWindow = props => {
           setIsLoading(false);
         }
       };
+
+
 
 
 
@@ -170,7 +173,13 @@ const MainWindow = props => {
       { label: '30 km', value: '30' },
   ];
 
- 
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
 
     return (
       

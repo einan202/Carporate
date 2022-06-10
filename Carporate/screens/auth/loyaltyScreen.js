@@ -287,6 +287,7 @@ const loyaltyScreen = (props) => {
     );
   }
 
+  
   return (
     <FlatList
       ListHeaderComponent={credentials}
@@ -314,6 +315,7 @@ const loyaltyScreen = (props) => {
           whereToNavigate={"upcomingDrive"}
           navigation={props.navigation}
           driveID={itemData.item.id}
+          drivePoints = {itemData.item.drivePoints}
         />
       )}
       ListEmptyComponent={

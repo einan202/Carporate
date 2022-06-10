@@ -48,17 +48,17 @@ const formReducer = (state, action) => {
 const AuthScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
-  const [isSignup, setIsSignup] = useState(false);
+  const [isSignup, setIsSignup] = useState(true);
   const dispatch = useDispatch();
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       email: '',
-      password: ''
+      password: '123456'
     },
     inputValidities: {
       email: false,
-      password: false
+      password: true
     },
     formIsValid: false
   });
@@ -136,7 +136,7 @@ const AuthScreen = props => {
               onInputChange={inputChangeHandler}
               initialValue=""
             />
-            <Input
+            {/* <Input
               id="password"
               label="Password"
               keyboardType="default"
@@ -147,7 +147,7 @@ const AuthScreen = props => {
               errorText="Please enter a valid password."
               onInputChange={inputChangeHandler}
               initialValue=""
-            />
+            /> */}
             <View style={styles.buttonContainer}>
               {isLoading ? (
                 <ActivityIndicator size="small" color={Colors.primary} />
@@ -159,7 +159,7 @@ const AuthScreen = props => {
                 />
               )}
             </View>
-            <View style={styles.buttonContainer}>
+            {/* <View style={styles.buttonContainer}>
               <Button
                 title={`Switch to ${isSignup ? 'Login' : 'Sign Up'}`}
                 color={Colors.accent}
@@ -167,7 +167,7 @@ const AuthScreen = props => {
                   setIsSignup(prevState => !prevState);
                 }}
               />
-            </View>
+            </View> */}
           </ScrollView>
         </Card>
       </LinearGradient>

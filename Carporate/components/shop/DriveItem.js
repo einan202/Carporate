@@ -1,4 +1,4 @@
-import React , {useState} from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,58 +9,105 @@ import {
   Platform,
   Alert,
   Modal,
-  Pressable
-} from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
-import Colors from '../../constants/Colors';
-import { useSelector} from 'react-redux';
-import {showDirectionInMaps} from '../../functions/googleAPI';
-import {useEffect, useLayoutEffect} from 'react'
+  Pressable,
+} from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import Colors from "../../constants/Colors";
+import { useSelector } from "react-redux";
+import { showDirectionInMaps } from "../../functions/googleAPI";
+import { useEffect, useLayoutEffect } from "react";
 
-import Card from '../UI/Card';
-import CollapseView from '../UI/CollapseView';
+import Card from "../UI/Card";
+import CollapseView from "../UI/CollapseView";
 
-const upcomingDriveItem = props => {
+const upcomingDriveItem = (props) => {
   let TouchableCmp = TouchableOpacity;
-  const email = useSelector(state => state.auth.email);
-  
+  const email = useSelector((state) => state.auth.email);
 
-  if (Platform.OS === 'android' && Platform.Version >= 21) {
+  const passangerIndex = (passangers, passangerEmail) => {
+    return passangers.findIndex((p) => p.email === passangerEmail);
+  };
+
+  if (Platform.OS === "android" && Platform.Version >= 21) {
     TouchableCmp = TouchableNativeFeedback;
   }
   const [modalVisible, setModalVisible] = useState(false);
 
+  const passangersText =
+    props.passangers !== undefined && props.passangers !== [] ? (
+      <FlatList
+        ListHeaderComponent={
+          <Text style={[styles.text, { fontSize: 20 }]}>
+            The passangers are:
+          </Text>
+        }
+        data={props.passangers.map((passanger, index) => ({
+          value: passanger,
+          id: index,
+        }))}
+        keyExtractor={(item) => item.id}
+        renderItem={(itemData) => (
+          <Text style={[styles.text, { fontSize: 20 }]}>
+            {itemData.item.value}{" "}
+          </Text>
+        )}
+      />
+    ) : (
+      <View style={{ marginTop: 0 }}>
+        <Text style={[styles.text, { fontSize: 20 }]}>
+          There are still no passangers for this drive
+        </Text>
+      </View>
+    );
 
-  
-  const passangersText = 
-  props.passangers!==undefined && props.passangers !== [] ? 
-    <FlatList
-          ListHeaderComponent={<Text style={[styles.text, {fontSize: 20}]}>The passangers are:</Text>}
-          data={props.passangers.map((passanger, index) => ({ value: passanger, id: index  }))}
-          keyExtractor={item => item.id}
-          renderItem = {itemData => 
-            (
-            <Text style={[styles.text, {fontSize: 20}]}>{itemData.item.value} </Text>
-             
-            )}
-    />
-    :
-    <View style = {{marginTop:0}}>
-    <Text style={[styles.text, {fontSize: 20}]}>There are still no passangers for this drive</Text>
-    </View>;
-    
- 
+  const fromTo =
+    props.driver.driverEmail === email || props.whereToNavigate === "foundDrive" ? (
+      <Text style={styles.text}>
+        {" "}
+        {props.starting_point.address} {"-->"} {props.destination.address}
+      </Text>
+    ) : (
+      <Text>
+        {
+          props.passangers[
+            passangerIndex(props.passangers, email)
+          ].starting_point.address
+        }{" "}
+        {"-->"}{" "}
+        {
+          props.passangers[
+            passangerIndex(props.passangers, email)
+          ].destination.address
+        }
+      </Text>
+    );
+
   return (
-    <Card style={{
-      height: (props.showButton)?  250 : 250 ,
-      margin: 20
-    }}>
-       
+    <Card
+      style={{
+        height: props.showButton ? 250 : 250,
+        margin: 20,
+      }}
+    >
       <View style={styles.touchable}>
-      <Text style={styles.text}> {props.starting_point.address} {'-->'} {props.destination.address}</Text>
-        <Text style={styles.text}> {props.date} {'at'} {props.time}  </Text>
-        <Text style={styles.text}>  {'available spaces:'} {props.amount_of_people}  </Text>
-        <Text style={styles.text}>  {props.driver.driverEmail === email ? 'You are the driver' : `the driver is: ${props.driver.driverFirstName} ${props.driver.driverLastName}`}  </Text>
+        <Text style={styles.text}>
+          {" "}
+          {fromTo}
+        </Text>
+        <Text style={styles.text}>
+          {" "}
+          {props.date} {"at"} {props.time}{" "}
+        </Text>
+        <Text style={styles.text}>
+          {" "}
+          {"available spaces:"} {props.amount_of_people}{" "}
+        </Text>
+        <Text style={styles.text}>
+          {" "}
+          {props.driver.driverEmail === email
+            ? "You are the driver"
+            : `the driver is: ${props.driver.driverFirstName} ${props.driver.driverLastName}`}{" "}
+        </Text>
       </View>
       {props.showButton}
       {/* <Modal
@@ -104,24 +151,36 @@ const upcomingDriveItem = props => {
             </Card>
             </View>
         </Modal> */}
-        <View style = {{marginTop: 0}}>
-      {/* <TouchableOpacity  onPress={() => setModalVisible(!modalVisible)}> */}
-      <TouchableOpacity  onPress={() => props.navigation.navigate(`${props.whereToNavigate}`,{
-        starting_point: props.starting_point.address,
-        destination: props.destination.address,
-        date: props.date,
-        time: props.time,
-        passangers: props.passangers,
-        amount_of_people: props.amount_of_people,
-        driver: props.driver,
-        dir: props.dir,
-        driveID: props.driveID,
-        newDriveInformation: props.newDriveInformation
-      })} >
-          <Text style = {{textAlign: 'center', fontSize: 15, fontFamily: 'open-sans-bold'}}>For more details click here</Text>
-      </TouchableOpacity>
-         </View>
-        
+      <View style={{ marginTop: 0 }}>
+        {/* <TouchableOpacity  onPress={() => setModalVisible(!modalVisible)}> */}
+        <TouchableOpacity
+          onPress={() =>
+            props.navigation.navigate(`${props.whereToNavigate}`, {
+              starting_point: props.starting_point.address,
+              destination: props.destination.address,
+              date: props.date,
+              time: props.time,
+              passangers: props.passangers,
+              amount_of_people: props.amount_of_people,
+              driver: props.driver,
+              dir: props.dir,
+              driveID: props.driveID,
+              newDriveInformation: props.newDriveInformation,
+              drivePoints: props.drivePoints,
+            })
+          }
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 15,
+              fontFamily: "open-sans-bold",
+            }}
+          >
+            For more details click here
+          </Text>
+        </TouchableOpacity>
+      </View>
     </Card>
   );
 };
@@ -129,58 +188,56 @@ const upcomingDriveItem = props => {
 const styles = StyleSheet.create({
   touchable: {
     borderRadius: 10,
-    overflow: 'hidden',
-    
+    overflow: "hidden",
   },
   text: {
-    textAlign: 'center',
-    fontFamily: 'open-sans',
+    textAlign: "center",
+    fontFamily: "open-sans",
     fontSize: 17,
-    color: '#888'
+    color: "#888",
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    
+    justifyContent: "center",
+    alignItems: "center",
   },
   button: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 12,
     marginTop: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-    borderWidth: 20
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    borderWidth: 20,
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
-    borderWidth: 20
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    borderWidth: 20,
   },
   bottomModal: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     margin: 0,
-    borderWidth: 20
+    borderWidth: 20,
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 22,
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -188,7 +245,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    borderWidth: 20
+    borderWidth: 20,
   },
 });
 

@@ -1,6 +1,6 @@
 import Drive from '../../models/drive';
 
-import {getDirections, getRouteDuration, getRoute} from '../../functions/googleAPI'
+import {getDirections, getRouteDuration, getRoute, getRoutePointsInOrder} from '../../functions/googleAPI'
 export const DELETE_DRIVE = 'DELETE_DRIVE';
 export const CREATE_DRIVE = 'CREATE_DRIVE';
 export const UPDATE_DRIVE = 'UPDATE_DRIVE';
@@ -114,7 +114,8 @@ export const fetchDrives = (userID) => {
             currRide.deviation_time,
             currRide.driver,
             currRide.passangers,
-            currRide.dir
+            currRide.dir,
+            currRide.drivePoints
             ));
           }
       }
@@ -295,6 +296,7 @@ export const deleteDriveForDriver = (driveID) => {
 }
 
 export const deleteDriveForPassanger = (driveID, userID) => {
+  
   return async dispatch => {
     let driveDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`)
     let driveDetails = await driveDetailsJson.json(); 
@@ -313,7 +315,7 @@ export const deleteDriveForPassanger = (driveID, userID) => {
     }
     let newDriveWayPoints = oldDriveWayPoints.filter(filterWayPoints);
     newDriveWayPoints = newDriveWayPoints.length === 0 ? undefined : newDriveWayPoints;
-
+    
     let newDir = await getDirections(
       driveDetails.starting_point,
       driveDetails.destination,
@@ -323,9 +325,9 @@ export const deleteDriveForPassanger = (driveID, userID) => {
 
     let oldDirDuration = getRouteDuration(getRoute(driveDetails.dir));
     let newDirDuration = getRouteDuration(getRoute(newDir));
-e
-    let deviationTim = oldDirDuration - newDirDuration + driveDetails.deviation_time
 
+    let deviationTime = oldDirDuration - newDirDuration + driveDetails.deviation_time
+    
     // Delete the drive from the drives of the passenger who is leaving
     let passangerDetailsJson = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users/${userID}.json`)
     let passangerDetails = await passangerDetailsJson.json(); 
@@ -340,7 +342,7 @@ e
         drives: currDrives
         })
       });
-    
+      
     // Update the drive in the database
     const response = await fetch(`https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/drives/${driveID}.json`, {
       method: 'PATCH',
@@ -352,7 +354,8 @@ e
         amount_of_people: amountOfPeople,
         dir: newDir,
         deviation_time: deviationTime,
-        driveTime: newDirDuration
+        driveTime: newDirDuration,
+        drivePoints: getRoutePointsInOrder(newDir)
       })
     });
 
