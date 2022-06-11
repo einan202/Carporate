@@ -39,12 +39,19 @@ function driveScreenIfUpcoming({ route, navigation }) {
     return drivePoints.findIndex((dP) => dP.place_id === passangerSP.place_id);
   };
 
-  const passangersByOrder = !route.params.passangers ? undefined : route.params.passangers.sort((passangerA, passangerB) => {
-    let passangerAIndex = passangerIndexBySP(route.params.drivePoints, passangerA.pickUpLocation);
-    let passangerBIndex = passangerIndexBySP(route.params.drivePoints, passangerB.pickUpLocation);
-    return passangerAIndex - passangerBIndex;
-  }
-  );
+  const passangersByOrder = !route.params.passangers
+    ? undefined
+    : route.params.passangers.sort((passangerA, passangerB) => {
+        let passangerAIndex = passangerIndexBySP(
+          route.params.drivePoints,
+          passangerA.pickUpLocation
+        );
+        let passangerBIndex = passangerIndexBySP(
+          route.params.drivePoints,
+          passangerB.pickUpLocation
+        );
+        return passangerAIndex - passangerBIndex;
+      });
 
   const triggerNotificationHandler = (title, to, body) => {
     fetch("https://exp.host/--/api/v2/push/send", {
@@ -144,23 +151,58 @@ function driveScreenIfUpcoming({ route, navigation }) {
           id: index,
         }))}
         keyExtractor={(item) => item.id}
-        renderItem={(itemData) =>
-          ifDriver ? (
-            <Pressable
-              onPress={() =>
-                Linking.openURL(`tel:${itemData.item.value.phone}`)
-              }
-            >
-              <Text style={[styles.text, { fontSize: 20 }]}>
-                {itemData.item.value.firstName} {itemData.item.value.lastName}
-              </Text>
-            </Pressable>
-          ) : (
+        renderItem={(itemData) => {
+         
+          let passanger_name = (
             <Text style={[styles.text, { fontSize: 20 }]}>
               {itemData.item.value.firstName} {itemData.item.value.lastName}
             </Text>
-          )
-        }
+          );
+
+          let passanger_locations = (
+            <>
+              <Text>pick up location:</Text>
+              <Pressable
+                onPress={() =>
+                  Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${itemData.item.value.pickUpLocation.location.lat}%2C${itemData.item.value.pickUpLocation.location.lng}`)
+                }
+              >
+                <Text style={[styles.text, { fontSize: 20 }]}>
+                  {itemData.item.value.pickUpLocation.address}
+                </Text>
+              </Pressable>
+
+              <Text>drop off location:</Text>
+              <Pressable
+                onPress={() =>
+                  Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${itemData.item.value.dropOffPoint.location.lat}%2C${itemData.item.value.dropOffPoint.location.lng}`)
+                }
+              >
+                <Text style={[styles.text, { fontSize: 20 }]}>
+                  {itemData.item.value.dropOffPoint.address}
+                </Text>
+              </Pressable>
+            </>
+          );
+
+          return ifDriver ? (
+            <>
+              <Pressable
+                onPress={() =>
+                  Linking.openURL(`tel:${itemData.item.value.phone}`)
+                }
+              >
+                {passanger_name}
+              </Pressable>
+              {passanger_locations}
+            </>
+          ) : (
+            <>
+            {passanger_name}
+            {passanger_locations}
+            </>
+          );
+        }}
       />
     ) : (
       <View style={{ marginTop: 0 }}>
@@ -187,8 +229,6 @@ function driveScreenIfUpcoming({ route, navigation }) {
       }
     </Text>
   );
-
-
 
   return (
     <View style={styles.touchable}>
