@@ -248,6 +248,15 @@ export const detailsFilling = (
   pushToken
 ) => {
   return async (dispatch) => {
+    if (!onlyLetters(first_name)) {
+      throw new Error("You entered invalid first name");
+    } else if (!onlyLetters(last_name)) {
+      throw new Error("You entered invalid last name");
+    } else if (!isValidPhone_number(phone_number)) {
+      throw new Error("You entered invalid phone number");
+    } else if (!isValidAge(age)) {
+      throw new Error("You entered invalid age");
+    } else {
     const response = await fetch(
       "https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users.json",
       {
@@ -264,8 +273,10 @@ export const detailsFilling = (
           gender: gender,
           pushToken: pushToken,
         }),
+      
       }
     );
+
 
     const resData = await response.json();
     saveDetaillsToStorage(
@@ -292,6 +303,7 @@ export const detailsFilling = (
       )
     );
   };
+}
 };
 
 export const logout = () => {

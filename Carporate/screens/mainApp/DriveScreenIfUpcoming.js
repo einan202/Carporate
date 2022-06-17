@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import Colors from "../../constants/Colors";
-import { showDirectionInMaps } from "../../functions/googleAPI";
+import { showDirectionInMaps, getLegsDuration } from "../../functions/googleAPI";
 import {
   deleteDriveForDriver,
   deleteDriveForPassanger,
@@ -37,6 +37,41 @@ function driveScreenIfUpcoming({ route, navigation }) {
   };
   const passangerIndexBySP = (drivePoints, passangerSP) => {
     return drivePoints.findIndex((dP) => dP.place_id === passangerSP.place_id);
+  };
+  function make_date (date, time){
+    let date_arr = date.split('/');
+    date_arr = date_arr.reverse();
+    date_arr[1] = String (Number(date_arr[1]) - 1);
+    let time_arr = time.split(':');
+    let date_obj = new Date(... date_arr, ... time_arr)
+    return date_obj;
+  }
+  const dir = route.params.dir;
+  const legsDuration = getLegsDuration(dir);
+
+  const calcPickUpTime = (passangerEmail, time = make_date(route.params.date, route.params.time)) => {
+    let passangers = route.params.passangers;
+    let passanger = passangers.find(p => p.email === passangerEmail);
+    let pickUpLocation =  passanger.pickUpLocation;
+    let PickUpIndexInLegs = route.params.drivePoints.findIndex(leg => leg.place_id === pickUpLocation.place_id) - 1;
+    let driveDuration = legsDuration.slice(0,PickUpIndexInLegs+1).reduce((prev, curr) => prev + curr, 0);
+    time = new Date(time.getTime() + (60000 * driveDuration));
+    let newMinutes = time.getMinutes()
+    let newHour = time.getHours()
+    if(newHour < 10){
+      newHour = '0' + newHour.toString()
+    }
+    else{
+      newHour = newHour.toString()
+    }
+    if(newMinutes < 10){
+      newMinutes = '0' + newMinutes.toString()
+    }
+    else{
+      newMinutes = newMinutes.toString()
+    }
+    let newTime = newHour.toString() + ':' + newMinutes.toString()
+    return [driveDuration, newTime];
   };
 
   const passangersByOrder = !route.params.passangers
@@ -99,7 +134,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
         triggerNotificationHandler(
           title,
           to[i].pushToken,
-          `${route.params.driver.driverFirstName} ${route.params.driver.driverLastName} is on the way to take you to ${to[i].destination.address}.`
+          `${route.params.driver.driverFirstName} ${route.params.driver.driverLastName} is on the way to take you to ${to[i].destination.address}, the estimated time he get to you are ${calcPickUpTime(to[i].email,Date.now())[0]} minutes .`
         );
       }
     }
@@ -138,6 +173,8 @@ function driveScreenIfUpcoming({ route, navigation }) {
     }
     navigation.navigate("Loyalty");
   };
+
+
   const passangersText =
     route.params.passangers !== undefined && route.params.passangers !== [] ? (
       <FlatList
@@ -230,6 +267,8 @@ function driveScreenIfUpcoming({ route, navigation }) {
     </Text>
   );
 
+  const pickUpTime = ifDriver ? null : <Text style={[styles.text, { fontSize: 20 }]}>estimated pick up time: {calcPickUpTime(email)[1]} </Text>
+  
   return (
     <View style={styles.touchable}>
       <Text style={[styles.text, { fontSize: 20 }]}> {fromTo}</Text>
@@ -246,6 +285,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
         {" "}
         {route.params.date} {"at"} {route.params.time}{" "}
       </Text>
+      {pickUpTime}
       <Text style={[styles.text, { fontSize: 20 }]}>
         {" "}
         {"available spaces:"} {route.params.amount_of_people}{" "}

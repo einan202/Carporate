@@ -9,7 +9,8 @@ import {
   Alert,
   Text, 
   FlatList,
-  Pressable
+  Pressable,
+  Linking
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {showDirectionInMaps} from '../../functions/googleAPI';
@@ -40,8 +41,31 @@ function driveScreenIfFound({ route, navigation }) {
             
             <View style={styles.touchable}>
             <Text style={[styles.text, {fontSize: 20}]}> {route.params.starting_point} {'-->'} {route.params.destination}</Text>
-            {route.params.newDriveInformation ?  
-            <Text style={[styles.text, {fontSize: 20}]}> {'The pick up address is:\n'} {route.params.newDriveInformation.pickUpPoint.address}</Text> : <Text></Text>
+            {route.params.newDriveInformation ?
+            <>
+              <Text>your pick up location:</Text>
+              <Pressable
+                onPress={() =>
+                  Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${route.params.newDriveInformation.pickUpPoint.location.lat}%2C${route.params.newDriveInformation.pickUpPoint.location.lng}`)
+                }
+              >
+                <Text style={[styles.text, { fontSize: 20 }]}>
+                  {route.params.newDriveInformation.pickUpPoint.address}
+                </Text>
+              </Pressable>
+
+              <Text>drop off location:</Text>
+              <Pressable
+                onPress={() =>
+                  Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${route.params.newDriveInformation.dropOffPoint.location.lat}%2C${route.params.newDriveInformation.dropOffPoint.location.lng}`)
+                }
+              >
+                <Text style={[styles.text, { fontSize: 20 }]}>
+                  {route.params.newDriveInformation.dropOffPoint.address}
+                </Text>
+              </Pressable>
+            </>
+            : null
             }
             <Text style={[styles.text, {fontSize: 20}]}> {route.params.date} {'at'} {route.params.time}  </Text>
             <Text style={[styles.text, {fontSize: 20}]}> {'available spaces:'} {route.params.amount_of_people}  </Text>

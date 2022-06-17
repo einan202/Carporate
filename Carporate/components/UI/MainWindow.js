@@ -110,6 +110,7 @@ const MainWindow = props => {
         let action;
         if(props.passangerOrDriver === "driver")
         {
+          if(start_point_place)
           action = drivesActions.post_drive(
           start_point_place,
           destination,

@@ -68,7 +68,8 @@ export async function algo(st_location, dest_location, oldDir, pickUpRangeFilter
     newDir,
     drivePoints,
     devationTime,
-    driveTime
+    driveTime,
+    newLegsDuration
   }
 }
 
