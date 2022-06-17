@@ -50,7 +50,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
           route.params.drivePoints,
           passangerB.pickUpLocation
         );
-        return passangerAIndex - passangerBIndex;
+        return passangerBIndex - passangerAIndex;
       });
 
   const triggerNotificationHandler = (title, to, body) => {

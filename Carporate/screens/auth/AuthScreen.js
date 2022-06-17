@@ -69,8 +69,19 @@ const AuthScreen = props => {
     }
   }, [error]);
 
+  const isValidEmail = (testEmail) => {
+    let is_valid_email = testEmail.endsWith(`@post.bgu.ac.il`);
+    return is_valid_email;
+  };
+
   const authHandler = async () => {
-    props.navigation.navigate('EmailVarefication', { email: formState.inputValues.email, password:formState.inputValues.password});
+    if(!isValidEmail(formState.inputValues.email)){
+      Alert.alert('An Error Occurred!', 'Your email must ends with @post.bgu.ac.il', [{ text: 'Okay' }]);
+      
+    }else{
+      props.navigation.navigate('EmailVarefication', { email: formState.inputValues.email, password:formState.inputValues.password});
+
+    }
     // let action;
     // if (isSignup) {
     //   action = authActions.signup(

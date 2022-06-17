@@ -147,10 +147,7 @@ export const joinDrive = (driveData,passangerEmail, passangerPushToken, passange
       phone: passangerPhone,
       userID:passangerUserId,
       pickUpLocation: newDriveInformation.pickUpPoint,
-
-      dropOffLocation: newDriveInformation.dropOffPoint,
-
-
+      dropOffPoint: newDriveInformation.dropOffPoint,
       starting_point: newDriveInformation.passangerStartingPoint,
       destination: newDriveInformation.passangerDestination,
       amountOfPeople: parseInt(newDriveInformation.amount_of_people)

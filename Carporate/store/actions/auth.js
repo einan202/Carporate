@@ -66,6 +66,7 @@ export const authenticate = (
 export const sendVareficationMail = (email) => {
   return async (dispatch) => {
     let code = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+    console.log(code);
     // console.log(`\n\n ----> ${code} <---- \n\n`);
     const response = await fetch(
       "https://us-central1-carpool-54fdc.cloudfunctions.net/sendEmailVarefication",

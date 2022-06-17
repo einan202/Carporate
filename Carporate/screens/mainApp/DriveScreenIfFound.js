@@ -27,7 +27,7 @@ function driveScreenIfFound({ route, navigation }) {
           keyExtractor={item => item.id}
           renderItem = {itemData => 
             (
-            <Text style={[styles.text, {fontSize: 20}]}>{itemData.item.value} </Text>
+            <Text style={[styles.text, {fontSize: 20}]}>{itemData.item.value.firstName} {itemData.item.value.lastName} </Text>
              
             )}
         />
