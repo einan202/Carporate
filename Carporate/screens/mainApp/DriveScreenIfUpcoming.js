@@ -49,15 +49,16 @@ function driveScreenIfUpcoming({ route, navigation }) {
   const dir = route.params.dir;
   const legsDuration = getLegsDuration(dir);
 
-  const calcPickUpTime = (passangerEmail, time = make_date(route.params.date, route.params.time)) => {
+  const calcPickUpTime = (passangerEmail, time = undefined) => {
     let passangers = route.params.passangers;
     let passanger = passangers.find(p => p.email === passangerEmail);
     let pickUpLocation =  passanger.pickUpLocation;
     let PickUpIndexInLegs = route.params.drivePoints.findIndex(leg => leg.place_id === pickUpLocation.place_id) - 1;
     let driveDuration = legsDuration.slice(0,PickUpIndexInLegs+1).reduce((prev, curr) => prev + curr, 0);
+    time = time ? time : new Date();
     time = new Date(time.getTime() + (60000 * driveDuration));
-    let newMinutes = time.getMinutes()
-    let newHour = time.getHours()
+    let newMinutes = time.getMinutes();
+    let newHour = time.getHours();
     if(newHour < 10){
       newHour = '0' + newHour.toString()
     }
@@ -134,7 +135,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
         triggerNotificationHandler(
           title,
           to[i].pushToken,
-          `${route.params.driver.driverFirstName} ${route.params.driver.driverLastName} is on the way to take you to ${to[i].destination.address}, the estimated time he get to you are ${calcPickUpTime(to[i].email,Date.now())[0]} minutes .`
+          `${route.params.driver.driverFirstName} ${route.params.driver.driverLastName} is on the way to take you to ${to[i].destination.address}, the estimated time he get to you are ${calcPickUpTime(to[i].email)[0]} minutes .`
         );
       }
     }
@@ -267,7 +268,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
     </Text>
   );
 
-  const pickUpTime = ifDriver ? null : <Text style={[styles.text, { fontSize: 20 }]}>estimated pick up time: {calcPickUpTime(email)[1]} </Text>
+  const pickUpTime = ifDriver ? null : <Text style={[styles.text, { fontSize: 20 }]}>estimated pick up time: {calcPickUpTime(email, make_date(route.params.date, route.params.time))[1]} </Text>
   
   return (
     <View style={styles.touchable}>
