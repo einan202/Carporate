@@ -245,6 +245,7 @@ export const detailsFilling = (
   phone_number,
   age,
   gender,
+  checkbox,
   pushToken
 ) => {
   return async (dispatch) => {
@@ -256,42 +257,30 @@ export const detailsFilling = (
       throw new Error("You entered invalid phone number");
     } else if (!isValidAge(age)) {
       throw new Error("You entered invalid age");
+    } else if (!checkbox) {
+      throw new Error("Please confirm our privacy terms");
     } else {
-    const response = await fetch(
-      "https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users.json",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          first_name: first_name,
-          last_name: last_name,
-          phone_number: phone_number,
-          age: age,
-          gender: gender,
-          pushToken: pushToken,
-        }),
-      
-      }
-    );
+      const response = await fetch(
+        "https://carpool-54fdc-default-rtdb.europe-west1.firebasedatabase.app/users.json",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            first_name: first_name,
+            last_name: last_name,
+            phone_number: phone_number,
+            age: age,
+            gender: gender,
+            pushToken: pushToken,
+          }),
+        }
+      );
 
-
-    const resData = await response.json();
-    saveDetaillsToStorage(
-      resData.name,
-      email,
-      first_name,
-      last_name,
-      phone_number,
-      age,
-      gender,
-      pushToken
-    );
-
-    dispatch(
-      detailsfl(
+      const resData = await response.json();
+      saveDetaillsToStorage(
         resData.name,
         email,
         first_name,
@@ -300,10 +289,22 @@ export const detailsFilling = (
         age,
         gender,
         pushToken
-      )
-    );
+      );
+
+      dispatch(
+        detailsfl(
+          resData.name,
+          email,
+          first_name,
+          last_name,
+          phone_number,
+          age,
+          gender,
+          pushToken
+        )
+      );
+    }
   };
-}
 };
 
 export const logout = () => {
