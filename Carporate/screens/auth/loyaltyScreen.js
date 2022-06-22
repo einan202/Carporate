@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useReducer, useCallback } from "react";
+import { Image } from 'react-native';
 import {
   ScrollView,
   View,
@@ -16,6 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as drivesActions from "../../store/actions/drives";
 import DriveItem from "../../components/shop/DriveItem";
 import * as Notifications from "expo-notifications";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const loyaltyScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -236,13 +238,94 @@ const loyaltyScreen = (props) => {
 
   const credentials = (
     <>
-      <View style={styles.textContainer}>
+       <View style={{
+            backgroundColor: "#FFF",
+            flex: 1
+      }}>
+      <View style={{
+                    // backgroundColor: "#00a46c",
+                    // backgroundColor: "#FFA500",
+                    backgroundColor: Platform.OS === 'android' ? Colors.primary : '',
+                    height: "1020%",
+                    borderBottomRightRadius: 20,
+                    borderBottomLeftRadius: 20,
+                    paddingHorizontal: 20,
+                }}
+      >
+      <Image
+          source={require('./1.png')}
+                    style={{
+                        height: 10,
+                        width: 20,
+                        marginTop: 30,
+                    }}          
+      />
+      </View></View>
+
+
+      
+      <View style = {{marginTop: 10, marginBottom: 0}}>
+        <Text style={{ fontSize: 30, textAlign: 'center', color: 'white'}}>Hello {first_name}</Text>
+      </View>
+      <View>
+      <Text
+        style={{
+          fontSize: 24,
+          flex: 1,
+          textAlign: "center",
+          fontFamily: "fontawesome-webfont",
+          fontWeight: 'bold',
+          color: "white",
+        }}
+      >
+        Personal Info
+      </Text>
+      </View>
+
+      
+      { <View style={styles.textContainer}>
+        <Text style={{ fontSize: 16, textAlign: 'center'}}> Email: {email} </Text>
+      </View> }
+      { <View style={styles.textContainer}>
+        <Text style={{ fontSize: 16, textAlign: 'center'}}> Name: {first_name} {last_name}</Text>
+      </View> }
+      { <View style={styles.textContainer}>
+        <Text style={{ fontSize: 16, textAlign: 'center'}}>  Phone: {phone_number} </Text>
+      </View> }
+      { <View style={styles.textContainer}>
+        <Text style={{ fontSize: 16, textAlign: 'center'}}> Gender: {gender} </Text>
+      </View> }
+      { <View style={styles.textContainer}>
+        <Text style={{ fontSize: 16, textAlign: 'center'}}> Age: {age} </Text>
+      </View> }
+
+
+      <View style = {{marginTop: 10}}>
+      <Text
+        style={{
+          fontSize: 24,
+          textAlign: "center",
+          fontFamily: "fontawesome-webfont",
+          fontWeight: 'bold',
+          color: "white",
+        }}
+      >
+        Upcoming Rides
+      </Text>
+      </View>
+      {/* { <View style={styles.textContainer}>
         <Text style={{ fontSize: 16 }}> E-Mail: {email} </Text>
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={{ fontSize: 16 }}> First name: {first_name}</Text>
-      </View>
-      <View style={styles.textContainer}>
+      </View> }
+      { <View style={styles.textContainer}>
+        <Text style={{ fontSize: 16}}> E-Mail: {email} </Text>
+      </View> }
+      { <View style={styles.textContainer}>
+        <Text style={{ fontSize: 16 }}> E-Mail: {email} </Text>
+      </View> }
+      { <View style={styles.textContainer}>
+        <Text style={{ fontSize: 16 }}> E-Mail: {email} </Text>
+      </View> } */}
+      {/* { <View style={styles.textContainer}>
         <Text style={{ fontSize: 16 }}> Last name:{last_name} </Text>
       </View>
       <View style={styles.textContainer}>
@@ -253,23 +336,16 @@ const loyaltyScreen = (props) => {
       </View>
       <View style={styles.textContainer}>
         <Text style={{ fontSize: 16 }}> Gender: {gender}</Text>
-      </View>
-      <Text
-        style={{
-          fontSize: 20,
-          textAlign: "center",
-          fontFamily: "open-sans-bold",
-        }}
-      >
-        My upcoming drives
-      </Text>
+      </View> } */}
+
     </>
   );
 
   if (error) {
     return (
       <View style={styles.centered}>
-        <Text>An error occurred!</Text>
+        <Text style={{textAlign: 'center', marginTop: 0, fontSize: 20,fontFamily: "fontawesome-webfont",
+              fontWeight: '900',color: 'grey'}}>An error occurred!</Text>
         <Button
           title="Try again"
           onPress={loadDrives()}
@@ -289,6 +365,7 @@ const loyaltyScreen = (props) => {
 
   
   return (
+    <View style={[styles.screen, {backgroundColor: '#fcefe3'}]}>
     <FlatList
       ListHeaderComponent={credentials}
       onRefresh={loadDrives}
@@ -297,6 +374,7 @@ const loyaltyScreen = (props) => {
       keyExtractor={(item) => item.id}
       renderItem={(itemData) => (
         <DriveItem
+          style = {{ marginTop: 30, flex: 1}}
           starting_point={itemData.item.starting_point}
           destination={itemData.item.destination}
           date={itemData.item.date}
@@ -312,18 +390,18 @@ const loyaltyScreen = (props) => {
             itemData.item.dir ? itemData.item.dir.geocoded_waypoints : undefined
           }
           dir={itemData.item.dir}
-          whereToNavigate={"upcomingDrive"}
+          whereToNavigate={"Current Ride"}
           navigation={props.navigation}
           driveID={itemData.item.id}
           drivePoints = {itemData.item.drivePoints}
         />
       )}
       ListEmptyComponent={
-        <View style={styles.centered}>
-          <Text>No drives found</Text>
-        </View>
+        <View>
+        <Text style={{ fontSize: 16, textAlign: 'center', padding: 5, color: 'white'}}> No Rides </Text>
+      </View> 
       }
-    />
+    /></View>
   );
 };
 

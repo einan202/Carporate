@@ -5,18 +5,14 @@ import NotificationItem from "../../components/shop/NotificationItem";
 import * as notificationsActions from "../../store/actions/notifications";
 import Colors from "../../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
+
 const Cred = (
-  <View>
-    <Text
-      style={{
-        fontSize: 20,
-        textAlign: "center",
-        fontFamily: "open-sans-bold",
-      }}
-    >
-      Your Notifications
-    </Text>
-  </View>
+  // <View style={{padding: 20}}>
+  //   <Text style={{ fontSize: 28, textAlign: 'center', color: 'white'}}>
+  //     Your Notifications
+  //   </Text>
+  // </View>
+  <View style={{ padding: 10}}></View>
 );
 
 const notificationScreen = props => {
@@ -70,7 +66,7 @@ const notificationScreen = props => {
   
  
   return (
-    <LinearGradient colors={['#DB7093', '#ffe3ff']} style={styles.gradient}>
+    <LinearGradient colors={['white', '#f7e8df']} style={styles.gradient}>
       <FlatList
         refreshing={isRefreshing}
         ListHeaderComponent={Cred}
@@ -86,7 +82,8 @@ const notificationScreen = props => {
         )}
         ListEmptyComponent={
           <View style={styles.centered}>
-            <Text>No notifications found</Text>
+          <Text style={{textAlign: 'center', marginTop: 50, fontSize: 20,fontFamily: "fontawesome-webfont",
+              fontWeight: '900', color: 'grey'}}>No notifications found</Text>
           </View>
         }
       />

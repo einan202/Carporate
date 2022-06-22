@@ -7,10 +7,11 @@ import {
     
   } from 'react-native';
 import MainWindow from "../../components/UI/MainWindow";
+import { LinearGradient } from 'expo-linear-gradient';
 
 const passengerScreen = props => {
     return (
-        <View style={styles.screen}>
+        <View style={[styles.screen, {backgroundColor: '#fcefe3'}]}>
         <MainWindow 
           text="text for the textBox"
           buttonStr = "Search"

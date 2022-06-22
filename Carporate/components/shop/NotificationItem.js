@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import style from 'react-native-modal-picker/style';
 import Card from '../UI/Card';
+import Colors from '../../constants/Colors';
 
 export default function NotificationItem({title, body, time}) {
 	return (
@@ -14,10 +15,10 @@ export default function NotificationItem({title, body, time}) {
                   <Text style = {styles.titleText}>{title}</Text>
                 </View>
                 <View style = {styles.body}>
-                  <Text>{body}</Text>
+                  <Text style = {{padding: 20}}>{body}</Text>
                 </View>
                 <View style = {styles.time}>
-                  <Text >{time}</Text> 
+                  <Text style = {styles.timeText}>{time}</Text> 
                 </View>
             </View>
     )
@@ -29,10 +30,12 @@ const styles = StyleSheet.create({
   },
   titleText: {
     textAlign: 'center',
-    fontSize: 20
+    fontSize: 16,
+    fontWeight: 'bold',
+    paddingTop: 25
   },
   body: {
-
+    textAlign: 'center',
   },
   bodyText: {
 
@@ -42,7 +45,12 @@ const styles = StyleSheet.create({
     bottom: 0, //Here is the trick
   },
   timeText: {
-    fontSize: 50
+    padding: 20, 
+    fontWeight: 'bold', 
+    color: Colors.primary,
+    textAlign: 'center',
+    justifyContent: 'center',
+    flex: 1
   },
   notificationContainer: {
     margin: 10,
@@ -53,7 +61,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: "white",
     height: 200,
-    width:330,
+    width:365,
    
   },
 });

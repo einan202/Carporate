@@ -8,7 +8,9 @@ import {
   ActivityIndicator,
   Alert,
   Text, 
-  FlatList
+  FlatList,
+  Image,
+  ImageBackground,
 } from 'react-native';
 import Colors from '../../constants/Colors';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,6 +18,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Drive from '../../models/drive'
 import * as drivesActions from '../../store/actions/drives'
 import DriveItem from '../../components/shop/DriveItem';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 
 const foundedDrivesScreen = props => {
@@ -54,8 +58,10 @@ const foundedDrivesScreen = props => {
     if (error) {
         return (
           <View style={styles.centered}>
-            <Text>An error occurred!</Text>
-            <Text>Try again late!</Text>
+            <Text style={{textAlign: 'center', marginTop: 0, fontSize: 20,fontFamily: "fontawesome-webfont",
+              fontWeight: '900',color: 'grey'}}>Error occurred!</Text>
+            <Text style={{textAlign: 'center', marginTop: 0, fontSize: 20,fontFamily: "fontawesome-webfont",
+              fontWeight: '900',color: 'grey'}}>Please, try again later...</Text>
           </View>
         );
     }
@@ -70,10 +76,19 @@ const foundedDrivesScreen = props => {
 
     if (!isLoading && foundedDrives.length === 0) {
         return (
-          <View style={styles.centered}>
-            <Text>We sorry, we don't find any drive for you</Text>
-            <Text>Try again later</Text>
+          
+          <View style={[styles.screen, {backgroundColor: '#fcefe3'}]}>
+          {/* <View style={styles.centered}> */}
+
+            <Text style={{textAlign: 'center', marginTop: 50, fontSize: 20,fontFamily: "fontawesome-webfont",
+              fontWeight: '900', color: 'grey'}}>We are sorry.</Text>
+            <Text style={{textAlign: 'center', marginTop: 0, fontSize: 20,fontFamily: "fontawesome-webfont",
+              fontWeight: '900',color: 'grey'}}>No rides have been found</Text>
+            <Text style={{textAlign: 'center', marginTop: 0, fontFamily: "fontawesome-webfont",
+              fontWeight: '900',fontSize: 20, color: 'grey'}}>please try again.</Text>
+            
           </View>
+                                  
         );
     }
 
@@ -87,8 +102,9 @@ const foundedDrivesScreen = props => {
     };
 
     return (
+      <View style={[styles.screen, {backgroundColor: '#fcefe3'}]}>
         <FlatList
-          ListHeaderComponent={<Text style = {{textAlign:'center', fontSize:16, fontFamily: 'open-sans-bold'}}>These are the drives we found for you </Text>}
+          ListHeaderComponent={<Text style = {{textAlign:'center', fontSize:16, fontFamily: "fontawesome-webfont", fontWeight: 'bold'}}>These are the drives we found for you </Text>}
           refreshing={isRefreshing}
           data={foundedDrives}
           keyExtractor = {item => item.old_drive.id}
@@ -119,7 +135,7 @@ const foundedDrivesScreen = props => {
               navigation = {props.navigation}
               driveID = {itemData.item.old_drive.id}
           />)}
-        />
+        /></View>
     );
 };
 

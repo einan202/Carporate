@@ -62,9 +62,9 @@ const upcomingDriveItem = (props) => {
 
   const fromTo =
     props.driver.driverEmail === email || props.whereToNavigate === "foundDrive" ? (
-      <Text style={styles.text}>
+      <Text style={{fontWeight: 'bold'}}>
         {" "}
-        {props.starting_point.address} {"-->"} {props.destination.address}
+        {props.starting_point.address} {" ==> "} {props.destination.address}
       </Text>
     ) : (
       <Text>
@@ -73,7 +73,7 @@ const upcomingDriveItem = (props) => {
             passangerIndex(props.passangers, email)
           ].starting_point.address
         }{" "}
-        {"-->"}{" "}
+        {" ==> "}{" "}
         {
           props.passangers[
             passangerIndex(props.passangers, email)
@@ -86,7 +86,7 @@ const upcomingDriveItem = (props) => {
     <Card
       style={{
         height: props.showButton ? 250 : 250,
-        margin: 20,
+        margin: 10,
       }}
     >
       <View style={styles.touchable}>
@@ -100,13 +100,13 @@ const upcomingDriveItem = (props) => {
         </Text>
         <Text style={styles.text}>
           {" "}
-          {"available spaces:"} {props.amount_of_people}{" "}
+          {"Available places:"} {props.amount_of_people}{" "}
         </Text>
         <Text style={styles.text}>
           {" "}
           {props.driver.driverEmail === email
             ? "You are the driver"
-            : `the driver is: ${props.driver.driverFirstName} ${props.driver.driverLastName}`}{" "}
+            : `Driver: ${props.driver.driverFirstName} ${props.driver.driverLastName}`}{" "}
         </Text>
       </View>
       {props.showButton}
@@ -151,9 +151,20 @@ const upcomingDriveItem = (props) => {
             </Card>
             </View>
         </Modal> */}
-      <View style={{ marginTop: 0 }}>
+
+{/* <View style={{flex: 1, justifyContent: "center", alignItems: "center",}}>
+            <Image
+                source={require('./map.jpg')}
+                          style={{
+                              height: 80,
+                              width: 120,
+                              marginTop: 5,
+                          
+                          }}          
+           /></View> */}
+      <View style={{ marginTop: 0, backgroundColor: 'white' }}>
         {/* <TouchableOpacity  onPress={() => setModalVisible(!modalVisible)}> */}
-        <TouchableOpacity
+        <TouchableOpacity 
           onPress={() =>
             props.navigation.navigate(`${props.whereToNavigate}`, {
               starting_point: props.starting_point.address,
@@ -169,17 +180,25 @@ const upcomingDriveItem = (props) => {
               drivePoints: props.drivePoints,
             })
           }
-        >
-          <Text
-            style={{
+        ><View style= {{padding: 0}}><Text style={{
               textAlign: "center",
-              fontSize: 15,
-              fontFamily: "open-sans-bold",
-            }}
-          >
-            For more details click here
-          </Text>
+              fontSize: 18,
+              color: Colors.primary,
+              fontFamily: "fontawesome-webfont",
+              fontWeight: '900',
+            }}>More details</Text></View>
         </TouchableOpacity>
+        
+        {/* <View style={{flex: 1, justifyContent: "center", alignItems: "center",}}>
+            <Image
+                source={require('./map.jpg')}
+                          style={{
+                              height: 110,
+                              width: 110,
+                              marginTop: 5,
+                          
+                          }}          
+           /></View> */}
       </View>
     </Card>
   );
@@ -192,9 +211,9 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    fontFamily: "open-sans",
-    fontSize: 17,
-    color: "#888",
+    fontFamily: "fontawesome-webfont",
+    fontSize: 16,
+    color: "black",
   },
   container: {
     flex: 1,

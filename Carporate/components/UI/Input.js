@@ -92,7 +92,8 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   label: {
-    fontFamily: 'open-sans-bold',
+    fontFamily: "fontawesome-webfont",
+    fontWeight: 'bold',
     marginVertical: 8
   },
   input: {
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     marginVertical: 5
   },
   errorText: {
-    fontFamily: 'open-sans',
+    fontFamily: "fontawesome-webfont",
     color: 'red',
     fontSize: 13
   }

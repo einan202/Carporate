@@ -66,12 +66,13 @@ const styles = StyleSheet.create({
     padding: 10
   },
   title: {
-    fontFamily: 'open-sans-bold',
+    fontFamily: "fontawesome-webfont",
+    fontWeight: 'bold',
     fontSize: 18,
     marginVertical: 2
   },
   price: {
-    fontFamily: 'open-sans',
+    fontFamily: "fontawesome-webfont",
     fontSize: 14,
     color: '#888'
   },

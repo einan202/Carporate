@@ -79,7 +79,7 @@ const AuthScreen = props => {
       Alert.alert('An Error Occurred!', 'Your email must ends with @post.bgu.ac.il', [{ text: 'Okay' }]);
       
     }else{
-      props.navigation.navigate('EmailVarefication', { email: formState.inputValues.email, password:formState.inputValues.password});
+      props.navigation.navigate('Email Validate', { email: formState.inputValues.email, password:formState.inputValues.password});
 
     }
     // let action;
@@ -125,20 +125,20 @@ const AuthScreen = props => {
 
   return (
     <KeyboardAvoidingView
-      behavior="padding"
+      // behavior="padding"
       keyboardVerticalOffset={50}
       style={styles.screen}
     >
-      <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
+     <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={styles.gradient}>
         <View style = {styles.welcomeContainer}>
-      <Text style = {styles.welcome}>Welcome to Car-Pool</Text>
+      <Text style = {[styles.welcome, { fontFamily: "fontawesome-webfont", fontWeight: '900', padding: 10}]}>Welcome to Carporate</Text>
       </View>
         <Card style={styles.authContainer}>
         
           <ScrollView>
             <Input
               id="email"
-              label="E-Mail"
+              label="Email"
               keyboardType="email-address"
               required
               email
@@ -165,7 +165,7 @@ const AuthScreen = props => {
               ) : (
                 <Button
                   title={isSignup ? 'Sign Up' : 'Login'}
-                  color={Colors.primary}
+                  color={'orange'}
                   onPress={authHandler}
                 />
               )}
@@ -187,12 +187,29 @@ const AuthScreen = props => {
 };
 
 export const navigationOptions = navData => {
-  return {headerTitle: 'Authenticate'};
+  return { headerTitle: 'Authenticate',
+  headerStyle: {
+    backgroundColor: 'white',
+    height: 70,
+  },
+  headerTitleStyle: {
+    fontFamily: "fontawesome-webfont",
+    fontWeight: 'bold', 
+    // letterSpacing: 1,
+  },
+  headerTitleAlign: 'center',
+  headerBackTitleStyle: {
+    fontFamily: "fontawesome-webfont",
+    flexDirection: "row",
+    alignSelf: 'center',
+  },
+  headerTintColor: Platform.OS === 'android' ? Colors.primary : '',
+};
 };
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1
+    flex: 1,
   },
   gradient: {
     flex: 1,
@@ -210,7 +227,8 @@ const styles = StyleSheet.create({
   },
   welcome: {
     fontSize: 30,
-    fontFamily: 'open-sans-bold'
+    fontFamily: "fontawesome-webfont",
+    fontWeight: 'bold',
   },
   welcomeContainer : {
     padding: 20

@@ -21,6 +21,7 @@ import {
   deleteDriveForPassanger,
   delaySpecificDrive,
 } from "../../store/actions/drives";
+import { LinearGradient } from 'expo-linear-gradient';
 import DropDownButton from "../../components/UI/DropDownButton";
 
 function driveScreenIfUpcoming({ route, navigation }) {
@@ -199,7 +200,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
 
           let passanger_locations = (
             <>
-              <Text>pick up location:</Text>
+              <Text>Ideal pick up:</Text>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${itemData.item.value.pickUpLocation.location.lat}%2C${itemData.item.value.pickUpLocation.location.lng}`)
@@ -210,7 +211,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
                 </Text>
               </Pressable>
 
-              <Text>drop off location:</Text>
+              <Text>Ideal drop off:</Text>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${itemData.item.value.dropOffPoint.location.lat}%2C${itemData.item.value.dropOffPoint.location.lng}`)
@@ -244,23 +245,23 @@ function driveScreenIfUpcoming({ route, navigation }) {
       />
     ) : (
       <View style={{ marginTop: 0 }}>
-        <Text style={[styles.text, { fontSize: 20 }]}>
-          There are still no passangers for this drive
+        <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}>
+          No passangers have join yet
         </Text>
       </View>
     );
 
   const fromTo = ifDriver ? (
-    <Text>
-      {route.params.starting_point} {"-->"} {route.params.destination}
+      <Text style = {{ flexShrink: 1, flexWrap: 'wrap', flex: 1, fontWeight: 'bold', fontSize: 20, marginTop: 30}}>
+      {route.params.starting_point} {" ==> "} {route.params.destination}
     </Text>
   ) : (
-    <Text>
+    <Text style = {{fontWeight: 'bold', fontSize: 20, marginTop: 30, flex: 1}}>
       {
         route.params.passangers[passangerIndex(route.params.passangers, email)]
           .starting_point.address
       }{" "}
-      {"-->"}{" "}
+      {" ==> "}{" "}
       {
         route.params.passangers[passangerIndex(route.params.passangers, email)]
           .destination.address
@@ -271,28 +272,29 @@ function driveScreenIfUpcoming({ route, navigation }) {
   const pickUpTime = ifDriver ? null : <Text style={[styles.text, { fontSize: 20 }]}>estimated pick up time: {calcPickUpTime(email, make_date(route.params.date, route.params.time))[1]} </Text>
   
   return (
-    <View style={styles.touchable}>
-      <Text style={[styles.text, { fontSize: 20 }]}> {fromTo}</Text>
+    
+    <View style={{flex:1, backgroundColor: '#fcefe3'}}>
+      <Text style={[styles.text, { fontSize: 20, marginTop: 30, marginBottom: 5, color: 'black'}]}> {fromTo}</Text>
       {route.params.newDriveInformation ? (
         <Text style={[styles.text, { fontSize: 20 }]}>
           {" "}
-          {"The pick up address is:\n"}{" "}
+          {"Ideal pick up:\n"}{" "}
           {route.params.newDriveInformation.pickUpPoint.address}
         </Text>
       ) : (
         <Text></Text>
       )}
-      <Text style={[styles.text, { fontSize: 20 }]}>
+      <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}>
         {" "}
         {route.params.date} {"at"} {route.params.time}{" "}
       </Text>
       {pickUpTime}
-      <Text style={[styles.text, { fontSize: 20 }]}>
+      <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}>
         {" "}
-        {"available spaces:"} {route.params.amount_of_people}{" "}
+        {"Available places:"} {route.params.amount_of_people}{" "}
       </Text>
       {ifDriver ? (
-        <Text style={[styles.text, { fontSize: 20 }]}>
+        <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}>
           {" "}
           {"You are the driver"}{" "}
         </Text>
@@ -304,7 +306,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
         >
           <Text style={[styles.text, { fontSize: 20 }]}>
             {" "}
-            {`the driver is: ${
+            {`Driver: ${
               route.params.driver.driverFirstName +
               " " +
               route.params.driver.driverLastName
@@ -315,11 +317,11 @@ function driveScreenIfUpcoming({ route, navigation }) {
 
       {passangersText}
       {
-        <Pressable
+        <Pressable 
           onPress={() => showDirectionInMaps(route.params.dir)}
           style={{ marginTop: 20 }}
         >
-          <Text style={[styles.text, { fontSize: 20, marginTop: 0 }]}>
+          <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold', marginTop: 0, marginBottom: 10, color: Colors.primary}]}>
             Press here to show the ride on map
           </Text>
         </Pressable>
@@ -333,7 +335,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
           Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
         }}
-        style={{ borderRadius: 50 }}
+        style={{ borderRadius: 50, }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -468,7 +470,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    fontFamily: "open-sans",
+    fontFamily: "fontawesome-webfont",
     fontSize: 17,
     color: "#888",
   },

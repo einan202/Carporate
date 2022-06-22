@@ -51,12 +51,12 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   totalAmount: {
-    fontFamily: 'open-sans-bold',
+    fontFamily: "fontawesome-webfont",
     fontSize: 16
   },
   date: {
     fontSize: 16,
-    fontFamily: 'open-sans',
+    fontFamily: "fontawesome-webfont",
     color: '#888'
   },
   detailItems: {

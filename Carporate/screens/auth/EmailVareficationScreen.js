@@ -121,17 +121,17 @@ function EmailVareficationScreen({ route, navigation }) {
   
     return (
       <KeyboardAvoidingView
-        behavior="padding"
+        // behavior="padding"
         keyboardVerticalOffset={50}
         style={styles.screen}
       >
-        <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
+     <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={styles.gradient}>
           <Card style={styles.authContainer}>
           
             <ScrollView>
               <Input
                 id="password_from_email"
-                label="please write the password you recieve in the mail (check spam)"
+                label="Please write the password you recieved in email, check spam also."
                 //keyboardType="email-address"
                 required
                 autoCapitalize="none"
@@ -152,7 +152,7 @@ function EmailVareficationScreen({ route, navigation }) {
                 ) : (
                   <Button
                     title={'Next'}
-                    color={Colors.primary}
+                    color={'orange'}
                     onPress={authHandler}
                   />
                 )}
@@ -195,7 +195,8 @@ const styles = StyleSheet.create({
     },
     welcome: {
       fontSize: 30,
-      fontFamily: 'open-sans-bold'
+      fontFamily: "fontawesome-webfont",
+      fontWeight: 'bold',
     },
     welcomeContainer : {
       padding: 20

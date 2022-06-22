@@ -88,7 +88,7 @@ const DetailsFillingScreen = (props) => {
         if (statusObj.status !== "granted") {
           Alert.alert(
             "An Error Occurred!",
-            "We must have your permission to send you notifications",
+            "We ask for your permission to send you notifications",
             [{ text: "Okay" }]
           );
           return Permissions.askAsync(Permissions.NOTIFICATIONS);
@@ -154,17 +154,18 @@ const DetailsFillingScreen = (props) => {
   );
 
   return (
+    
     <KeyboardAvoidingView
-      behavior="padding"
+      // behavior="padding"
       keyboardVerticalOffset={50}
       style={styles.screen}
     >
-      <LinearGradient colors={["#ffedff", "#ffe3ff"]} style={styles.gradient}>
+     <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={styles.gradient}>
         <Card style={styles.authContainer}>
           <ScrollView>
             <Input
               id="email"
-              label="E-Mail"
+              label="Email"
               defaultValue={email}
               editable={false}
               keyboardType="email-address"
@@ -190,7 +191,7 @@ const DetailsFillingScreen = (props) => {
             />
             <Input
               id="phone"
-              label="Phone-Number"
+              label="Phone"
               keyboardType="number-pad"
               required
               minLength={10}
@@ -215,7 +216,7 @@ const DetailsFillingScreen = (props) => {
               keyboardType="default"
               required
               isGander
-              errorText="gender must to be male/female."
+              errorText="Gender should be male or female."
               onInputChange={inputChangeHandler}
               initialValue=""
             />
@@ -227,9 +228,9 @@ const DetailsFillingScreen = (props) => {
                   value={isChecked}
                   onValueChange={setChecked}
                 />
-                <Text style={styles.paragraph}>
-                  We will save your data in our database to find you the optimal
-                  social drive
+                <Text style={[styles.paragraph, {textAlign: 'center'}]}>
+                 Aprove to keep your details in our database to find you an optimal
+                  cooperative ride.
                 </Text>
               </View>
             </View>
@@ -249,7 +250,7 @@ const DetailsFillingScreen = (props) => {
               ) : (
                 <Button
                   title={"Create account"}
-                  color={Colors.primary}
+                  color={'orange'}
                   onPress={authHandler}
                 />
               )}
@@ -287,15 +288,17 @@ const styles = StyleSheet.create({
   // },
   welcome: {
     fontSize: 30,
-    fontFamily: "open-sans-bold",
+    fontFamily: "fontawesome-webfont",
+    fontWeight: 'bold',
   },
   welcomeContainer: {
     padding: 20,
   },
   checkboxContainer: {
     flex: 1,
-    marginHorizontal: 20,
-    marginVertical: 32,
+    marginHorizontal: 10,
+    marginVertical: 20,
+    // alignItems: 'baseline'
   },
   section: {
     flexDirection: "row",
@@ -305,7 +308,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   checkbox: {
-    margin: 5,
+    margin: 3
+    
   },
 });
 

@@ -25,7 +25,7 @@ const FiltersScreen = props => {
 
     return (
         <View style={styles.screen}>
-            <Text style={styles.title}>Notes</Text>
+            <View style={{padding: 10}}><Text style={styles.title}> Notes</Text></View>
             <View style={styles.filterRowContainer}>
                 <FilterSwitch
                     label='Animals'
@@ -71,8 +71,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     title: {
-        fontFamily: 'open-sans-bold',
-        fontSize: 22,
+        fontFamily: "fontawesome-webfont",
+        fontWeight: '800',
+        // fontFamily: 'open-sans-bold',
+        fontSize: 20,
         margin: 10,
         textAlign: 'center'
     },

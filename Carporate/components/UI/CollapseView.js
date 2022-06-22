@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontFamily: 'open-sans',
+    fontFamily: "fontawesome-webfont",
     fontSize: 17,
     color: '#888'
   },

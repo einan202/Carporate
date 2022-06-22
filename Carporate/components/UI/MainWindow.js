@@ -143,7 +143,7 @@ const MainWindow = props => {
           await dispatch(action);
           setIsLoading(false);
           if(props.passangerOrDriver === "passanger"){
-            props.navigation.navigate('foundedDrivesScreen');
+            props.navigation.navigate('Rides Found');
           }
           else if(props.passangerOrDriver === "driver"){
             props.navigation.navigate('Loyalty');
@@ -244,7 +244,9 @@ const MainWindow = props => {
             <View style = {styles.buttonContainer}>
             <Button
             title={props.buttonStr}
+            // color={'orange'}
             color={Colors.primary}
+            // color={Colors.accent}
             onPress={driverPassangerHandler}
             />
             </View>
@@ -259,7 +261,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 10,
         alignItems: 'center',
-        marginTop: 30
+        marginTop: 30,
     },
     textBoxHeader: {
         margin: 10
@@ -271,18 +273,17 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     buttonContainer : {
-        margin: 10
+        margin: 110,
     },
     filtersContainer : {
         margin: 20,
         flex: 1,
-
     },
     dropDownStyle: {
       flexDirection: 'row',
       width: 500,
-      maxWidth: "90%",
-      marginTop: 20
+      maxWidth: "95%",
+      marginTop: 10
       
     }
 });

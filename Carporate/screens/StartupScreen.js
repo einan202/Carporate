@@ -31,8 +31,8 @@ const StartupScreen = props => {
         dispatch(authActions.setDidTryAl());
         return;
       }
-      /*AsyncStorage.removeItem('userData');/*ffgggggggggggggggggggggggggggggg*/
-      /*AsyncStorage.removeItem('userDetaills');/*ffgggggggggggggggggggggggggggggg*/
+      // AsyncStorage.removeItem('userData');/*ffgggggggggggggggggggggggggggggg*/
+      // AsyncStorage.removeItem('userDetaills');/*ffgggggggggggggggggggggggggggggg*/
       const expirationTime = expirationDate.getTime() - new Date().getTime();
       try {
         const userDetaills = await AsyncStorage.getItem('userDetaills');
