@@ -39,7 +39,7 @@ function driveScreenIfFound({ route, navigation }) {
 
     return (
             
-            <View style={styles.touchable}>
+      <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
             <Text style={[styles.text, {fontSize: 20}]}> {route.params.starting_point} {' ==> '} {route.params.destination}</Text>
             {route.params.newDriveInformation ?
             <>
@@ -79,7 +79,7 @@ function driveScreenIfFound({ route, navigation }) {
             >
             <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold', marginTop: 0, marginBottom: 10 }]}>
               Press here to show the ride on map</Text>
-            </Pressable>}</View>
+            </Pressable>}</LinearGradient>
     )
 }
 

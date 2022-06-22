@@ -229,8 +229,8 @@ const DetailsFillingScreen = (props) => {
                   onValueChange={setChecked}
                 />
                 <Text style={[styles.paragraph, {textAlign: 'center'}]}>
-                 Aprove to keep your details in our database to find you an optimal
-                  cooperative ride.
+                 You approve keeping your current details to find you an optimal
+                  cooperative ride
                 </Text>
               </View>
             </View>

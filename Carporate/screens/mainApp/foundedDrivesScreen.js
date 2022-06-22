@@ -77,17 +77,19 @@ const foundedDrivesScreen = props => {
     if (!isLoading && foundedDrives.length === 0) {
         return (
           
-          <View style={[styles.screen, {backgroundColor: '#fcefe3'}]}>
+          <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
           {/* <View style={styles.centered}> */}
 
-            <Text style={{textAlign: 'center', marginTop: 50, fontSize: 20,fontFamily: "fontawesome-webfont",
-              fontWeight: '900', color: 'grey'}}>We are sorry.</Text>
+            <Text style={{textAlign: 'center', marginTop: 30, fontSize: 20,fontFamily: "fontawesome-webfont",
+              fontWeight: '900', color: 'black'}}>We are sorry</Text>
             <Text style={{textAlign: 'center', marginTop: 0, fontSize: 20,fontFamily: "fontawesome-webfont",
-              fontWeight: '900',color: 'grey'}}>No rides have been found</Text>
-            <Text style={{textAlign: 'center', marginTop: 0, fontFamily: "fontawesome-webfont",
-              fontWeight: '900',fontSize: 20, color: 'grey'}}>please try again.</Text>
+              fontWeight: '900',color: 'black'}}>No rides were found
+              {/* </Text> */}
+            {/* <Text style={{textAlign: 'center', marginTop: 0, fontFamily: "fontawesome-webfont",
+              fontWeight: '900',fontSize: 20, color: 'black'}}> */}
+                , please try again</Text>
             
-          </View>
+          </LinearGradient>
                                   
         );
     }

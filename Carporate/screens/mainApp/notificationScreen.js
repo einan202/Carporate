@@ -66,7 +66,7 @@ const notificationScreen = props => {
   
  
   return (
-    <LinearGradient colors={['white', '#f7e8df']} style={styles.gradient}>
+    <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
       <FlatList
         refreshing={isRefreshing}
         ListHeaderComponent={Cred}
@@ -82,8 +82,8 @@ const notificationScreen = props => {
         )}
         ListEmptyComponent={
           <View style={styles.centered}>
-          <Text style={{textAlign: 'center', marginTop: 50, fontSize: 20,fontFamily: "fontawesome-webfont",
-              fontWeight: '900', color: 'grey'}}>No notifications found</Text>
+          <Text style={{textAlign: 'center', marginTop: 30, fontSize: 20,fontFamily: "fontawesome-webfont",
+              fontWeight: '900', color: 'black'}}>No notifications lately</Text>
           </View>
         }
       />

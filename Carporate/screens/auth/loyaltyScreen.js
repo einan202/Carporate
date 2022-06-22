@@ -365,7 +365,7 @@ const loyaltyScreen = (props) => {
 
   
   return (
-    <View style={[styles.screen, {backgroundColor: '#fcefe3'}]}>
+    <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
     <FlatList
       ListHeaderComponent={credentials}
       onRefresh={loadDrives}
@@ -401,7 +401,7 @@ const loyaltyScreen = (props) => {
         <Text style={{ fontSize: 16, textAlign: 'center', padding: 5, color: 'white'}}> No Rides </Text>
       </View> 
       }
-    /></View>
+    /></LinearGradient>
   );
 };
 

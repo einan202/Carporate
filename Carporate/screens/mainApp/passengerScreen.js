@@ -11,14 +11,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const passengerScreen = props => {
     return (
-        <View style={[styles.screen, {backgroundColor: '#fcefe3'}]}>
+      <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
+        {/* <View style={[styles.screen, {flex: 1,backgroundColor: '#fcefe3'}]}> */}
         <MainWindow 
           text="text for the textBox"
           buttonStr = "Search"
           passangerOrDriver = "passanger"
           navigation = {props.navigation}>
           </MainWindow>
-        </View>
+        {/* </View> */}
+        </LinearGradient>
       );
   };
 

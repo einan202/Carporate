@@ -245,7 +245,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
       />
     ) : (
       <View style={{ marginTop: 0 }}>
-        <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}>
+        <Text style={[styles.text, { fontSize: 20, color: 'black' }]}>
           No passangers have join yet
         </Text>
       </View>
@@ -273,8 +273,8 @@ function driveScreenIfUpcoming({ route, navigation }) {
   
   return (
     
-    <View style={{flex:1, backgroundColor: '#fcefe3'}}>
-      <Text style={[styles.text, { fontSize: 20, marginTop: 30, marginBottom: 5, color: Colors.primary, fontWeight: '600'}]}> {fromTo}</Text>
+    <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
+      <Text style={[styles.text, { fontSize: 20, marginTop: 30, marginBottom: 5, color: 'black', fontWeight: '600'}]}> {fromTo}</Text>
       {route.params.newDriveInformation ? (
         <Text style={[styles.text, { fontSize: 20 }]}>
           {" "}
@@ -284,17 +284,17 @@ function driveScreenIfUpcoming({ route, navigation }) {
       ) : (
         <Text></Text>
       )}
-      <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}>
+      <Text style={[styles.text, { fontSize: 20, color: 'black' }]}>
         {" "}
         {route.params.date} {"at"} {route.params.time}{" "}
       </Text>
       {pickUpTime}
-      <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}>
+      <Text style={[styles.text, { fontSize: 20, color: 'black' }]}>
         {" "}
         {"Available places:"} {route.params.amount_of_people}{" "}
       </Text>
       {ifDriver ? (
-        <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}>
+        <Text style={[styles.text, { fontSize: 20, color: 'black' }]}>
           {" "}
           {"You are the driver"}{" "}
         </Text>
@@ -459,7 +459,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
           style={styles.button}
         />
       </View>
-    </View>
+    </LinearGradient>
   );
 }
 
