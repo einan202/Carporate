@@ -274,7 +274,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
   return (
     
     <View style={{flex:1, backgroundColor: '#fcefe3'}}>
-      <Text style={[styles.text, { fontSize: 20, marginTop: 30, marginBottom: 5, color: 'black'}]}> {fromTo}</Text>
+      <Text style={[styles.text, { fontSize: 20, marginTop: 30, marginBottom: 5, color: Colors.primary, fontWeight: '600'}]}> {fromTo}</Text>
       {route.params.newDriveInformation ? (
         <Text style={[styles.text, { fontSize: 20 }]}>
           {" "}
@@ -321,7 +321,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
           onPress={() => showDirectionInMaps(route.params.dir)}
           style={{ marginTop: 20 }}
         >
-          <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold', marginTop: 0, marginBottom: 10, color: Colors.primary}]}>
+          <Text style={[styles.text, { fontSize: 20, fontWeight: '600', marginTop: 0, marginBottom: 10, color: Colors.primary}]}>
             Press here to show the ride on map
           </Text>
         </Pressable>
