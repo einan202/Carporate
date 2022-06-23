@@ -12,11 +12,14 @@ import {
   Pressable,
   Linking
 } from 'react-native';
+import Colors from "../../constants/Colors";
+
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector, useDispatch } from 'react-redux';
 import {showDirectionInMaps} from '../../functions/googleAPI';
 
 
-function driveScreenIfFound({ route, navigation }) {
+function DriveScreenIfFound({ route, navigation }) {
 
   const email = useSelector(state => state.auth.email);
   
@@ -40,10 +43,10 @@ function driveScreenIfFound({ route, navigation }) {
     return (
             
       <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
-            <Text style={[styles.text, {fontSize: 20}]}> {route.params.starting_point} {' ==> '} {route.params.destination}</Text>
+            <Text style={[styles.text, {fontSize: 20, color: 'black', fontWeight: 'bold'}]}> {route.params.starting_point} {' ==> '} {route.params.destination}</Text>
             {route.params.newDriveInformation ?
             <>
-              <Text>Ideal pick up:</Text>
+              <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold' }]}>Ideal pick up:</Text>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${route.params.newDriveInformation.pickUpPoint.location.lat}%2C${route.params.newDriveInformation.pickUpPoint.location.lng}`)
@@ -54,22 +57,22 @@ function driveScreenIfFound({ route, navigation }) {
                 </Text>
               </Pressable>
 
-              <Text>Ideal drop off:</Text>
+              <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold'  }]}>Ideal drop off:</Text>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${route.params.newDriveInformation.dropOffPoint.location.lat}%2C${route.params.newDriveInformation.dropOffPoint.location.lng}`)
                 }
               >
-                <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}>
+                <Text  style={[styles.text, { fontSize: 20,  }]}>
                   {route.params.newDriveInformation.dropOffPoint.address}
                 </Text>
               </Pressable>
             </>
             : null
             }
-            <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}> {route.params.date} {'at'} {route.params.time}  </Text>
-            <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}> {'Available places:'} {route.params.amount_of_people}  </Text>
-            <Text style={[styles.text, { fontSize: 20, color: 'grey' }]}> {route.params.driver === email ? 'You are the driver' : `Driver: ${route.params.driver.driverFirstName + ' ' + route.params.driver.driverLastName}`}  </Text>
+            <Text  style={[styles.text, { fontSize: 20,  }]}> {route.params.date} {'at'} {route.params.time}  </Text>
+            <Text  style={[styles.text, { fontSize: 20,  }]}> {'Available places:'} {route.params.amount_of_people}  </Text>
+            <Text  style={[styles.text, { fontSize: 20,  }]}> {route.params.driver === email ? 'You are the driver' : `Driver: ${route.params.driver.driverFirstName + ' ' + route.params.driver.driverLastName}`}  </Text>
             
             {passangersText}
             { 
@@ -77,7 +80,7 @@ function driveScreenIfFound({ route, navigation }) {
             onPress={() => showDirectionInMaps(route.params.dir)}
             style = {{marginTop: 20}}
             >
-            <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold', marginTop: 0, marginBottom: 10 }]}>
+            <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold', marginTop: 0, marginBottom: 10, color: Colors.primary }]}>
               Press here to show the ride on map</Text>
             </Pressable>}</LinearGradient>
     )
@@ -93,7 +96,8 @@ const styles = StyleSheet.create({
       textAlign: 'center',
       fontFamily: "fontawesome-webfont",
       fontSize: 17,
-      color: '#888'
+      color: 'black',
+      margin:3
     },
     container: {
       flex: 1,
@@ -149,4 +153,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export default driveScreenIfFound;
+export default DriveScreenIfFound;

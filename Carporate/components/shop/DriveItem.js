@@ -61,7 +61,7 @@ const upcomingDriveItem = (props) => {
     );
 
   const fromTo =
-    props.driver.driverEmail === email || props.whereToNavigate === "foundDrive" ? (
+    props.driver.driverEmail === email || props.whereToNavigate === "FoundDrive" ? (
       <Text style={{fontWeight: 'bold'}}>
         {" "}
         {props.starting_point.address} {" ==> "} {props.destination.address}
@@ -180,7 +180,7 @@ const upcomingDriveItem = (props) => {
               drivePoints: props.drivePoints,
             })
           }
-        ><View style= {{padding: 0}}><Text style={{
+        ><View style= {{margin:3}}><Text style={{
               textAlign: "center",
               fontSize: 18,
               color: Colors.primary,
@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
     fontFamily: "fontawesome-webfont",
     fontSize: 16,
     color: "black",
+    margin:3
   },
   container: {
     flex: 1,

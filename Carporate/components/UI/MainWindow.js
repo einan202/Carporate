@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer, useCallback } from "react";
-import { View, Text, StyleSheet, Button, Alert, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, Button, Alert, ScrollView, ActivityIndicator, KeyboardAvoidingView } from "react-native";
 
 import DateTimeButton from "./DateTimeButton";
 import DropDownButton from "./DropDownButton";
@@ -48,23 +48,23 @@ const MainWindow = props => {
     const firstName = useSelector(state => state.auth.first_name);
     const LastName = useSelector(state => state.auth.last_name);
     const phone = useSelector(state => state.auth.phone_number);
-    const [start_point_place, setStart_point_place] = useState(
-      address = undefined,
-      place_id = undefined,
-      location = {
+    const [start_point_place, setStart_point_place] = useState({
+      address: undefined,
+      place_id: undefined, 
+      location: {
         lat: undefined, 
         lng: undefined
       }
-    );
+    });
 
-    const [destination, setDestination] = useState(
-      address = undefined,
-      place_id = undefined,
-      location = {
+    const [destination, setDestination] = useState({
+      address: undefined,
+      place_id: undefined, 
+      location: {
         lat: undefined, 
         lng: undefined
       }
-    );
+    });
 
 
 
@@ -143,7 +143,7 @@ const MainWindow = props => {
           await dispatch(action);
           setIsLoading(false);
           if(props.passangerOrDriver === "passanger"){
-            props.navigation.navigate('Rides Found');
+            props.navigation.navigate('foundedDrivesScreen');
           }
           else if(props.passangerOrDriver === "driver"){
             props.navigation.navigate('Loyalty');
@@ -183,6 +183,11 @@ const MainWindow = props => {
   }
 
     return (
+      <KeyboardAvoidingView
+      // behavior="padding"
+      keyboardVerticalOffset={50}
+      style={styles.screen}
+    >
       
         <View style={styles.screen}>
             {/* <View>
@@ -196,7 +201,6 @@ const MainWindow = props => {
               placeholder="starting point"
               setPlace = {setStart_point_place}
               zIndex = {40}
-               
             />
             </View>
             <View style = {{ padding: 30, alignItems: 'center'}}>
@@ -207,11 +211,9 @@ const MainWindow = props => {
             />
             </View>
             <View style = {{marginTop: 0}}>
-                <Text>
                     <DateTimeButton
                     onInputChange={inputChangeHandler}
                     />
-                </Text>
             </View>
             <View style = {styles.dropDownStyle}>
               <DropDownButton
@@ -248,10 +250,13 @@ const MainWindow = props => {
             color={Colors.primary}
             // color={Colors.accent}
             onPress={driverPassangerHandler}
+            style = {styles.button}
             />
             </View>
             
           </View>
+          
+          </KeyboardAvoidingView>
         
     );
 };
@@ -273,11 +278,17 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     buttonContainer : {
-        margin: 110,
+      marginTop: '50%',
+      bottom:'0%',
+    },
+    button: {
+      bottom:0,
+      marginTop: '30%'
     },
     filtersContainer : {
         margin: 20,
         flex: 1,
+        position:'relative'
     },
     dropDownStyle: {
       flexDirection: 'row',

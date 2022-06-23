@@ -24,7 +24,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import DropDownButton from "../../components/UI/DropDownButton";
 
-function driveScreenIfUpcoming({ route, navigation }) {
+function DriveScreenIfUpcoming({ route, navigation }) {
   const email = useSelector((state) => state.auth.email);
   const firstName = useSelector((state) => state.auth.first_name);
   const LastName = useSelector((state) => state.auth.last_name);
@@ -412,6 +412,8 @@ function driveScreenIfUpcoming({ route, navigation }) {
           </View>
         </View>
       </Modal>
+      
+     
       {ifDriver ? (
         <View style={{ padding: 5 }}>
           <Button
@@ -442,7 +444,7 @@ function driveScreenIfUpcoming({ route, navigation }) {
         </View>
       ) : null}
 
-      <View style={{ padding: 5 }}>
+      <View style={{ padding: 5,  }}>
         <Button
           color={Colors.primary}
           title={ifDriver ? "delete this drive" : "leave this drive"}
@@ -456,8 +458,8 @@ function driveScreenIfUpcoming({ route, navigation }) {
               },
             ])
           }
-          style={styles.button}
         />
+      
       </View>
     </LinearGradient>
   );
@@ -472,7 +474,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "fontawesome-webfont",
     fontSize: 17,
-    color: "#888",
+    color: "black",
+    margin:3
+
   },
   container: {
     flex: 1,
@@ -480,14 +484,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    backgroundColor: "white",
-    padding: 20,
-    marginTop: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 4,
-    borderColor: "rgba(0, 0, 0, 0.1)",
-    borderWidth: 20,
+    
   },
   modalContent: {
     backgroundColor: "white",
@@ -528,4 +525,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default driveScreenIfUpcoming;
+export default DriveScreenIfUpcoming;

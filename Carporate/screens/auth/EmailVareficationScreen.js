@@ -16,7 +16,6 @@ import Card from '../../components/UI/Card';
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/auth';
 import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
 import CountDown from 'react-native-countdown-component';
 
 

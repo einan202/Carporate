@@ -13,13 +13,12 @@ import {
 } from "react-native";
 import Colors from "../../constants/Colors";
 import { useSelector, useDispatch } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as drivesActions from "../../store/actions/drives";
 import DriveItem from "../../components/shop/DriveItem";
 import * as Notifications from "expo-notifications";
 import { LinearGradient } from 'expo-linear-gradient';
 
-const loyaltyScreen = (props) => {
+const LoyaltyScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
@@ -390,7 +389,7 @@ const loyaltyScreen = (props) => {
             itemData.item.dir ? itemData.item.dir.geocoded_waypoints : undefined
           }
           dir={itemData.item.dir}
-          whereToNavigate={"Current Ride"}
+          whereToNavigate={"UpcomingDrive"}
           navigation={props.navigation}
           driveID={itemData.item.id}
           drivePoints = {itemData.item.drivePoints}
@@ -423,4 +422,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default loyaltyScreen;
+export default LoyaltyScreen;

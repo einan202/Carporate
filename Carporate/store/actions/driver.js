@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch,useSelector } from 'react-redux';
 import {Alert} from 'react-native';
 

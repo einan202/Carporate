@@ -273,8 +273,9 @@ const styles = StyleSheet.create({
   },
   authContainer: {
     width: "80%",
+    height: "80%",
     maxWidth: 400,
-    maxHeight: 400,
+    maxHeight: 800,
     padding: 20,
   },
   buttonContainer: {

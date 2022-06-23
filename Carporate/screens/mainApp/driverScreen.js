@@ -5,7 +5,7 @@ import MainWindow from "../../components/UI/MainWindow";
 import Colors from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const driverScreen = props => {
+const DriverScreen = props => {
     return (  
         <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
             <MainWindow 
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default driverScreen;
+export default DriverScreen;

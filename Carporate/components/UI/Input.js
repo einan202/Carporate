@@ -55,9 +55,6 @@ const Input = props => {
     if (props.minLength != null && text.length < props.minLength) {
       isValid = false;
     }
-    if (props.isAge && text.match(/^[0-9]+$/) != null){
-      isValid = false;
-    }
     if (props.isGander && text != "male" && text != "female" ){
       isValid = false;
     }

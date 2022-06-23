@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import Colors from '../../constants/Colors';
 import { useSelector, useDispatch } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Drive from '../../models/drive'
 import * as drivesActions from '../../store/actions/drives'
 import DriveItem from '../../components/shop/DriveItem';
@@ -22,7 +21,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 
 
-const foundedDrivesScreen = props => {
+const FoundedDrivesScreen = props => {
     const foundedDrives = useSelector(state => state.passanger.foundedDrives);
     const [isLoading, setIsLoading] = useState(false);
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -133,7 +132,7 @@ const foundedDrivesScreen = props => {
               newDriveInformation = {itemData.item.newDriveInformation}
               dir = {itemData.item.old_drive.dir}
               map = {true}
-              whereToNavigate = {"foundDrive"}
+              whereToNavigate = {"FoundDrive"}
               navigation = {props.navigation}
               driveID = {itemData.item.old_drive.id}
           />)}
@@ -150,4 +149,4 @@ const styles = StyleSheet.create({
       }
 });
 
-export default foundedDrivesScreen;
+export default FoundedDrivesScreen;

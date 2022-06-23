@@ -15,7 +15,7 @@ const Cred = (
   <View style={{ padding: 10}}></View>
 );
 
-const notificationScreen = props => {
+const NotificationScreen = props => {
   const userID = useSelector((state) => state.auth.userId);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -115,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default notificationScreen;
+export default NotificationScreen;

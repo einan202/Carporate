@@ -9,7 +9,7 @@ import {
 import MainWindow from "../../components/UI/MainWindow";
 import { LinearGradient } from 'expo-linear-gradient';
 
-const passengerScreen = props => {
+const PassengerScreen = props => {
     return (
       <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
         {/* <View style={[styles.screen, {flex: 1,backgroundColor: '#fcefe3'}]}> */}
@@ -30,4 +30,4 @@ const passengerScreen = props => {
     }
 });
 
-export default passengerScreen;
+export default PassengerScreen;
