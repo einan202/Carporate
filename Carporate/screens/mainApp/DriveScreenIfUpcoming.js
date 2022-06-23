@@ -181,7 +181,7 @@ function DriveScreenIfUpcoming({ route, navigation }) {
     route.params.passangers !== undefined && route.params.passangers !== [] ? (
       <FlatList
         ListHeaderComponent={
-          <Text style={[styles.text, { fontSize: 20 }]}>
+          <Text style={[styles.text, { fontSize: 20, color: 'black', marginTop: 20 }]}>
             The passangers are:
           </Text>
         }
@@ -193,31 +193,31 @@ function DriveScreenIfUpcoming({ route, navigation }) {
         renderItem={(itemData) => {
          
           let passanger_name = (
-            <Text style={[styles.text, { fontSize: 20 }]}>
+            <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1 }]}>
               {itemData.item.value.firstName} {itemData.item.value.lastName}
             </Text>
           );
 
           let passanger_locations = (
             <>
-              <Text>Ideal pick up:</Text>
+              <Text style={{fontSize: 20, marginTop: 20, textAlign: 'center'}}>Ideal pick up:</Text>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${itemData.item.value.pickUpLocation.location.lat}%2C${itemData.item.value.pickUpLocation.location.lng}`)
                 }
               >
-                <Text style={[styles.text, { fontSize: 20 }]}>
+                <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1 }]}>
                   {itemData.item.value.pickUpLocation.address}
                 </Text>
               </Pressable>
 
-              <Text>Ideal drop off:</Text>
+              <Text style={{marginTop: 20, fontSize: 20, textAlign: 'center'}}>Ideal drop off:</Text>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${itemData.item.value.dropOffPoint.location.lat}%2C${itemData.item.value.dropOffPoint.location.lng}`)
                 }
               >
-                <Text style={[styles.text, { fontSize: 20 }]}>
+                <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1 }]}>
                   {itemData.item.value.dropOffPoint.address}
                 </Text>
               </Pressable>
@@ -252,11 +252,11 @@ function DriveScreenIfUpcoming({ route, navigation }) {
     );
 
   const fromTo = ifDriver ? (
-      <Text style = {{ flexShrink: 1, flexWrap: 'wrap', flex: 1, fontWeight: 'bold', fontSize: 20, marginTop: 30}}>
-      {route.params.starting_point} {" ==> "} {route.params.destination}
+    <Text style = {{ flexShrink: 1, flexWrap: 'wrap', flex: 1, fontWeight: 'bold', fontSize: 20, marginTop: 20 }}>
+    {route.params.starting_point} {" ==> "} {route.params.destination}
     </Text>
   ) : (
-    <Text style = {{fontWeight: 'bold', fontSize: 20, marginTop: 30, flex: 1}}>
+    <Text style = {{fontWeight: 'bold', fontSize: 20, marginTop: 20, flex: 1}}>
       {
         route.params.passangers[passangerIndex(route.params.passangers, email)]
           .starting_point.address
@@ -269,27 +269,27 @@ function DriveScreenIfUpcoming({ route, navigation }) {
     </Text>
   );
 
-  const pickUpTime = ifDriver ? null : <Text style={[styles.text, { fontSize: 20 }]}>estimated pick up time: {calcPickUpTime(email, make_date(route.params.date, route.params.time))[1]} </Text>
+  const pickUpTime = ifDriver ? null : <Text style={[styles.text, { fontSize: 20, color: 'black', marginTop: 20 }]}>Estimated pick up time: {calcPickUpTime(email, make_date(route.params.date, route.params.time))[1]} </Text>
   
   return (
     
     <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
-      <Text style={[styles.text, { fontSize: 20, marginTop: 30, marginBottom: 5, color: 'black', fontWeight: '600'}]}> {fromTo}</Text>
+      <Text style={[styles.text, { fontSize: 20, marginTop: 30, marginBottom: 0, color: 'black', fontWeight: '600'}]}> {fromTo}</Text>
       {route.params.newDriveInformation ? (
-        <Text style={[styles.text, { fontSize: 20 }]}>
-          {" "}
+        <Text style={[styles.text, { fontSize: 20, color: 'black'}]}>
+        {" "}
           {"Ideal pick up:\n"}{" "}
           {route.params.newDriveInformation.pickUpPoint.address}
         </Text>
       ) : (
         <Text></Text>
       )}
-      <Text style={[styles.text, { fontSize: 20, color: 'black' }]}>
+      <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginBottom: 20 }]}>
         {" "}
         {route.params.date} {"at"} {route.params.time}{" "}
       </Text>
       {pickUpTime}
-      <Text style={[styles.text, { fontSize: 20, color: 'black' }]}>
+      <Text style={[styles.text, { fontSize: 20, color: 'black', marginTop: 0 }]}>
         {" "}
         {"Available places:"} {route.params.amount_of_people}{" "}
       </Text>
@@ -304,9 +304,10 @@ function DriveScreenIfUpcoming({ route, navigation }) {
             Linking.openURL(`tel:${route.params.driver.driverPhone}`)
           }
         >
-          <Text style={[styles.text, { fontSize: 20 }]}>
+          <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginTop: 20}]}>
             {" "}
-            {`Driver: ${
+            <Text style={[styles.text, { fontSize: 20, color: 'black', fontWeight: '600'}]}>Driver: </Text>
+            {'\n'} {`${
               route.params.driver.driverFirstName +
               " " +
               route.params.driver.driverLastName
@@ -321,7 +322,7 @@ function DriveScreenIfUpcoming({ route, navigation }) {
           onPress={() => showDirectionInMaps(route.params.dir)}
           style={{ marginTop: 20 }}
         >
-          <Text style={[styles.text, { fontSize: 20, fontWeight: '600', marginTop: 0, marginBottom: 10, color: Colors.primary}]}>
+          <Text style={[styles.text, { fontSize: 20, fontWeight: '600', marginTop: 0, marginBottom: 20, color: Colors.primary}]}>
             Press here to show the ride on map
           </Text>
         </Pressable>

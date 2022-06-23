@@ -103,7 +103,7 @@ const FoundedDrivesScreen = props => {
     };
 
     return (
-      <View style={[styles.screen, {backgroundColor: '#fcefe3'}]}>
+      <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
         <FlatList
           ListHeaderComponent={<Text style = {{textAlign:'center', fontSize:16, fontFamily: "fontawesome-webfont", fontWeight: 'bold'}}>These are the drives we found for you </Text>}
           refreshing={isRefreshing}
@@ -136,7 +136,7 @@ const FoundedDrivesScreen = props => {
               navigation = {props.navigation}
               driveID = {itemData.item.old_drive.id}
           />)}
-        /></View>
+        /></LinearGradient>
     );
 };
 

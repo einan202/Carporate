@@ -26,8 +26,8 @@ function DriveScreenIfFound({ route, navigation }) {
     const passangersText = 
     route.params.passangers!==undefined && route.params.passangers !== [] ? 
         <FlatList
-          ListHeaderComponent={<Text style={[styles.text, {fontSize: 20}]}>Passangers: </Text>}
-          data={route.params.passangers.map((passanger, index) => ({ value: passanger, id: index  }))}
+        ListHeaderComponent={<Text style={[styles.text, {fontSize: 20, color: 'black'}]}>Passangers: </Text>}
+        data={route.params.passangers.map((passanger, index) => ({ value: passanger, id: index  }))}
           keyExtractor={item => item.id}
           renderItem = {itemData => 
             (
@@ -37,13 +37,13 @@ function DriveScreenIfFound({ route, navigation }) {
         />
         :
         <View style = {{marginTop:0}}>
-        <Text style={[styles.text, {fontSize: 20}]}>No passangers have join yet</Text>
+        <Text style={[styles.text, {fontSize: 20, color: 'black'}]}>No passangers have join yet</Text>
         </View>;
 
     return (
             
       <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
-            <Text style={[styles.text, {fontSize: 20, color: 'black', fontWeight: 'bold'}]}> {route.params.starting_point} {' ==> '} {route.params.destination}</Text>
+            <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginBottom: 20 }]}> {route.params.starting_point} {' ==> '} {route.params.destination}</Text>
             {route.params.newDriveInformation ?
             <>
               <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold' }]}>Ideal pick up:</Text>
@@ -52,7 +52,7 @@ function DriveScreenIfFound({ route, navigation }) {
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${route.params.newDriveInformation.pickUpPoint.location.lat}%2C${route.params.newDriveInformation.pickUpPoint.location.lng}`)
                 }
               >
-                <Text style={[styles.text, { fontSize: 20,  }]}>
+                <Text style={[styles.text, { fontSize: 20, color: 'black'  }]}>
                   {route.params.newDriveInformation.pickUpPoint.address}
                 </Text>
               </Pressable>
@@ -63,16 +63,16 @@ function DriveScreenIfFound({ route, navigation }) {
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${route.params.newDriveInformation.dropOffPoint.location.lat}%2C${route.params.newDriveInformation.dropOffPoint.location.lng}`)
                 }
               >
-                <Text  style={[styles.text, { fontSize: 20,  }]}>
+               <Text style={[styles.text, { fontSize: 20, color: 'black' }]}>
                   {route.params.newDriveInformation.dropOffPoint.address}
-                </Text>
+               </Text>
               </Pressable>
             </>
             : null
             }
-            <Text  style={[styles.text, { fontSize: 20,  }]}> {route.params.date} {'at'} {route.params.time}  </Text>
-            <Text  style={[styles.text, { fontSize: 20,  }]}> {'Available places:'} {route.params.amount_of_people}  </Text>
-            <Text  style={[styles.text, { fontSize: 20,  }]}> {route.params.driver === email ? 'You are the driver' : `Driver: ${route.params.driver.driverFirstName + ' ' + route.params.driver.driverLastName}`}  </Text>
+            <Text style={[styles.text, { fontSize: 20, color: 'black' }]}> {route.params.date} {'at'} {route.params.time}  </Text>
+            <Text style={[styles.text, { fontSize: 20, color: 'black' }]}> {'Available places:'} {route.params.amount_of_people}  </Text>
+            <Text style={[styles.text, { fontSize: 20, color: 'black' }]}> {route.params.driver === email ? 'You are the driver' : `Driver: ${route.params.driver.driverFirstName + ' ' + route.params.driver.driverLastName}`}  </Text>
             
             {passangersText}
             { 
@@ -80,7 +80,7 @@ function DriveScreenIfFound({ route, navigation }) {
             onPress={() => showDirectionInMaps(route.params.dir)}
             style = {{marginTop: 20}}
             >
-            <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold', marginTop: 0, marginBottom: 10, color: Colors.primary }]}>
+            <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold', marginTop: 20, marginBottom: 20 }]}>
               Press here to show the ride on map</Text>
             </Pressable>}</LinearGradient>
     )

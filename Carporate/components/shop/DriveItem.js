@@ -67,7 +67,7 @@ const upcomingDriveItem = (props) => {
         {props.starting_point.address} {" ==> "} {props.destination.address}
       </Text>
     ) : (
-      <Text>
+      <Text style={{fontWeight: 'bold'}}>
         {
           props.passangers[
             passangerIndex(props.passangers, email)
