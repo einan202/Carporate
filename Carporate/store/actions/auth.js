@@ -31,7 +31,7 @@ const isValidPhone_number = (testPhoneNumber) => {
   return testPhoneNumber.length == 10 && onlyDigits(testPhoneNumber);
 };
 const isValidAge = (testAge) => {
-  return testAge !== null && onlyDigits(testAge) && parseInt(testAge) <= 120;
+  return onlyDigits(testAge) && parseInt(testAge) <= 120;
 };
 
 export const authenticate = (
@@ -67,7 +67,7 @@ export const sendVareficationMail = (email) => {
   return async (dispatch) => {
     let code = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
     console.log(code);
-    // console.log(`\n\n ----> ${code} <---- \n\n`);
+    console.log(`\n\n ----> ${code} <---- \n\n`);
     const response = await fetch(
       "https://us-central1-carpool-54fdc.cloudfunctions.net/sendEmailVarefication",
       {
@@ -124,6 +124,11 @@ export const detailsfl = (
       throw new Error("You entered invalid phone number");
     } else if (!isValidAge(age)) {
       throw new Error("You entered invalid age");
+    } else if (
+      gender.toLowerCase() !== "male" &&
+      gender.toLowerCase() !== "female"
+    ) {
+      throw new Error("Gender can be male or female");
     } else {
       dispatch({
         type: DETAILSFILLING,
@@ -257,6 +262,11 @@ export const detailsFilling = (
       throw new Error("You entered invalid phone number");
     } else if (!isValidAge(age)) {
       throw new Error("You entered invalid age");
+    } else if (
+      (gender.toLowerCase() !== "male") &
+      (gender.toLowerCase() !== "female")
+    ) {
+      throw new Error("Gender can be male or female");
     } else if (!checkbox) {
       throw new Error("Please confirm our privacy terms");
     } else {
