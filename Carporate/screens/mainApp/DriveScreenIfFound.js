@@ -13,10 +13,11 @@ import {
   Linking
 } from 'react-native';
 import Colors from "../../constants/Colors";
-
+import Card from '../../components/UI/Card';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector, useDispatch } from 'react-redux';
 import {showDirectionInMaps} from '../../functions/googleAPI';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 function DriveScreenIfFound({ route, navigation }) {
@@ -43,44 +44,62 @@ function DriveScreenIfFound({ route, navigation }) {
     return (
             
       <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
-            <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginBottom: 20 }]}> {route.params.starting_point} {' ==> '} {route.params.destination}</Text>
+            <Text style={[styles.text, {  fontWeight: 'bold', fontSize: 20, marginTop: 10 }]}> {route.params.starting_point} {' ==> '} {route.params.destination}</Text>
+            <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginBottom: 5 }]}> {route.params.date} {'at'} {route.params.time}  </Text>
+            <Text style={[styles.text, { fontSize: 20, color: 'black' }]}> {'Available places:'} {route.params.amount_of_people}  </Text>
+            <Text style={[styles.text, { fontSize: 20, color: 'black' }]}> {route.params.driver === email ? 'You are the driver' : `Driver: ${route.params.driver.driverFirstName + ' ' + route.params.driver.driverLastName}`}  </Text>
             {route.params.newDriveInformation ?
-            <>
-              <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold' }]}>Ideal pick up:</Text>
+             <View style={{flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              }}>
+            <Card style = {{marginTop: 10,width: '70%', height:300}}>
+              <Text style={{fontSize: 20, marginTop: 10, textAlign: 'center'}}>Ideal pick up:</Text>
+              <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1 }]}>
+                  {route.params.newDriveInformation.pickUpPoint.address}
+              </Text>
+              <View style={{flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              }}>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${route.params.newDriveInformation.pickUpPoint.location.lat}%2C${route.params.newDriveInformation.pickUpPoint.location.lng}`)
                 }
               >
-                <Text style={[styles.text, { fontSize: 20, color: 'black'  }]}>
-                  {route.params.newDriveInformation.pickUpPoint.address}
-                </Text>
+                <Ionicons name="location-outline" size = {25} color = {Platform.OS === 'android' ? Colors.primary : ''}/> 
               </Pressable>
-
-              <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold'  }]}>Ideal drop off:</Text>
+              </View>
+              <Text style={{fontSize: 20, marginTop: 10, textAlign: 'center'}}>Ideal drop off:</Text>
+              <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1 }]}>
+                  {route.params.newDriveInformation.dropOffPoint.address}
+               </Text>
+               <View style={{flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              }}>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${route.params.newDriveInformation.dropOffPoint.location.lat}%2C${route.params.newDriveInformation.dropOffPoint.location.lng}`)
                 }
               >
-               <Text style={[styles.text, { fontSize: 20, color: 'black' }]}>
-                  {route.params.newDriveInformation.dropOffPoint.address}
-               </Text>
+                <Ionicons name="location-outline" size = {25} color = {Platform.OS === 'android' ? Colors.primary : ''}/> 
+
               </Pressable>
-            </>
+              </View>
+            </Card>
+            </View>
             : null
             }
-            <Text style={[styles.text, { fontSize: 20, color: 'black' }]}> {route.params.date} {'at'} {route.params.time}  </Text>
-            <Text style={[styles.text, { fontSize: 20, color: 'black' }]}> {'Available places:'} {route.params.amount_of_people}  </Text>
-            <Text style={[styles.text, { fontSize: 20, color: 'black' }]}> {route.params.driver === email ? 'You are the driver' : `Driver: ${route.params.driver.driverFirstName + ' ' + route.params.driver.driverLastName}`}  </Text>
             
-            {passangersText}
+            
+            {/* {passangersText} */}
             { 
             <Pressable
             onPress={() => showDirectionInMaps(route.params.dir)}
             style = {{marginTop: 20}}
             >
-            <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold', marginTop: 20, marginBottom: 20 }]}>
+            <Text style={[styles.text, { fontSize: 20, fontWeight: 'bold' }]}>
               Press here to show the ride on map</Text>
             </Pressable>}</LinearGradient>
     )

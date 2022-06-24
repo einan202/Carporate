@@ -22,7 +22,10 @@ import {
   delaySpecificDrive,
 } from "../../store/actions/drives";
 import { LinearGradient } from 'expo-linear-gradient';
+import Card from "../../components/UI/Card";
 import DropDownButton from "../../components/UI/DropDownButton";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import style from "react-native-modal-picker/style";
 
 function DriveScreenIfUpcoming({ route, navigation }) {
   const email = useSelector((state) => state.auth.email);
@@ -179,70 +182,117 @@ function DriveScreenIfUpcoming({ route, navigation }) {
 
   const passangersText =
     route.params.passangers !== undefined && route.params.passangers !== [] ? (
-      <FlatList
-        ListHeaderComponent={
-          <Text style={[styles.text, { fontSize: 20, color: 'black', marginTop: 20 }]}>
+      <>
+      <Text style={[styles.text, { fontSize: 20, color: 'black', marginTop: 20 }]}>
             The passangers are:
-          </Text>
-        }
+      </Text>
+      <FlatList
         data={passangersByOrder.map((passanger, index) => ({
           value: passanger,
           id: index,
         }))}
         keyExtractor={(item) => item.id}
+        style={{
+        }}
+
         renderItem={(itemData) => {
+        
          
           let passanger_name = (
-            <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1 }]}>
+            <View style={{flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              borderBottomWidth:0.5,
+              borderBottomEndRadius:5
+             
+          }}
+>
+            <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1, justifyContent: "center", }]}>
               {itemData.item.value.firstName} {itemData.item.value.lastName}
             </Text>
+            </View>
           );
 
           let passanger_locations = (
             <>
-              <Text style={{fontSize: 20, marginTop: 20, textAlign: 'center'}}>Ideal pick up:</Text>
+              <Text style={{fontSize: 20, marginTop: 10, textAlign: 'center'}}>Ideal pick up:</Text>
+              <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1 }]}>
+                  {itemData.item.value.pickUpLocation.address}
+                </Text>
+              <View style={{flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              }}>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${itemData.item.value.pickUpLocation.location.lat}%2C${itemData.item.value.pickUpLocation.location.lng}`)
                 }
               >
-                <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1 }]}>
-                  {itemData.item.value.pickUpLocation.address}
-                </Text>
+                <Ionicons name="location-outline" size = {25} color = {Platform.OS === 'android' ? Colors.primary : ''}/> 
               </Pressable>
+              </View>
 
-              <Text style={{marginTop: 20, fontSize: 20, textAlign: 'center'}}>Ideal drop off:</Text>
+              <Text style={{marginTop: 10, fontSize: 20, textAlign: 'center'}}>Ideal drop off:</Text>
+              <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1 }]}>
+                  {itemData.item.value.dropOffPoint.address}
+                </Text>
+                <View style={{flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              }}>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${itemData.item.value.dropOffPoint.location.lat}%2C${itemData.item.value.dropOffPoint.location.lng}`)
                 }
               >
-                <Text style={[styles.text, { fontSize: 20, color: Colors.primary, textAlign: 'center', flex: 1 }]}>
-                  {itemData.item.value.dropOffPoint.address}
-                </Text>
+                <Ionicons name="location-outline" size = {25} color = {Platform.OS === 'android' ? Colors.primary : ''}/> 
+
               </Pressable>
+              </View>
             </>
           );
 
           return ifDriver ? (
-            <>
+            <View style={{flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              bottom: 0
+              }}>
+            <Card style = {{marginTop: 10,width: '70%'}}>
+              
+              {passanger_name}
+              <View style = {{ flex: 1, marginTop:15,
+              justifyContent: "center",
+              alignItems: "center",}}>
               <Pressable
                 onPress={() =>
                   Linking.openURL(`tel:${itemData.item.value.phone}`)
                 }
               >
-                {passanger_name}
+                <Ionicons name='call-outline' size = {25} color = {Platform.OS === 'android' ? Colors.primary : ''}/> 
               </Pressable>
+              
+             
+              </View>
+              
               {passanger_locations}
-            </>
+            </Card>
+            </View>
           ) : (
-            <>
+            <View style={{flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              }}>
+            <Card style={{marginTop: 20, width:"70%"}}>
+
             {passanger_name}
             {passanger_locations}
-            </>
+            </Card>
+            </View>
           );
         }}
       />
+      </>
     ) : (
       <View style={{ marginTop: 0 }}>
         <Text style={[styles.text, { fontSize: 20, color: 'black', padding: 20}]}>
@@ -299,12 +349,8 @@ function DriveScreenIfUpcoming({ route, navigation }) {
           <Text style={{color: 'black'}}>Driver: </Text>{"\n"}{"You are the driver"}{" "}
         </Text>
       ) : (
-        <Pressable
-          onPress={() =>
-            Linking.openURL(`tel:${route.params.driver.driverPhone}`)
-          }
-        >
-          <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginTop: 20}]}>
+        <>
+        <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginTop: 20}]}>
             {" "}
             <Text style={[styles.text, { fontSize: 20, color: 'black', fontWeight: '600'}]}>Driver: </Text>
             {'\n'} {`${
@@ -313,16 +359,28 @@ function DriveScreenIfUpcoming({ route, navigation }) {
               route.params.driver.driverLastName
             }`}{" "}
           </Text>
+          <View style={{
+              justifyContent: "center",
+              alignItems: "center",
+              }}>
+        <Pressable
+          onPress={() =>
+            Linking.openURL(`tel:${route.params.driver.driverPhone}`)
+          }
+        >
+          <Ionicons name='call-outline' size = {25} color = { Colors.primary }/> 
         </Pressable>
+        </View>
+        </>
       )}
 
       {passangersText}
       {
         <Pressable 
           onPress={() => showDirectionInMaps(route.params.dir)}
-          style={{ marginTop: '50%', bottom: 0 }}
+          style={{ marginTop: route.params.passangers ? '0%' : '50%' }}
         >
-          <Text style={[styles.text, { fontSize: 20, fontWeight: '600', marginTop: 0, marginBottom: 10, color: Colors.primary}]}>
+          <Text style={[styles.text, { fontSize: 20, fontWeight: '600', marginTop: 10, marginBottom: 10, color: Colors.primary}]}>
             Press here to show the ride on map
           </Text>
         </Pressable>

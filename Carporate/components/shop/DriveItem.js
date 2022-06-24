@@ -85,7 +85,7 @@ const upcomingDriveItem = (props) => {
   return (
     <Card
       style={{
-        height: props.showButton ? 250 : 250,
+        height: props.showButton ? 250 : 180,
         margin: 10,
       }}
     >
