@@ -60,7 +60,7 @@ const Driver_passanger_navigator = ({navigation}) => {
   // "#FF8C00",
   // "#c71585",
   tabBarStyle:{
-    height:60,
+    height: 50,
   },
   tabBarHideOnKeyboard:true,
   // tabBarStyle: {
@@ -73,61 +73,84 @@ const Driver_passanger_navigator = ({navigation}) => {
       {/* <Ionicons name='md-person-circle-outline' size = {32} color = "#00a46c"/>  */}
       {/* <Ionicons name='md-person-circle-outline' size = {32} color = "#c71585" /> */}
       {/* <Ionicons name='md-person-circle-outline' size = {32} color = "#FF8C00"/>  */}
-      <Ionicons name='md-person-circle-outline' size = {36} color = {Platform.OS === 'android' ? Colors.primary : ''} />  
+      <Ionicons name='md-person-circle-outline' size = {33} color = {Platform.OS === 'android' ? Colors.primary : ''} />  
     </TouchableOpacity> ),
     headerRight: () => (
        <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
       {/* <Ionicons name='notifications' size = {32} color = "#00a46c"/> */}
       {/* <Ionicons name='notifications' size = {32} color = "#c71585"/>  */}
       {/* <Ionicons name='notifications' size = {32} color = "#FF8C00"/>  */}
-      <Ionicons name='notifications' size = {35} color = {Platform.OS === 'android' ? Colors.primary : ''}/> 
+      <Ionicons name='notifications' size = {33} color = {Platform.OS === 'android' ? Colors.primary : ''}/> 
     </TouchableOpacity>
     ),
   }}>
     <appTabNavigator.Screen name = "Loyalty" component = {LoyaltyScreen} options={{
-      tabBarButton: (props) => null
+      tabBarButton: (props) => null,
+      headerBackgroundContainerStyle: {
+        borderBottomWidth: 0.5,
+      }
     }}/>
     <appTabNavigator.Screen name = "Notifications" component = {NotificationScreen} options={{
-      tabBarButton: (props) => null
+      tabBarButton: (props) => null,
+      headerBackgroundContainerStyle: {
+        borderBottomWidth: 0.5,
+      }
     }} />
     <appTabNavigator.Screen name = "foundedDrivesScreen"  component = {foundedDrivesScreen} options={{
       tabBarButton: (props) => null,
-      title: "Rides Found"
+      title: "Rides Found",
+      headerBackgroundContainerStyle: {
+        borderBottomWidth: 0.5,
+      }
     }}/>
-    <appTabNavigator.Screen name = "driver" component = {driverScreen} options={{
-      title: "As a driver",
+    <appTabNavigator.Screen name = "Driver" component = {driverScreen} options={{
+      // title: "As a driver",
       tabBarLabelStyle:{
-        fontSize:15,
-        color: Colors.primary
+        fontSize:12,
+        color: Colors.primary,
+        marginBottom: 5,
+      },
+      headerBackgroundContainerStyle: {
+        borderBottomWidth: 0.5,
       },
       tabBarIcon: ({ tintColor }) => (
-        <Ionicons name="car-outline" size={38} color = {Platform.OS === 'android' ? Colors.primary : ''}/>
+        <Ionicons name="car-outline" size={30} color = {Platform.OS === 'android' ? Colors.primary : ''}/>
       )
     }}/>
-    <appTabNavigator.Screen name = "passenger"  component = {PassengerScreen} options={{
-      title: "As a passenger",
+    <appTabNavigator.Screen name = "Passenger"  component = {PassengerScreen} options={{
+      // title: "As a passenger",
       tabBarLabelStyle:{
-        fontSize:15,
+        fontSize:12,
+        marginBottom: 5,
         color: Colors.primary
       },
+      headerBackgroundContainerStyle: {
+        borderBottomWidth: 0.5,
+      },
       tabBarIcon: ({ tintColor }) => (
-        <Ionicons name="man-outline" size={38} color = {Platform.OS === 'android' ? Colors.primary : ''}/>
+        <Ionicons name="search" size={30} color = {Platform.OS === 'android' ? Colors.primary : ''}/>
       )
     }}/>
     <appTabNavigator.Screen name = "UpcomingDrive"  component = {DriveScreenIfUpcoming} options={{
       tabBarButton: (props) => null,
+      headerBackgroundContainerStyle: {
+        borderBottomWidth: 0.5,
+      },
       headerRight: () => (
         <TouchableOpacity onPress={() => navigation.navigate("Loyalty")}>
-          <Ionicons name="arrow-back" size={35} color={Platform.OS === 'android' ? Colors.primary : ''} />    
+          <Ionicons name="arrow-back" size={33} color={Platform.OS === 'android' ? Colors.primary : ''} />    
         </TouchableOpacity>
      ),
      title: "Current Ride",
     }} />
     <appTabNavigator.Screen name = "FoundDrive" component = {DriveScreenIfFound} options={{
       tabBarButton: (props) => null,
+      headerBackgroundContainerStyle: {
+        borderBottomWidth: 0.5,
+      },
       headerRight: () => (
         <TouchableOpacity onPress={() => navigation.navigate("foundedDrivesScreen")}>
-          <Ionicons name="arrow-back" size={35} color={Platform.OS === 'android' ? Colors.primary : ''} />    
+          <Ionicons name="arrow-back" size={33} color={Platform.OS === 'android' ? Colors.primary : ''} />    
         </TouchableOpacity>
      ),
     }} />

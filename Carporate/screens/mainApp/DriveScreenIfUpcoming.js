@@ -245,18 +245,18 @@ function DriveScreenIfUpcoming({ route, navigation }) {
       />
     ) : (
       <View style={{ marginTop: 0 }}>
-        <Text style={[styles.text, { fontSize: 20, color: 'black' }]}>
-          No passangers have join yet
+        <Text style={[styles.text, { fontSize: 20, color: 'black', padding: 20}]}>
+        <Text style={{color: 'black'}}>Passngers:</Text><Text style={{color: Colors.primary,}}>{"\n"}No passangers have join yet</Text>
         </Text>
       </View>
     );
 
   const fromTo = ifDriver ? (
-    <Text style = {{ flexShrink: 1, flexWrap: 'wrap', flex: 1, fontWeight: 'bold', fontSize: 20, marginTop: 20 }}>
+    <Text style = {{ flexShrink: 1, flexWrap: 'wrap', flex: 1, fontWeight: 'bold', fontSize: 20, marginTop: 10 }}>
     {route.params.starting_point} {" ==> "} {route.params.destination}
     </Text>
   ) : (
-    <Text style = {{fontWeight: 'bold', fontSize: 20, marginTop: 20, flex: 1}}>
+    <Text style = {{fontWeight: 'bold', fontSize: 20, marginTop: 10, flex: 1}}>
       {
         route.params.passangers[passangerIndex(route.params.passangers, email)]
           .starting_point.address
@@ -269,12 +269,12 @@ function DriveScreenIfUpcoming({ route, navigation }) {
     </Text>
   );
 
-  const pickUpTime = ifDriver ? null : <Text style={[styles.text, { fontSize: 20, color: 'black', marginTop: 20 }]}>Estimated pick up time: {calcPickUpTime(email, make_date(route.params.date, route.params.time))[1]} </Text>
+  const pickUpTime = ifDriver ? null : <Text style={[styles.text, { fontSize: 20, color: 'black', marginTop: 0, fontWeight: '900' }]}>Estimated pick up time: <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginTop: 0 }]}>{calcPickUpTime(email, make_date(route.params.date, route.params.time))[1]} </Text> </Text>
   
   return (
     
     <LinearGradient colors={['#f7e8df', '#ffe3ff']} style={{flex:1}}>
-      <Text style={[styles.text, { fontSize: 20, marginTop: 30, marginBottom: 0, color: 'black', fontWeight: '600'}]}> {fromTo}</Text>
+      <Text style={[styles.text, { fontSize: 20, marginTop: 30, marginBottom: -10, color: 'black', fontWeight: '600'}]}> {fromTo}</Text>
       {route.params.newDriveInformation ? (
         <Text style={[styles.text, { fontSize: 20, color: 'black'}]}>
         {" "}
@@ -284,19 +284,19 @@ function DriveScreenIfUpcoming({ route, navigation }) {
       ) : (
         <Text></Text>
       )}
-      <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginBottom: 20 }]}>
+      <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginBottom: 5 }]}>
         {" "}
         {route.params.date} {"at"} {route.params.time}{" "}
       </Text>
       {pickUpTime}
-      <Text style={[styles.text, { fontSize: 20, color: 'black', marginTop: 0 }]}>
+      <Text style={[styles.text, { fontSize: 20, color: 'black', marginTop: 5 }]}>
         {" "}
-        {"Available places:"} {route.params.amount_of_people}{" "}
+        {"Available places:"} <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginTop: 0 }]}>{route.params.amount_of_people}{" "}</Text>
       </Text>
       {ifDriver ? (
-        <Text style={[styles.text, { fontSize: 20, color: 'black' }]}>
+        <Text style={[styles.text, { fontSize: 20, color: Colors.primary, marginTop: 20 }]}>
           {" "}
-          {"You are the driver"}{" "}
+          <Text style={{color: 'black'}}>Driver: </Text>{"\n"}{"You are the driver"}{" "}
         </Text>
       ) : (
         <Pressable
@@ -320,9 +320,9 @@ function DriveScreenIfUpcoming({ route, navigation }) {
       {
         <Pressable 
           onPress={() => showDirectionInMaps(route.params.dir)}
-          style={{ marginTop: 20 }}
+          style={{ marginTop: '50%', bottom: 0 }}
         >
-          <Text style={[styles.text, { fontSize: 20, fontWeight: '600', marginTop: 0, marginBottom: 20, color: Colors.primary}]}>
+          <Text style={[styles.text, { fontSize: 20, fontWeight: '600', marginTop: 0, marginBottom: 10, color: Colors.primary}]}>
             Press here to show the ride on map
           </Text>
         </Pressable>
