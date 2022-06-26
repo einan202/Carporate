@@ -60,7 +60,7 @@ const Driver_passanger_navigator = ({navigation}) => {
   // "#FF8C00",
   // "#c71585",
   tabBarStyle:{
-    height: 50,
+    height: 55,
   },
   tabBarHideOnKeyboard:true,
   // tabBarStyle: {
@@ -114,7 +114,7 @@ const Driver_passanger_navigator = ({navigation}) => {
         borderBottomWidth: 0.5,
       },
       tabBarIcon: ({ tintColor }) => (
-        <Ionicons name="car-outline" size={30} color = {Platform.OS === 'android' ? Colors.primary : ''}/>
+        <Ionicons name="car-outline" size={33} color = {Platform.OS === 'android' ? Colors.primary : ''}/>
       )
     }}/>
     <appTabNavigator.Screen name = "Passenger"  component = {PassengerScreen} options={{
@@ -128,7 +128,7 @@ const Driver_passanger_navigator = ({navigation}) => {
         borderBottomWidth: 0.5,
       },
       tabBarIcon: ({ tintColor }) => (
-        <Ionicons name="search" size={30} color = {Platform.OS === 'android' ? Colors.primary : ''}/>
+        <Ionicons name="walk" size={33} color = {Platform.OS === 'android' ? Colors.primary : ''}/>
       )
     }}/>
     <appTabNavigator.Screen name = "UpcomingDrive"  component = {DriveScreenIfUpcoming} options={{
@@ -145,6 +145,7 @@ const Driver_passanger_navigator = ({navigation}) => {
     }} />
     <appTabNavigator.Screen name = "FoundDrive" component = {DriveScreenIfFound} options={{
       tabBarButton: (props) => null,
+      title: "Current Ride",
       headerBackgroundContainerStyle: {
         borderBottomWidth: 0.5,
       },
