@@ -38,7 +38,7 @@ const upcomingDriveItem = (props) => {
       <FlatList
         ListHeaderComponent={
           <Text style={[styles.text, { fontSize: 20 }]}>
-            The passangers are:
+            Passengers:
           </Text>
         }
         data={props.passangers.map((passanger, index) => ({
@@ -55,7 +55,7 @@ const upcomingDriveItem = (props) => {
     ) : (
       <View style={{ marginTop: 0 }}>
         <Text style={[styles.text, { fontSize: 20 }]}>
-          There are still no passangers for this drive
+          There are still no passengers to this drive
         </Text>
       </View>
     );
@@ -85,7 +85,7 @@ const upcomingDriveItem = (props) => {
   return (
     <Card
       style={{
-        height: props.showButton ? 250 : 180,
+        height: props.showButton ? 250 : 250,
         margin: 10,
       }}
     >
