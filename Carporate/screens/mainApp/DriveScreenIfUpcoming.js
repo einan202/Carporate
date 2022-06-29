@@ -186,7 +186,7 @@ function DriveScreenIfUpcoming({ route, navigation }) {
     route.params.passangers !== undefined && route.params.passangers !== [] ? (
       <>
       <Text style={[styles.text, { fontSize: 20, color: 'black', marginTop: 20 }]}>
-            The passangers are:
+            Passengers:
       </Text>
       <FlatList
         data={passangersByOrder.map((passanger, index) => ({
@@ -297,18 +297,18 @@ function DriveScreenIfUpcoming({ route, navigation }) {
       </>
     ) : (
       <View style={{ marginTop: 0 }}>
-        <Text style={[styles.text, { fontSize: 20, color: 'black', padding: 20}]}>
-        <Text style={{color: 'black'}}>Passngers:</Text><Text style={{color: Colors.primary,}}>{"\n"}No passangers have join yet</Text>
+        <Text style={[styles.text, { fontSize: 20, color: 'black', padding: 10}]}>
+        <Text style={{color: 'black'}}>Passengers:</Text><Text style={{color: Colors.primary,}}>{"\n"}No passengers have joined yet</Text>
         </Text>
       </View>
     );
 
   const fromTo = ifDriver ? (
-    <Text style = {{ flexShrink: 1, flexWrap: 'wrap', flex: 1, fontWeight: 'bold', fontSize: 20, marginTop: 10 }}>
+    <Text style = {{ flexShrink: 1, flexWrap: 'wrap', flex: 1, fontWeight: 'bold', fontSize: 18, marginTop: 10 }}>
     {route.params.starting_point} {" ==> "} {route.params.destination}
     </Text>
   ) : (
-    <Text style = {{fontWeight: 'bold', fontSize: 20, marginTop: 10, flex: 1}}>
+    <Text style = {{fontWeight: 'bold', fontSize: 18, marginTop: 10, flex: 1}}>
       {
         route.params.passangers[passangerIndex(route.params.passangers, email)]
           .starting_point.address

@@ -37,8 +37,8 @@ const upcomingDriveItem = (props) => {
     props.passangers !== undefined && props.passangers !== [] ? (
       <FlatList
         ListHeaderComponent={
-          <Text style={[styles.text, { fontSize: 18 }]}>
-            The passangers are:
+          <Text style={[styles.text, { fontSize: 20 }]}>
+            Passengers:
           </Text>
         }
         data={props.passangers.map((passanger, index) => ({
@@ -55,7 +55,7 @@ const upcomingDriveItem = (props) => {
     ) : (
       <View style={{ marginTop: 0 }}>
         <Text style={[styles.text, { fontSize: 20 }]}>
-          There are still no passangers for this drive
+          There are still no passengers to this drive
         </Text>
       </View>
     );
