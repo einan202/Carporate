@@ -61,6 +61,8 @@ const LoyaltyScreen = (props) => {
       }),
     });
 
+    
+
     if (title === "You have received permission to join the drive") {
       const action = drivesActions.joinDrive(
         driveData,
@@ -97,6 +99,7 @@ const LoyaltyScreen = (props) => {
 
     const foregroundSubscription =
       Notifications.addNotificationReceivedListener(async function (response) {
+
         const content = response.request.content;
 
         let title = content.title;
@@ -215,6 +218,8 @@ const LoyaltyScreen = (props) => {
           }
         );
       });
+      
+      
   }, []);
 
   const loadDrives = useCallback(async () => {

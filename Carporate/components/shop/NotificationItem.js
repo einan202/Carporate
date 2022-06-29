@@ -60,8 +60,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 12,
     backgroundColor: "white",
-    height: 200,
+    height: 280,
     width:365,
-   
   },
 });

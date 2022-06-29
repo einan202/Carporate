@@ -11,7 +11,7 @@ import {
     export default (state = initialState, action) => {
         switch (action.type) {
           case SEARCH_DRIVE:
-            return {
+            return {...state,
                 foundedDrives: action.foundedDrives.sort((drive_a, drive_b)=> {
                     if (drive_a.old_drive.date > drive_b.old_drive.date) {
                       return -1;
@@ -23,7 +23,7 @@ import {
                     if(drive_a.old_drive.time > drive_b.old_drive.time){
                       return -1;
                     }
-                    if (drive_b.old_drive.time > drive_a.old_drive.time) {
+                    if (drive_b.old_drive.time > drive_.old_drive.time) {
                       return 1;
                   }
                   return 0;

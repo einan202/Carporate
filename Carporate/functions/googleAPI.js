@@ -45,9 +45,7 @@ export function getRoute(dir){
 
 // Returns the duration of each leg in minutes
 export function getLegsDuration(dir){
-  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-
-  return dir.routes[0].legs.map(leg => Math.round(leg.duration.value / 60));
+  return dir.routes[0].legs.map(leg => (leg.duration.value / 60));
 }
 
 export function getRouteLegsDuration(route){
@@ -98,11 +96,11 @@ export function getRoutePointsInOrder(dir) {
   // Get Route Points by Place Id (sorted)
   let pointsByPlaceId = dir.geocoded_waypoints.map(geoCodedPoint => geoCodedPoint.place_id);
   //Sort Route Points by Place Id
-  if (numOfWayPoints > 0){
-    let wayPointsPlaceId = pointsByPlaceId.slice(1, numOfPoints-1);
-    wayPointsPlaceId = wayPointsInOrder.map(index => wayPointsPlaceId[index]);
-    pointsByPlaceId = [pointsByPlaceId[0], ...wayPointsPlaceId, pointsByPlaceId[numOfPoints-1]];
-  }
+  // if (numOfWayPoints > 0){
+  //   let wayPointsPlaceId = pointsByPlaceId.slice(1, numOfPoints-1);
+  //   wayPointsPlaceId = wayPointsInOrder.map(index => wayPointsPlaceId[index]);
+  //   pointsByPlaceId = [pointsByPlaceId[0], ...wayPointsPlaceId, pointsByPlaceId[numOfPoints-1]];
+  // }
   let pointsInOrder = []
   for (let i = 0; i < numOfPoints; i++){
     let point = {

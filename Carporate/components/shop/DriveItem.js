@@ -37,7 +37,7 @@ const upcomingDriveItem = (props) => {
     props.passangers !== undefined && props.passangers !== [] ? (
       <FlatList
         ListHeaderComponent={
-          <Text style={[styles.text, { fontSize: 20 }]}>
+          <Text style={[styles.text, { fontSize: 18 }]}>
             The passangers are:
           </Text>
         }
@@ -85,7 +85,7 @@ const upcomingDriveItem = (props) => {
   return (
     <Card
       style={{
-        height: props.showButton ? 250 : 180,
+        height: props.showButton ? 300 : 250,
         margin: 10,
       }}
     >

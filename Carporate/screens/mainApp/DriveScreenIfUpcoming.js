@@ -47,7 +47,7 @@ function DriveScreenIfUpcoming({ route, navigation }) {
     date_arr = date_arr.reverse();
     date_arr[1] = String (Number(date_arr[1]) - 1);
     let time_arr = time.split(':');
-    let date_obj = new Date(... date_arr, ... time_arr)
+    let date_obj = new Date(`${date_arr[0]}`, `${date_arr[1]}`, `${date_arr[2]}`, `${time_arr[0] }`, `${time_arr[1]}`);
     return date_obj;
   }
   const dir = route.params.dir;
@@ -57,8 +57,9 @@ function DriveScreenIfUpcoming({ route, navigation }) {
     let passangers = route.params.passangers;
     let passanger = passangers.find(p => p.email === passangerEmail);
     let pickUpLocation =  passanger.pickUpLocation;
-    let PickUpIndexInLegs = route.params.drivePoints.findIndex(leg => leg.place_id === pickUpLocation.place_id) - 1;
-    let driveDuration = legsDuration.slice(0,PickUpIndexInLegs+1).reduce((prev, curr) => prev + curr, 0);
+    let PickUpIndexInLegs = route.params.drivePoints.findIndex(p => p.place_id === pickUpLocation.place_id);
+    let driveDuration = legsDuration.slice(0,PickUpIndexInLegs).reduce((prev, curr) => prev + curr, 0);
+    driveDuration = Math.floor(driveDuration);
     time = time ? time : new Date();
     time = new Date(time.getTime() + (60000 * driveDuration));
     let newMinutes = time.getMinutes();
@@ -76,6 +77,7 @@ function DriveScreenIfUpcoming({ route, navigation }) {
       newMinutes = newMinutes.toString()
     }
     let newTime = newHour.toString() + ':' + newMinutes.toString()
+    
     return [driveDuration, newTime];
   };
 
@@ -90,7 +92,7 @@ function DriveScreenIfUpcoming({ route, navigation }) {
           route.params.drivePoints,
           passangerB.pickUpLocation
         );
-        return passangerBIndex - passangerAIndex;
+        return passangerAIndex - passangerBIndex ;
       });
 
   const triggerNotificationHandler = (title, to, body) => {
@@ -375,6 +377,7 @@ function DriveScreenIfUpcoming({ route, navigation }) {
       )}
 
       {passangersText}
+      
       {
         <Pressable 
           onPress={() => showDirectionInMaps(route.params.dir)}

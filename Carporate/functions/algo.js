@@ -55,7 +55,7 @@ export async function algo(st_location, dest_location, oldDir, pickUpRangeFilter
   }
   let drivePoints = newDriveInfo.getPoints();
   let driveTime = newDriveInfo.getDuration({});
-  let devationTime = newDriveInfo.getDuration({}) - oldDriveInfo.getDuration({});
+  let devationTime = Math.round(newDriveInfo.getDuration({}) - oldDriveInfo.getDuration({}));
   
   // let oldDirDuration = googleAPI.getRouteDuration(googleAPI.getRoute(oldDir));
   // let newDirDuration = googleAPI.getRouteDuration(googleAPI.getRoute(newDir));
@@ -202,7 +202,7 @@ class DriveInfo{
     for (let i = st_index; i < end_index; i++){
       duration += this.legs_duration[i];
     }
-    return duration;
+    return Math.round(duration);
   }
   // Get a new DriveInfo for the a drive
   // from point "st_index", to point "end_index" included

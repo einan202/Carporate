@@ -19,7 +19,7 @@ const FiltersScreen = props => {
     const [isAnimalFree, setIsAnimalFree] = useState(false);
     const [isCargoFree, setIsCargoFree] = useState(false);
     const [isTollRoadsFree, setIsTollRoadsFree] = useState(false);
-    const [isFriendlyFree, setIsFriendlyFree] = useState(true);
+    const [isFriendlyFree, setIsFriendlyFree] = useState(false);
     const [isCoffeeStopFree, setIsCoffeeStopFree] = useState(false);
     const [isOtherFree, setIsOtherFree] = useState(false);
 
