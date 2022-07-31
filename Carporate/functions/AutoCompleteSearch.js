@@ -28,7 +28,7 @@ export default function AutoCompleteSearch({placeholder, setPlace, zIndex}) {
 					component: "country:il"
 				}}
 				styles={{
-					container: {  width: "70%", zIndex: zIndex, position: 'absolute'},
+					container: {  width: "100%", zIndex: zIndex, position: 'absolute'},
 					
                     textInput: {
                         borderColor:'grey',

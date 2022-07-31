@@ -5,7 +5,7 @@ const SEARCH_RANGE = [1500, 5000, 10000];
   Input: 
     1. location = Passenger's current location (should be LatLng)
     2. oldDir = The directions of the drive we want to join the passenger
-    3. (optional) pickUpRangeFilter = should be a number between [1, 5] 
+    3. (optional) pickUpRangeFilter = should be a number between [0, 3] 
 
 
   Output:
@@ -19,12 +19,8 @@ const SEARCH_RANGE = [1500, 5000, 10000];
 /* ***************************************************************************************** */
 
 export async function algo(st_location, dest_location, oldDir, pickUpRangeFilter = 0, dropOffRangeFilter = 0, date = new Date()){
-  let pickUpPoints = await nearbyPoints(st_location, pickUpRangeFilter);
-  let dropOffPoints = await nearbyPoints(dest_location, dropOffRangeFilter);
-  
-
-  // console.log(`pickup filtered places found:`);
-  // console.log(JSON.stringify(pickUpPoints));
+  let pickUpPoints = pickUpRangeFilter < 0 ? [st_location] : await nearbyPoints(st_location, pickUpRangeFilter);
+  let dropOffPoints = dropOffRangeFilter < 0 ? [dest_location] : await nearbyPoints(dest_location, dropOffRangeFilter);
   
   
   //********************************************************************** */
@@ -43,8 +39,9 @@ export async function algo(st_location, dest_location, oldDir, pickUpRangeFilter
   // console.log(`newDir Duration: ${googleAPI.getRouteDuration(googleAPI.getRoute(newDir))}`)
   // console.log(`oldDrive Duration: ${oldDriveInfo.getDuration({})}`);
   // console.log(`newDrive Duration: ${newDriveInfo.getDuration({})}`); 
-  oldLegsDuration = oldDriveInfo.getLegsDuration();
-  newLegsDuration = newDriveInfo.getLegsDuration();
+  console.log(`oldDriveInfo: ${JSON.stringify(optDrive.oldDriveInfo)}`);
+  let oldLegsDuration = oldDriveInfo.getLegsDuration();
+  let newLegsDuration = newDriveInfo.getLegsDuration();
   console.log('old legs duration');
   for (let i=0; i < oldLegsDuration.length; i++){
     console.log(oldLegsDuration[i])
@@ -76,7 +73,7 @@ export async function algo(st_location, dest_location, oldDir, pickUpRangeFilter
 /* ***************************************************************************************** */
 
 async function nearbyPoints(place, filter){
-  let nearbySearch = await googleAPI.getNearbySearch(place, `transit_station`, `intersection`, SEARCH_RANGE[0]);
+  let nearbySearch = await googleAPI.getNearbySearch(place, `transit_station`, `intersection`, SEARCH_RANGE[filter]);
   let nearbyPlaces = googleAPI.getNearbySearchPlaces(nearbySearch);
   // console.log(`Number of nearby places found - ${nearbyPlaces.length}`);
   // for (place of nearbyPlaces){
@@ -109,8 +106,8 @@ async function optDrive(pickUpPoints, dropOffPoints, oldDriveInfo, depature_time
     newDriveInfo: undefined
   }
   
-  for (let i = 0; i < NUM_OF_FILTERED_POINTS; i++){
-    for (let j = 0; j < NUM_OF_FILTERED_POINTS; j++){
+  for (let i = 0; i < Math.min(NUM_OF_FILTERED_POINTS, pickUpPoints.length); i++){
+    for (let j = 0; j < Math.min(NUM_OF_FILTERED_POINTS,dropOffPoints.length); j++){
       let currPickUpPoint = pickUpPoints[i];
       let currDropOffPoint = dropOffPoints[j];
       // Find the new drive with the picking point

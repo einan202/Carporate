@@ -7,10 +7,10 @@ const DateTimeButton = props => {
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    const [dateField, setDateField] = useState('date field');
-    const [timeField, setTimeField] = useState('time field');
+    const [dateField, setDateField] = useState('Date');
+    const [timeField, setTimeField] = useState('Time');
 
-    const { onInputChange} = props;
+    const {onInputChange} = props;
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -85,18 +85,19 @@ const DateTimeButton = props => {
         <View>
             <View style={styles.buttonContainer}>
 
+                <TouchableOpacity onPress={showTimepicker}  >
+                    <View style={styles.picker}>
+                        <Text style={styles.buttonText}>{timeField}</Text>
+                    </View>
+                </TouchableOpacity>
+
+
                 <TouchableOpacity onPress={showDatepicker}  >
                     <View style={styles.picker}>
                         <Text style={styles.buttonText}>{dateField}</Text>
                     </View>
                 </TouchableOpacity>
 
-
-                <TouchableOpacity onPress={showTimepicker}  >
-                    <View style={styles.picker}>
-                        <Text style={styles.buttonText}>{timeField}</Text>
-                    </View>
-                </TouchableOpacity>
 
             </View>
             {show && (
@@ -116,18 +117,20 @@ const DateTimeButton = props => {
 const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-evenly',
         margin: 10,
-        width: 250,
-        maxWidth: "90%"
+        width: 400,
+        maxWidth: "95%"
     },
     picker: {
+        width: 150,
         borderColor: 'grey',
         borderWidth: 1,
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 10,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        marginHorizontal:20
     },
     buttonText: {
         color: 'black'

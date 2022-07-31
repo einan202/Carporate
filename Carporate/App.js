@@ -11,6 +11,7 @@ import notificationsReducer from './store/reducers/notifications';
 import AppNavigator from './navigation/AppNavigator';
 import * as Font from 'expo-font';
 import * as Notifications from 'expo-notifications';
+import short_bar from './assets/short_bar.jpg'
 
 
 Notifications.setNotificationHandler({
